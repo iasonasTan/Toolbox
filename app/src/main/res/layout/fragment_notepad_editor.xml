@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <Button
+        android:layout_marginTop="15dp"
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="@string/back"
+        android:background="@drawable/round_border"/>
+
+    <EditText
+        android:id="@+id/title_view"
+        android:layout_marginBottom="20dp"
+        android:hint="@string/title"
+        android:inputType="text"
+        android:textSize="26sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <EditText
+            android:id="@+id/main_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine|textCapSentences"
+            android:gravity="top|start"
+            android:minLines="10"
+            android:maxLines="1000"
+            android:scrollHorizontally="false"
+            android:background="@android:color/transparent"
+            android:padding="16dp"
+            android:textSize="16sp"
+            android:overScrollMode="ifContentScrolls"
+            android:importantForAutofill="no"
+            android:imeOptions="flagNoEnterAction"
+            android:hint="Write your notes here..." />
+    </ScrollView>
+
+
+<!--    <EditText-->
+<!--        android:id="@+id/main_edittext"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:autofillHints="Content"-->
+<!--        android:gravity="start|top"-->
+<!--        android:hint="@string/content"-->
+<!--        android:scrollHorizontally="false"-->
+<!--        android:overScrollMode="never"-->
+<!--        android:maxLines="60"-->
+<!--        android:singleLine="false"-->
+<!--        android:inputType="textMultiLine" />-->
+
+</LinearLayout>

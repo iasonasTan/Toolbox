@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Toolbox</string>
+    <string name="start">Ξεκίνα</string>
+    <string name="reset">Επαναφορά</string>
+    <string name="stop">Παύση</string>
+    <string name="delete">Διαγραφή Σημείωσης</string>
+    <string name="back">Πίσω</string>
+    <string name="set">Όρισε</string>
+    <string name="item_stopwatch">Χρονόμετρο</string>
+    <string name="item_calculator">Αριθμομηχανή</string>
+    <string name="item_notepad">Σημειοματάριο</string>
+    <string name="item_rng">Τυχαίος Αριθμός</string>
+    <string name="item_timer">Χρονόμετρο</string>
+    <string name="title">Τίτλος</string>
+    <string name="content">Περιεχόμενο…</string>
+    <string name="new_note_fab">Νέα Σημείωση</string>
+    <string name="timer_name">Όνομα Χρονομέτρου</string>
+    <string name="loading">Φορτώνει…</string>
+</resources>

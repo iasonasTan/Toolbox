@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Toolbox</string>
+    <!--  Buttons Actions  -->
+    <string name="start">Start</string>
+    <string name="reset">Reset</string>
+    <string name="stop">Pause</string>
+    <string name="delete">Delete Note</string>
+    <string name="back">Back</string>
+    <string name="ok" translatable="false">OK</string>
+    <string name="set">Set</string>
+
+    <!--  Fragments  -->
+    <string name="item_stopwatch">Stopwatch</string>
+    <string name="item_calculator">Calculator</string>
+    <string name="item_notepad">Notepad</string>
+    <string name="item_rng">Random Number</string>
+    <string name="item_timer">Timer</string>
+
+    <!--  Other strings -->
+    <string name="title">Title</string>
+    <string name="content">Content…</string>
+    <string name="new_note_fab">New Note</string>
+    <string name="timer_name">Timer name…</string>
+    <string name="loading">Loading…</string>
+    <string name="no_notes_found">No notes found.</string>
+</resources>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.example.toolbox.view.TitleView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_row="0"
+        android:text="@string/item_stopwatch" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_column="0"
+        android:layout_row="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/time_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:textSize="60sp"
+            android:textStyle="bold"
+            android:text="00:00:00.00"/>
+
+        <Button
+            android:id="@+id/start_button"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:text="@string/start"
+            android:textSize="18sp"
+            android:background="@drawable/round_border"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/reset_button"
+            android:layout_width="153dp"
+            android:background="@drawable/round_border"
+            android:layout_height="60dp"
+            android:text="@string/reset"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/stop_button"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:background="@drawable/round_border"
+            android:text="@string/stop"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</GridLayout>
