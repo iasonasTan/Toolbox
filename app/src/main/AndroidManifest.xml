@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <application
@@ -28,18 +29,20 @@
 
         <service
             android:name="com.example.toolbox.fragment.StopwatchFragment$TimerService"
+            android:foregroundServiceType="dataSync"
             android:exported="false" />
 
         <service
             android:name="com.example.toolbox.fragment.TimerFragment$CountDownService"
+            android:foregroundServiceType="dataSync"
             android:exported="false" />
 
         <service
-            android:name="com.example.toolbox.fragment.TimerFragment$Timer$NotificationListener"
+            android:name="com.example.toolbox.fragment.TimerFragment$Timer$BroadcastManagerService"
             android:exported="false" />
 
         <service
-            android:name="com.example.toolbox.fragment.StopwatchFragment$NotificationEventListener"
+            android:name="com.example.toolbox.fragment.StopwatchFragment$BroadcastSenderService"
             android:exported="false" />
     </application>
 </manifest>

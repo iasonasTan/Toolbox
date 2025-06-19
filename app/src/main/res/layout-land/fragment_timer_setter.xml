@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/name_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/timer_name"
+            android:layout_marginVertical="10dp" />
+
+        <com.example.toolbox.view.AnimatedButton
+            android:id="@+id/start_timer_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/set"
+            android:padding="10dp"
+            android:textSize="20sp"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <NumberPicker
+            android:id="@+id/hours_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <NumberPicker
+            android:id="@+id/minutes_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <NumberPicker
+            android:id="@+id/seconds_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</LinearLayout>

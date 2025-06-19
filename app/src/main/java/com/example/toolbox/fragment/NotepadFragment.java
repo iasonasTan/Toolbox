@@ -15,10 +15,11 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.toolbox.MainActivity;
+import com.example.toolbox.Utils;
 import com.example.toolbox.view.ItemView;
 import com.example.toolbox.view.navigation.NavigationItemView;
 import com.game.toolbox.R;
@@ -34,12 +35,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class NotepadFragment extends ToolFragment {
+public class NotepadFragment extends Utils.ToolFragment {
     public final HomeFragment home=new HomeFragment();
     public final EditorFragment editor=new EditorFragment();
 
-    public NotepadFragment(Context context) {
-        super(new NavigationItemView(context, R.drawable.notepad_icon));
+    @Override
+    protected String getName() {
+        return "NOTEPAD_FRAGMENT";
+    }
+
+    @Override
+    protected NavigationItemView getNavigationItem(Context context) {
+        return new NavigationItemView(context, R.drawable.notepad_icon);
     }
 
     public void setFragment(Fragment fragment) {
@@ -90,7 +97,7 @@ public class NotepadFragment extends ToolFragment {
         private NotepadFragment parent;
         private final List<ItemView> note_views=new ArrayList<>();
         private LinearLayout notesList;
-        private TextView textView;
+        private TextView noNotesFound_textview;
 
 
         @Override
@@ -103,7 +110,7 @@ public class NotepadFragment extends ToolFragment {
                 parent.setFragment(parent.editor);
             });
 
-            textView = view.findViewById(R.id.message);
+            noNotesFound_textview = view.findViewById(R.id.message);
             notesList = view.findViewById(R.id.notes_layout);
         }
 
@@ -125,9 +132,9 @@ public class NotepadFragment extends ToolFragment {
             }
             File[] files=Objects.requireNonNull(notes_dir.listFiles());
             if(files.length==0) {
-                textView.setVisibility(View.VISIBLE);
+                noNotesFound_textview.setVisibility(View.VISIBLE);
             } else {
-                textView.setVisibility(View.GONE);
+                noNotesFound_textview.setVisibility(View.GONE);
             }
             for (File file: files) {
                 ItemView nv = getNoteView(file);
@@ -140,6 +147,8 @@ public class NotepadFragment extends ToolFragment {
         public void onHiddenChanged(boolean hidden) {
             super.onHiddenChanged(hidden);
             updateGUI();
+            if (!hidden)
+                noNotesFound_textview.setVisibility(View.INVISIBLE);
         }
 
         private ItemView getNoteView(File file) {
@@ -256,35 +265,44 @@ public class NotepadFragment extends ToolFragment {
         }
 
         public void exitEditor () {
-            if (saveFile())
+            if (allowExiting())
                 parent.setFragment(parent.home);
         }
 
-        public boolean saveFile () {
+        public boolean allowExiting() {
             String name=title_view.getText().toString();
+
+            // exit if there's nothing to save
             if (name.isBlank()&&main_edittext.getText().toString().isBlank()) {
                 return true;
-            } else if (name.isBlank()||parent.home.nameConflicts(name)&&newFile) {
+            }
+
+            return isFileValid(name)&&saveBuffer(name);
+        }
+
+        public boolean isFileValid(String name) {
+            if (name.isBlank()||parent.home.nameConflicts(name)&&newFile) {
                 new AlertDialog.Builder(requireContext())
-                        .setTitle("Invalid Name")
-                        .setMessage("The name you entered is conflict with another file " +
-                                "or invalid, please change the note name and try again")
-                        .setPositiveButton("OK", (dialog, which) -> {
-                            dialog.dismiss();
-                        })
+                        .setTitle(ContextCompat.getString(requireContext(), R.string.invalid_name))
+                        .setMessage(ContextCompat.getString(requireContext(), R.string.invalid_name_desc))
+                        .setPositiveButton(ContextCompat.getString(requireContext(), R.string.ok), (dialog, which) -> dialog.dismiss())
                         .show();
                 return false;
-            } else {
-                try {
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(parent.home.newFile(name)));
-                    writer.write(main_edittext.getText().toString());
-                    writer.close();
-                    Toast.makeText(requireContext(), "Note saved!", Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
             }
             return true;
+        }
+
+        public boolean saveBuffer(String name) {
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(parent.home.newFile(name)));
+                writer.write(main_edittext.getText().toString());
+                writer.close();
+                Toast.makeText(requireContext(), ContextCompat.getString(requireContext(), R.string.note_saved), Toast.LENGTH_SHORT).show();
+                return true;
+            } catch (Exception e) {
+                System.out.println("Exception occurred: "+e);
+                return false;
+            }
         }
     }
 

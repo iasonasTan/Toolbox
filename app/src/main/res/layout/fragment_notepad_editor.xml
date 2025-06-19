@@ -5,14 +5,14 @@
     android:orientation="vertical"
     android:layout_height="match_parent">
 
-    <Button
+    <com.example.toolbox.view.AnimatedButton
         android:layout_marginTop="15dp"
         android:id="@+id/back_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:text="@string/back"
-        android:background="@drawable/round_border"/>
+        />
 
     <EditText
         android:id="@+id/title_view"
@@ -44,7 +44,7 @@
             android:overScrollMode="ifContentScrolls"
             android:importantForAutofill="no"
             android:imeOptions="flagNoEnterAction"
-            android:hint="Write your notes here..." />
+            android:hint="@string/write_your_notes_here" />
     </ScrollView>
 
 

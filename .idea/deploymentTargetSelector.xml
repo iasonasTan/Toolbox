@@ -4,13 +4,21 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="buildrun">
-        <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-05-29T22:41:30.385695996Z">
+        <DropdownSelection timestamp="2025-06-18T09:09:44.891173075Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=/home/iasonas/.android/avd/Small_Phone.avd" />
+            </handle>
+          </Target>
+        </DropdownSelection>
+        <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="buildrun">
+        <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2025-06-19T15:56:49.841395338Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="LocalEmulator" identifier="path=/home/iasonas/.android/avd/Medium_Phone.avd" />
             </handle>
           </Target>
         </DropdownSelection>
@@ -18,17 +26,12 @@
           <targets>
             <Target type="DEFAULT_BOOT">
               <handle>
-                <DeviceId pluginId="PhysicalDevice" identifier="serial=R92W50F1JXD" />
-              </handle>
-            </Target>
-            <Target type="DEFAULT_BOOT">
-              <handle>
                 <DeviceId pluginId="PhysicalDevice" identifier="serial=HVA4CH93" />
               </handle>
             </Target>
             <Target type="DEFAULT_BOOT">
               <handle>
-                <DeviceId pluginId="LocalEmulator" identifier="path=/home/iasonas/.android/avd/Medium_Phone.avd" />
+                <DeviceId pluginId="LocalEmulator" identifier="path=/home/iasonas/.android/avd/Pixel_6_Pro.avd" />
               </handle>
             </Target>
           </targets>
@@ -36,7 +39,7 @@
       </SelectionState>
       <SelectionState runConfigName="MainActivity">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-05-28T10:54:17.400948305Z">
+        <DropdownSelection timestamp="2025-06-18T09:07:26.091473689Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="PhysicalDevice" identifier="serial=R92W50F1JXD" />

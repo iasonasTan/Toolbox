@@ -25,25 +25,32 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.toolbox.MainActivity;
+import com.example.toolbox.Utils;
 import com.example.toolbox.view.navigation.NavigationItemView;
 import com.game.toolbox.R;
 
-import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class StopwatchFragment extends ToolFragment {
+public class StopwatchFragment extends Utils.ToolFragment {
     private Button start_button, reset_button, stop_button;
     private TextView timeView;
 
-    public StopwatchFragment(Context context) {
-        super(new NavigationItemView(context, R.drawable.stopwatch_icon));
+    @Override
+    protected String getName() {
+        return "STOPWATCH_FRAGMENT";
     }
+
+    @Override
+    protected NavigationItemView getNavigationItem(Context context) {
+        return new NavigationItemView(context, R.drawable.stopwatch_icon);
+    }
+
     private final BroadcastReceiver timerReceiver=new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             long time=intent.getLongExtra("elapsed_time", 0);
-            timeView.setText(longToTime(time, true));
+            timeView.setText(Utils.longToTime(time, true));
         }
     };
 
@@ -51,7 +58,7 @@ public class StopwatchFragment extends ToolFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             System.out.println("received intent with action "+intent.getAction());
-            updateUI(Objects.requireNonNull(intent.getAction()));
+            setUiState(Objects.requireNonNull(intent.getAction()));
         }
     };
 
@@ -64,20 +71,6 @@ public class StopwatchFragment extends ToolFragment {
         NotificationManager notificationManager =
                 requireContext().getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
-    }
-
-    public static String longToTime(long inputMillis, boolean showMillis) {
-        final boolean INPUT_POSITIVE=inputMillis>=0;
-        inputMillis=Math.abs(inputMillis);
-        long secs=0, mins=0, hours=0;
-        while (inputMillis>=1000) { secs+=1;inputMillis-=1000; }
-        while (secs>=60) { mins+=1;secs-=60; }
-        while (mins>=60) { hours+=1;mins-=60; }
-        inputMillis/=10;
-        String timeFormated = String.format(Locale.ENGLISH,
-                "%s%02d:%02d:%02d",
-                INPUT_POSITIVE?"":"-", hours, mins, secs);
-        return showMillis?timeFormated+"."+inputMillis:timeFormated;
     }
 
     @Nullable
@@ -101,6 +94,12 @@ public class StopwatchFragment extends ToolFragment {
         }
         ContextCompat.registerReceiver(requireContext(), updateReceiver, filter1,
                 ContextCompat.RECEIVER_NOT_EXPORTED);
+
+        if(TimerService.running) {
+            setUiState(ActionType.START.name());
+        } else {
+            setUiState(ActionType.RESET.name());
+        }
     }
 
     @Override
@@ -110,7 +109,7 @@ public class StopwatchFragment extends ToolFragment {
         requireContext().unregisterReceiver(updateReceiver);
     }
 
-    public void updateUI(String state) {
+    public void setUiState(String state) {
         System.out.println("ui changed "+state);
         switch(state) {
             case "START":
@@ -136,7 +135,6 @@ public class StopwatchFragment extends ToolFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         initNotifications();
 
         start_button = view.findViewById(R.id.start_button);
@@ -144,28 +142,25 @@ public class StopwatchFragment extends ToolFragment {
         timeView = view.findViewById(R.id.time_view);
         stop_button = view.findViewById(R.id.stop_button);
 
+        final Intent serviceIntent=new Intent(getActivity(), TimerService.class);
         start_button.setOnClickListener(v -> {
-            updateUI(ActionType.START.name());
-            Intent serviceIntent=new Intent(getActivity(), TimerService.class);
+            setUiState(ActionType.START.name());
             serviceIntent.setAction("START_TIMER");
-            requireActivity().startService(serviceIntent);
+            requireContext().startForegroundService(serviceIntent);
         });
         stop_button.setOnClickListener(v -> {
-            updateUI(ActionType.STOP.name());
-            Intent serviceIntent=new Intent(getActivity(), TimerService.class);
+            setUiState(ActionType.STOP.name());
             serviceIntent.setAction("STOP_TIMER");
-            requireActivity().startService(serviceIntent);
+            requireContext().startForegroundService(serviceIntent);
         });
         reset_button.setOnClickListener(v -> {
-            updateUI(ActionType.RESET.name());
-            Intent resetIntent=new Intent(getActivity(), TimerService.class);
-            resetIntent.setAction("RESET_TIMER");
-            requireActivity().
-                    startService(resetIntent);
+            setUiState(ActionType.RESET.name());
+            serviceIntent.setAction("RESET_TIMER");
+            requireContext().startForegroundService(serviceIntent);
         });
     }
 
-    public static final class NotificationEventListener extends Service {
+    public static final class BroadcastSenderService extends Service {
         @Nullable
         @Override
         public IBinder onBind(Intent intent) {
@@ -192,10 +187,10 @@ public class StopwatchFragment extends ToolFragment {
                 default:
                     throw new IllegalArgumentException();
             }
-            getApplicationContext().startService(serviceIntent);
+            getApplicationContext().startForegroundService(serviceIntent);
             sendBroadcast(new Intent(intent.getAction()).setPackage(getPackageName()));
 
-            return START_STICKY;
+            return START_NOT_STICKY;
         }
     }
 
@@ -211,12 +206,11 @@ public class StopwatchFragment extends ToolFragment {
         private Consumer<Long> updateNotification_cons;
         private long fromStartTime =0, startTime=System.currentTimeMillis(), untilStartTime;
         private NotificationCompat.Builder time_notification;
-        private NotificationManager notif_man;
         private static final int notificationID=1;
-        private boolean running = false;
+        private static boolean running = false;
 
         private PendingIntent getPendingIntent(ActionType type) {
-            Intent intent=new Intent(getApplicationContext(), NotificationEventListener.class);
+            Intent intent=new Intent(getApplicationContext(), BroadcastSenderService.class);
             intent.setAction(type.toString());
             PendingIntent pe=PendingIntent.getService(getApplicationContext(), 0,
                     intent, PendingIntent.FLAG_IMMUTABLE);
@@ -227,8 +221,6 @@ public class StopwatchFragment extends ToolFragment {
         public void onCreate() {
             super.onCreate();
             NotificationManagerCompat.from(getApplicationContext());
-
-            notif_man=getApplicationContext().getSystemService(NotificationManager.class);
 
             updateNotification_run = () -> {
                 updateNotification_cons.accept(untilStartTime + fromStartTime);
@@ -245,53 +237,61 @@ public class StopwatchFragment extends ToolFragment {
                     handler.postDelayed(timeCounter_run, 50);
             };
 
-            updateNotification_cons = t -> {
+            updateNotification_cons = time_millis -> {
                 NotificationCompat.Action action;
                 NotificationCompat.Action action2=null;
                 if(running) {
-                    action=new NotificationCompat.Action(R.drawable.delete_icon, "Pause", getPendingIntent(ActionType.STOP));
+                    action=new NotificationCompat.Action(R.drawable.delete_icon, ContextCompat.getString(getApplicationContext(), R.string.stop), getPendingIntent(ActionType.STOP));
                 } else {
-                    action=new NotificationCompat.Action(R.drawable.timer_icon, "Start", getPendingIntent(ActionType.START));
-                    action2=new NotificationCompat.Action(R.drawable.delete_icon, "Reset", getPendingIntent(ActionType.RESET));
+                    action=new NotificationCompat.Action(R.drawable.timer_icon, ContextCompat.getString(getApplicationContext(), R.string.start), getPendingIntent(ActionType.START));
+                    action2=new NotificationCompat.Action(R.drawable.delete_icon, ContextCompat.getString(getApplicationContext(), R.string.start), getPendingIntent(ActionType.RESET));
                 }
 
                 time_notification= new NotificationCompat.Builder(getApplicationContext(), "stopwatch_channel")
-                        .setContentTitle("Stopwatch running")
-                        .setContentText("Time: "+longToTime(t, false))
+                        .setContentTitle(ContextCompat.getString(getApplicationContext(), R.string.stopwatch_running))
+                        .setContentIntent(Utils.createPendingIntent(MainActivity.getFragment(StopwatchFragment.class), getApplicationContext()))
+                        .setContentText(ContextCompat.getString(getApplicationContext(), R.string.time)+ Utils.longToTime(time_millis, false))
                         .setOnlyAlertOnce(true)
                         .addAction(action)
                         .addAction(action2)
                         .setSmallIcon(R.drawable.stopwatch_icon);
 
-                notif_man.notify(notificationID, time_notification.build());
+                startForeground(notificationID, time_notification.build());
             };
         }
 
         @Override
         public int onStartCommand(Intent intent, int flags, int startId) {
+            if(intent==null)
+                return START_STICKY;
+
             final String action=Objects.requireNonNull(
                     intent.getAction(), "must specify intent.action");
 
             System.out.println("Service started with action "+intent.getAction());
 
-            if (action.equals("RESET_TIMER")) {
-                notif_man.cancel(1);
-                untilStartTime =0;
-                sendTime(0);
-            } else if (action.equals("START_TIMER")) {
-                startTime=System.currentTimeMillis();
-                handler.post(timeCounter_run);
-                handler.post(updateNotification_run);
-                running=true;
-            } else if (action.equals("STOP_TIMER")) {
-                untilStartTime += fromStartTime;
-                handler.removeCallbacks(timeCounter_run);
-                handler.removeCallbacks(updateNotification_run);
-                running=false;
-                updateNotification_cons.accept(untilStartTime);
+            switch (action) {
+                case "RESET_TIMER":
+                    stopForeground(true);
+                    untilStartTime = 0;
+                    sendTime(0);
+                    break;
+                case "START_TIMER":
+                    startTime = System.currentTimeMillis();
+                    handler.post(timeCounter_run);
+                    handler.post(updateNotification_run);
+                    running = true;
+                    break;
+                case "STOP_TIMER":
+                    untilStartTime += fromStartTime;
+                    handler.removeCallbacks(timeCounter_run);
+                    handler.removeCallbacks(updateNotification_run);
+                    running = false;
+                    updateNotification_cons.accept(untilStartTime);
+                    break;
             }
 
-            return Service.START_STICKY;
+            return START_STICKY;
         }
 
         private void sendTime(long time) {
@@ -304,7 +304,6 @@ public class StopwatchFragment extends ToolFragment {
         @Nullable
         @Override
         public IBinder onBind(Intent intent) {
-            /* i don't care, leave me alone */
             return null;
         }
     }

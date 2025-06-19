@@ -1,26 +1,44 @@
 <resources>
-    <string name="app_name">Toolbox</string>
-    <!--  Buttons Actions  -->
+    <string name="app_name" translatable="false">Toolbox</string>
+
+    <!-- Buttons Actions -->
     <string name="start">Start</string>
     <string name="reset">Reset</string>
     <string name="stop">Pause</string>
     <string name="delete">Delete Note</string>
     <string name="back">Back</string>
     <string name="ok" translatable="false">OK</string>
-    <string name="set">Set</string>
 
-    <!--  Fragments  -->
+    <!-- Fragments -->
     <string name="item_stopwatch">Stopwatch</string>
     <string name="item_calculator">Calculator</string>
     <string name="item_notepad">Notepad</string>
     <string name="item_rng">Random Number</string>
     <string name="item_timer">Timer</string>
 
-    <!--  Other strings -->
+    <!-- Views Strings -->
     <string name="title">Title</string>
     <string name="content">Content…</string>
     <string name="new_note_fab">New Note</string>
     <string name="timer_name">Timer name…</string>
     <string name="loading">Loading…</string>
     <string name="no_notes_found">No notes found.</string>
+    <string name="set">Set</string>
+    <string name="write_your_notes_here">Write your notes here…</string>
+
+    <!-- Toast Strings -->
+    <string name="timer_set">Timer set.</string>
+    <string name="timer_canceled">Timer canceled.</string>
+    <string name="note_saved">Note saved.</string>
+
+    <!-- Notification Strings -->
+    <string name="stopwatch_running">Stopwatch running.</string>
+    <string name="timer_running">Timer running.</string>
+    <string name="time">Time: </string>
+    <string name="time_left">Time left: </string>
+
+    <!-- Alert Dialog Strings -->
+    <string name="invalid_name">Invalid name!</string>
+    <string name="invalid_name_desc">Name is invalid or already used. Please choose a different name.</string>
+
 </resources>

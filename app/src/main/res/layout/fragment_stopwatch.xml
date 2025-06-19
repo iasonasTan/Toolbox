@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -27,9 +28,10 @@
             android:layout_marginBottom="30dp"
             android:textSize="60sp"
             android:textStyle="bold"
-            android:text="00:00:00.00"/>
+            android:text="00:00:00.00"
+            tools:ignore="HardcodedText" />
 
-        <Button
+        <com.example.toolbox.view.AnimatedButton
             android:id="@+id/start_button"
             android:layout_width="150dp"
             android:layout_height="60dp"
@@ -38,7 +40,7 @@
             android:background="@drawable/round_border"
             android:textStyle="bold" />
 
-        <Button
+        <com.example.toolbox.view.AnimatedButton
             android:id="@+id/reset_button"
             android:layout_width="153dp"
             android:background="@drawable/round_border"
@@ -48,7 +50,7 @@
             android:textStyle="bold"
             android:visibility="gone"/>
 
-        <Button
+        <com.example.toolbox.view.AnimatedButton
             android:id="@+id/stop_button"
             android:layout_width="150dp"
             android:layout_height="60dp"

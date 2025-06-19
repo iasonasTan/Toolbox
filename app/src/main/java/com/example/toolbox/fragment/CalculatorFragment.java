@@ -1,41 +1,42 @@
 package com.example.toolbox.fragment;
 
-import static android.content.Context.VIBRATOR_SERVICE;
-
 import android.content.Context;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowInsets;
-import android.view.WindowMetrics;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.GridLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
-import com.example.toolbox.MainActivity;
+import com.example.toolbox.Utils;
+import com.example.toolbox.view.AnimatedButton;
 import com.example.toolbox.view.navigation.NavigationItemView;
 import com.game.toolbox.R;
 
 import org.mozilla.javascript.Scriptable;
 
 import java.util.Locale;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
-public class CalculatorFragment extends ToolFragment implements View.OnClickListener {
+public class CalculatorFragment extends Utils.ToolFragment implements View.OnClickListener {
     private TextView mainTv;
 
-    public CalculatorFragment(Context context) {
-        super(new NavigationItemView(context, R.drawable.calculator_icon));
+    @Override
+    protected String getName() {
+        return "CALCULATOR_FRAGMENT";
+    }
+
+    @Override
+    protected NavigationItemView getNavigationItem(Context context) {
+        return new NavigationItemView(context, R.drawable.calculator_icon);
     }
 
     @Nullable
@@ -44,39 +45,54 @@ public class CalculatorFragment extends ToolFragment implements View.OnClickList
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_calculator, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_calculator, container, false);
+        createButtons(rootView);
+
+        return rootView;
+    }
+
+    private void createButtons(View rootView) {
+        GridLayout buttonsParent=rootView.findViewById(R.id.buttons_layout);
+        String[] chars={
+                "C", "(", ")", "/",
+                "√", "x²", "!", "L",
+                "7", "8", "9", "*",
+                "4", "5", "6", "-",
+                "1", "2", "3", "+",
+                "R", "0", ".", "="
+        };
+        final int ROW_COUNT=6;
+        final int COL_COUNT=4;
+        buttonsParent.setColumnCount(COL_COUNT);
+        buttonsParent.setRowCount(ROW_COUNT);
+        int i=0;
+        for(String ch: chars) {
+            Button button=new AnimatedButton(requireContext());
+            button.setText(ch);
+            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 100);
+            button.setGravity(Gravity.CENTER);
+            button.setOnClickListener(this);
+            button.setBackgroundResource(R.drawable.round_shape);
+            button.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+
+            GridLayout.LayoutParams params=new GridLayout.LayoutParams();
+            params.width=0;
+            params.height=0;
+            params.rowSpec=GridLayout.spec(i/COL_COUNT, 1f);
+            params.columnSpec=GridLayout.spec(i%COL_COUNT, 1f);
+            button.setLayoutParams(params);
+
+            buttonsParent.addView(button);
+            i++;
+        }
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
         mainTv = view.findViewById(R.id.result);
-        defineButton(view, R.id.button_c, R.id.button_bracket_open, R.id.button_bracket_close,
-                R.id.button_ac, R.id.button_dot, R.id.button_equals, R.id.button_plus,
-                R.id.button_minus, R.id.button_multiply, R.id.button_divide, R.id.button_0,
-                R.id.button_1, R.id.button_2, R.id.button_3, R.id.button_4, R.id.button_5,
-                R.id.button_6, R.id.button_7, R.id.button_8, R.id.button_9, R.id.button_sqrt,
-                R.id.button_power, R.id.button_factorial, R.id.button_log);
-
     }
 
-    void defineButton (View rootView, int... ids) {
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-        final int BUTTON_GAP=20;
-        final int BUTTONS_PER_ROW=4;
-        final int SCREEN_WIDTH = metrics.widthPixels;
-        final int BUTTON_SIZE = SCREEN_WIDTH/BUTTONS_PER_ROW-BUTTON_GAP;
-        ViewGroup.LayoutParams buttonLayout = rootView.findViewById(R.id.button_0).getLayoutParams();
-        buttonLayout.width = BUTTON_SIZE;
-        buttonLayout.height = (int)((double)BUTTON_SIZE/5*3.8);
-
-        for (int id: ids) {
-            Button b = rootView.findViewById(id);
-            b.setOnClickListener(this);
-            b.setLayoutParams(buttonLayout);
-        }
-    }
     public long factorial (long val) {
         long result = 1;
         for (int i = 2; i <= val; i++) {
@@ -148,9 +164,9 @@ public class CalculatorFragment extends ToolFragment implements View.OnClickList
     }
 
     void vibrate () {
-        Vibrator v = (Vibrator) getContext().getSystemService(VIBRATOR_SERVICE);
-        v.vibrate(VibrationEffect.createOneShot(40, VibrationEffect.DEFAULT_AMPLITUDE));
-//        v.vibrate(45);
+        Vibrator v = ContextCompat.getSystemService(requireContext(), Vibrator.class);
+        if(v!=null)
+            v.vibrate(VibrationEffect.createOneShot(40, VibrationEffect.DEFAULT_AMPLITUDE));
     }
 
     public String getResult (String code) {

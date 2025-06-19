@@ -31,6 +31,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.toolbox.MainActivity;
+import com.example.toolbox.Utils;
 import com.example.toolbox.view.ItemView;
 import com.example.toolbox.view.navigation.NavigationItemView;
 import com.game.toolbox.R;
@@ -40,14 +41,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class TimerFragment extends ToolFragment {
+public class TimerFragment extends Utils.ToolFragment {
     private static final Handler handler=new Handler(Looper.getMainLooper());
     private Runnable updateUI_run, updateNotification_run;
     public final TimerSetterFragment timerSetterFragment =new TimerSetterFragment();
     public final ActiveTimersFragment timersFragment=new ActiveTimersFragment();
 
-    public TimerFragment(Context context) {
-        super(new NavigationItemView(context, R.drawable.timer_icon));
+    @Override
+    protected String getName() {
+        return "TIMER_FRAGMENT";
+    }
+
+    @Override
+    protected NavigationItemView getNavigationItem(Context context) {
+        return new NavigationItemView(context, R.drawable.timer_icon);
     }
 
     private void initNotificationChannel() {
@@ -131,6 +138,12 @@ public class TimerFragment extends ToolFragment {
         private final static List<Timer> timers=new ArrayList<>();
 
         @Override
+        public void onDestroy() {
+            super.onDestroy();
+            timers.forEach(Timer::unregisterReceiver);
+        }
+
+        @Override
         public int onStartCommand(Intent intent, int flags, int startId) {
             if(intent==null)
                 // system's business or logic error, reject
@@ -144,7 +157,7 @@ public class TimerFragment extends ToolFragment {
             Timer timer = new Timer(getApplicationContext(), view, end_time, name);
             timers.add(timer);
 
-            return super.onStartCommand(intent, flags, startId);
+            return START_STICKY;
         }
 
         @Nullable
@@ -184,7 +197,7 @@ public class TimerFragment extends ToolFragment {
                     intent.putExtra("TIME_MILLIS", totalTime_millis);
                     intent.putExtra("TIMER_NAME", name_input.getText().toString());
                     requireActivity().startService(intent);
-                    Toast.makeText(requireContext(), "Timer set.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), ContextCompat.getString(requireContext(), R.string.timer_set), Toast.LENGTH_SHORT).show();
                 }
 
                 parent.setFragment(parent.timersFragment);
@@ -257,7 +270,6 @@ public class TimerFragment extends ToolFragment {
 
             return inflater.inflate(R.layout.fragment_timer_list, container, false);
         }
-
     }
 
     public static class Timer implements Runnable {
@@ -267,18 +279,20 @@ public class TimerFragment extends ToolFragment {
         private long endTime;
         private boolean alive=true;
         private final String eventID;
-        NotificationCompat.Builder time_notification;
-        NotificationManager notification_man;
+        private NotificationCompat.Builder time_notification;
+        private NotificationManager notification_man;
         private int notificationID;
-        private final Runnable ring_run = () -> ringtone.play(), updateNotificaton_run = () -> {
+
+        private final Runnable ring_run = () -> ringtone.play(), updateNotification_run = () -> {
             long time = endTime - System.currentTimeMillis();
             time_notification=new NotificationCompat.Builder(context, "timer_channel")
-                    .setContentTitle("Timer is running...")
-                    .setContentText("Time Left: "+StopwatchFragment.longToTime(time, false))
+                    .setContentTitle(ContextCompat.getString(context, R.string.timer_running))
+                    .setContentIntent(Utils.createPendingIntent(MainActivity.getFragment(TimerFragment.class), context))
+                    .setContentText(ContextCompat.getString(context, R.string.time_left)+ Utils.longToTime(time, false))
                     .setSmallIcon(R.drawable.timer_icon)
                     .setAutoCancel(true)
                     .setOnlyAlertOnce(true)
-                    .addAction(R.id.deleteNote_button, "Stop", getNotificationIntent(getIntent()));
+                    .addAction(R.id.deleteNote_button, ContextCompat.getString(context, R.string.stop), getNotificationIntent(getIntent()));
             notification_man.notify(notificationID, time_notification.build());
         };
 
@@ -291,7 +305,10 @@ public class TimerFragment extends ToolFragment {
                     ringtone.stop();
 
                 notification_man.cancel(notificationID);
-                Toast.makeText(context, "Timer canceled.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, ContextCompat.getString(context, R.string.timer_canceled), Toast.LENGTH_SHORT).show();
+
+                // unregister receiver
+                context.unregisterReceiver(receiver);
             }
         };
 
@@ -319,15 +336,17 @@ public class TimerFragment extends ToolFragment {
         }
 
         public Intent getIntent() {
-            Intent intent=new Intent(context, NotificationListener.class);
+            Intent intent=new Intent(context, BroadcastManagerService.class);
             intent.putExtra("eventID", eventID);
             intent.setAction(eventID);
             return intent;
         }
 
-        // TODO add unregister receiver
+        public void unregisterReceiver() {
+            context.unregisterReceiver(receiver);
+        }
 
-        public static class NotificationListener extends Service {
+        public static class BroadcastManagerService extends Service {
             @Override
             public int onStartCommand(Intent intent, int flags, int startId) {
                 if(intent==null)
@@ -354,12 +373,12 @@ public class TimerFragment extends ToolFragment {
 
         public boolean isAlive() { return alive; }
         public View getView() { return view; }
-        public Runnable getNotificationUpdate_run() { return updateNotificaton_run; }
+        public Runnable getNotificationUpdate_run() { return updateNotification_run; }
 
         @Override
         public void run() {
             long time = endTime - System.currentTimeMillis();
-            view.setTitle(StopwatchFragment.longToTime(time, true));
+            view.setTitle(Utils.longToTime(time, true));
             if(time<0) {
                 handler.post(ring_run);
             }
@@ -375,5 +394,4 @@ public class TimerFragment extends ToolFragment {
             this.parent=parent;
         }
     }
-
 }

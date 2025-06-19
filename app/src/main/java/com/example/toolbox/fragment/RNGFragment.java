@@ -11,14 +11,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.toolbox.MainActivity;
+import com.example.toolbox.Utils;
 import com.example.toolbox.view.navigation.NavigationItemView;
 import com.game.toolbox.R;
 
-public class RNGFragment extends ToolFragment {
+public class RNGFragment extends Utils.ToolFragment {
 
-    public RNGFragment(Context context) {
-        super(new NavigationItemView(context, R.drawable.random_number));
+    @Override
+    protected String getName() {
+        return "RANDOM_NUMBER_GENERATOR_FRAGMENT";
+    }
+
+    @Override
+    protected NavigationItemView getNavigationItem(Context context) {
+        return new NavigationItemView(context, R.drawable.random_number);
     }
 
     @Nullable

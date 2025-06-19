@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="start">Начать</string>
+    <string name="reset">Сбросить</string>
+    <string name="stop">Пауза</string>
+    <string name="delete">Удалить заметку</string>
+    <string name="back">Назад</string>
+    <string name="set">Установить</string>
+    <string name="item_stopwatch">Секундомер</string>
+    <string name="item_calculator">Калькулятор</string>
+    <string name="item_notepad">Блокнот</string>
+    <string name="item_rng">Случайное число</string>
+    <string name="item_timer">Таймер</string>
+    <string name="title">Заголовок</string>
+    <string name="content">Содержимое…</string>
+    <string name="new_note_fab">Новая заметка</string>
+    <string name="timer_name">Имя таймера…</string>
+    <string name="loading">Загрузка…</string>
+    <string name="no_notes_found">Заметки не найдены.</string>
+    <string name="write_your_notes_here">Напишите свои заметки здесь…</string>
+    <string name="timer_set">Таймер установлен.</string>
+    <string name="timer_canceled">Таймер отменён.</string>
+    <string name="note_saved">Заметка сохранена.</string>
+    <string name="stopwatch_running">Секундомер работает.</string>
+    <string name="timer_running">Таймер работает.</string>
+    <string name="time">Время: </string>
+    <string name="time_left">Осталось времени: </string>
+    <string name="invalid_name">Неверное имя!</string>
+    <string name="invalid_name_desc">Имя недопустимо или уже используется. Пожалуйста, выберите другое имя.</string>
+</resources>

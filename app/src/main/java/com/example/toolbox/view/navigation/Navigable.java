@@ -1,5 +1,7 @@
 package com.example.toolbox.view.navigation;
 
+import android.content.Context;
+
 public interface Navigable {
-    NavigationItemView getNavItem();
+    NavigationItemView getNavItem(Context context);
 }
