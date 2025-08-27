@@ -1,14 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/fragment_adapter"
+        android:layout_marginHorizontal="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="0dp"
         android:layout_above="@+id/hr"
         android:layout_marginBottom="0dp" />
 
@@ -20,10 +20,10 @@
         android:layout_marginBottom="5dp"
         android:background="@color/black" />
 
-    <com.example.toolbox.view.navigation.NavigationView
+    <com.app.toolbox.view.navigation.NavigationView
         android:id="@+id/bottom_navigation"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="45dp" />
 
 </RelativeLayout>

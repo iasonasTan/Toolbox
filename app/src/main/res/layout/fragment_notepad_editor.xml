@@ -5,60 +5,45 @@
     android:orientation="vertical"
     android:layout_height="match_parent">
 
-    <com.example.toolbox.view.AnimatedButton
-        android:layout_marginTop="15dp"
-        android:id="@+id/back_button"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="@string/back"
-        />
+        android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/title_view"
-        android:layout_marginBottom="20dp"
-        android:hint="@string/title"
-        android:inputType="text"
-        android:textSize="26sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        <com.app.toolbox.view.AnimatedButton
+            android:layout_weight="1"
+            android:id="@+id/back_button"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:text="@string/back"
+            />
 
         <EditText
-            android:id="@+id/main_edittext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine|textCapSentences"
-            android:gravity="top|start"
-            android:minLines="10"
-            android:maxLines="1000"
-            android:scrollHorizontally="false"
-            android:background="@android:color/transparent"
-            android:padding="16dp"
-            android:textSize="16sp"
-            android:overScrollMode="ifContentScrolls"
-            android:importantForAutofill="no"
-            android:imeOptions="flagNoEnterAction"
-            android:hint="@string/write_your_notes_here" />
-    </ScrollView>
+            android:id="@+id/title_view"
+            android:layout_weight="4"
+            android:hint="@string/title"
+            android:inputType="text"
+            android:textSize="26sp"
+            android:layout_width="0dp"
+            android:layout_height="55dp" />
 
+    </LinearLayout>
 
-<!--    <EditText-->
-<!--        android:id="@+id/main_edittext"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:autofillHints="Content"-->
-<!--        android:gravity="start|top"-->
-<!--        android:hint="@string/content"-->
-<!--        android:scrollHorizontally="false"-->
-<!--        android:overScrollMode="never"-->
-<!--        android:maxLines="60"-->
-<!--        android:singleLine="false"-->
-<!--        android:inputType="textMultiLine" />-->
+    <EditText
+        android:id="@+id/main_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="top|start"
+        android:scrollbars="vertical"
+        android:inputType="textMultiLine|textCapSentences"
+        android:overScrollMode="ifContentScrolls"
+        android:padding="4dp"
+        android:scrollHorizontally="false"
+        android:singleLine="false"
+        android:textSize="16sp"
+        android:hint="@string/write_your_notes_here"
+        android:importantForAutofill="no"
+        android:imeOptions="flagNoEnterAction"
+        android:background="@drawable/no_background_no_round_border" />
 
 </LinearLayout>

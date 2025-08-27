@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Toolbox</string>
+
+    <!-- Buttons Actions -->
+    <string name="start">Start</string>
+    <string name="reset">Zurücksetzen</string>
+    <string name="stop">Pause</string>
+    <string name="delete">Löschen</string>
+    <string name="back">Zurück</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="ok" translatable="false">OK</string>
+
+    <!-- Fragments -->
+    <string name="item_stopwatch">Stoppuhr</string>
+    <string name="item_calculator">Rechner</string>
+    <string name="item_notepad">Notizblock</string>
+    <string name="item_rng">Zufallszahl</string>
+    <string name="item_timer">Timer</string>
+
+    <!-- Views Strings -->
+    <string name="title">Titel</string>
+    <string name="content">Inhalt…</string>
+    <string name="new_note_fab">Neue Notiz</string>
+    <string name="timer_name">Timer-Name…</string>
+    <string name="loading">Lädt…</string>
+    <string name="no_notes_found">Keine Notizen gefunden.</string>
+    <string name="write_your_notes_here">Schreibe deine Notizen hier…</string>
+    <string name="unnamed">Unbenannt</string>
+
+    <!-- Toast Strings -->
+    <string name="timer_set">Timer gesetzt.</string>
+    <string name="timer_canceled">Timer abgebrochen.</string>
+    <string name="note_saved">Notiz gespeichert.</string>
+
+    <!-- Notification Strings -->
+    <string name="stopwatch_running">Stoppuhr läuft.</string>
+    <string name="timer_running">Timer läuft.</string>
+    <string name="time">Zeit:</string>
+    <string name="time_left">Verbleibende Zeit: </string>
+
+    <!-- Alert Dialog Strings -->
+    <string name="invalid_name">Ungültiger Name!</string>
+    <string name="invalid_name_desc">Name ist ungültig oder bereits vergeben. Bitte wähle einen anderen Namen.</string>
+    <string name="time_is_up">Zeit ist um!</string>
+    <string name="timer">"Timer: "</string>
+    <string name="ended">beendet.</string>
+    <string name="delete_note">Notiz löschen</string>
+    <string name="delete_note_desc">Möchtest du diese Notiz wirklich löschen?</string>
+
+</resources>

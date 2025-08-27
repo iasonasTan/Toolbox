@@ -5,7 +5,6 @@
     <string name="stop">Пауза</string>
     <string name="delete">Удалить заметку</string>
     <string name="back">Назад</string>
-    <string name="set">Установить</string>
     <string name="item_stopwatch">Секундомер</string>
     <string name="item_calculator">Калькулятор</string>
     <string name="item_notepad">Блокнот</string>
@@ -25,6 +24,13 @@
     <string name="timer_running">Таймер работает.</string>
     <string name="time">Время: </string>
     <string name="time_left">Осталось времени: </string>
+    <string name="unnamed">Без имени</string>
     <string name="invalid_name">Неверное имя!</string>
     <string name="invalid_name_desc">Имя недопустимо или уже используется. Пожалуйста, выберите другое имя.</string>
+    <string name="time_is_up">время истекло</string>
+    <string name="cancel">отмена</string>
+    <string name="timer">Таймер:</string>
+    <string name="ended">все кончено</string>
+    <string name="delete_note">удалить примечание</string>
+    <string name="delete_note_desc">Вы уверены, что хотите удалить эту заметку?</string>
 </resources>

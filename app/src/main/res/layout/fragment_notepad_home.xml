@@ -18,6 +18,8 @@
 
     </ScrollView>
 
+<!--  TODO HIDE NO-NOTES-FOUND MESSAGE EFFICIENT  -->
+
     <TextView
         android:id="@+id/message"
         android:layout_width="wrap_content"
@@ -32,7 +34,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
-        android:background="@drawable/round_border"
+        android:background="@drawable/background_with_border"
         android:clickable="true"
         android:layout_margin="25dp"
         android:contentDescription="@string/new_note_fab"

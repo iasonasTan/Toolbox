@@ -1,48 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:padding="10dp"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <com.app.toolbox.view.TimeInput
+        android:id="@+id/time_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        app:title="@string/time"
         android:gravity="center"
         android:layout_marginTop="50dp"
-        android:layout_gravity="center" >
-
-        <NumberPicker
-            android:id="@+id/hours_picker"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-
-        <NumberPicker
-            android:id="@+id/minutes_picker"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-
-        <NumberPicker
-            android:id="@+id/seconds_picker"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
+        android:layout_gravity="center"/>
 
     <EditText
         android:id="@+id/name_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:autofillHints="timer x"
         android:hint="@string/timer_name"
-        android:layout_marginVertical="10dp" />
+        android:layout_marginVertical="10dp"
+        android:inputType="text" />
 
-    <com.example.toolbox.view.AnimatedButton
+    <com.app.toolbox.view.AnimatedButton
         android:id="@+id/start_timer_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:text="@string/set"
+        android:text="@string/start"
         android:textSize="20sp"
         android:layout_gravity="center"
         android:layout_marginTop="40dp" />

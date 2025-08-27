@@ -3,15 +3,15 @@ plugins {
 }
 
 android {
-    namespace 'com.game.toolbox'
+    namespace 'com.app.toolbox'
     compileSdk 35
 
     defaultConfig {
-        applicationId "com.game.toolbox"
+        applicationId "com.app.toolbox"
         minSdk 30 // 25
         targetSdk 35
-        versionCode 4
-        versionName "4.1.6"
+        versionCode 5
+        versionName "5.1.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -32,11 +32,11 @@ dependencies {
     implementation 'androidx.viewpager2:viewpager2:1.0.0' // view pager
     implementation 'com.google.android.material:material:1.11.0' // tab layout
 
-    implementation 'com.google.mlkit:barcode-scanning:17.2.0'
-    implementation 'androidx.camera:camera-core:1.1.0'
-    implementation 'androidx.camera:camera-camera2:1.1.0'
-    implementation 'androidx.camera:camera-lifecycle:1.1.0'
-    implementation 'androidx.camera:camera-view:1.0.0-alpha31'
+//    implementation 'com.google.mlkit:barcode-scanning:17.2.0'
+//    implementation 'androidx.camera:camera-core:1.1.0'
+//    implementation 'androidx.camera:camera-camera2:1.1.0'
+//    implementation 'androidx.camera:camera-lifecycle:1.1.0'
+//    implementation 'androidx.camera:camera-view:1.0.0-alpha31'
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.fragment:fragment:1.6.2'

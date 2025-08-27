@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.example.toolbox.view.TitleView
+    <com.app.toolbox.view.TitleView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/item_notepad" />
@@ -12,8 +12,6 @@
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/notepad_fragment_container"
         android:layout_width="match_parent"
-        android:layout_margin="20dp"
-        android:layout_marginTop="0dp"
         android:layout_height="match_parent" >
 
     </androidx.fragment.app.FragmentContainerView>

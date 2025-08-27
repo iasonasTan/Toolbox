@@ -5,7 +5,6 @@
     <string name="stop">Παύση</string>
     <string name="delete">Διαγραφή Σημείωσης</string>
     <string name="back">Πίσω</string>
-    <string name="set">Όρισε</string>
     <string name="item_stopwatch">Χρονόμετρο</string>
     <string name="item_calculator">Αριθμομηχανή</string>
     <string name="item_notepad">Σημειοματάριο</string>
@@ -24,7 +23,14 @@
     <string name="stopwatch_running">Το χρονόμετρο τρέχει</string>
     <string name="timer_running">Το χρονόμετρο τρέχει</string>
     <string name="time">Χρόνος:</string>
+    <string name="unnamed">Ανώνυμο</string>
     <string name="time_left">Απομένει:</string>
     <string name="invalid_name">Μη έγκυρο όνομα!</string>
     <string name="invalid_name_desc">Αυτό το όνομα είναι μη έγκυρο ή όμοιο με άλλο όνομα, παρακαλώ χρησημοποιήστε ένα διαφορετικό όνομα.</string>
+    <string name="cancel">Ακύρωση</string>
+    <string name="time_is_up">Ο χρόνος τελείωσε</string>
+    <string name="timer">Χρονόμετρο:</string>
+    <string name="ended">Τελείωσε</string>
+    <string name="delete_note">Διαγραφή σημείωσης</string>
+    <string name="delete_note_desc">Είσαι σίγουρος οτι θέλεις να διαγράψεις αυτή τη σειμείωση;</string>
 </resources>

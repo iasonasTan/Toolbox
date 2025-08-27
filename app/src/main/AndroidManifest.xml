@@ -19,7 +19,8 @@
         tools:targetApi="31">
 
         <activity
-            android:name="com.example.toolbox.MainActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:name="com.app.toolbox.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,21 +29,11 @@
         </activity>
 
         <service
-            android:name="com.example.toolbox.fragment.StopwatchFragment$TimerService"
+            android:name="com.app.toolbox.fragment.stopwatch.TimerService"
             android:foregroundServiceType="dataSync"
             android:exported="false" />
+        <service android:name="com.app.toolbox.fragment.stopwatch.BroadcastSenderService" android:exported="false" />
 
-        <service
-            android:name="com.example.toolbox.fragment.TimerFragment$CountDownService"
-            android:foregroundServiceType="dataSync"
-            android:exported="false" />
-
-        <service
-            android:name="com.example.toolbox.fragment.TimerFragment$Timer$BroadcastManagerService"
-            android:exported="false" />
-
-        <service
-            android:name="com.example.toolbox.fragment.StopwatchFragment$BroadcastSenderService"
-            android:exported="false" />
+        <receiver android:name="com.app.toolbox.fragment.timer.StopTimerReceiver" android:exported="false"/>
     </application>
 </manifest>
