@@ -8,7 +8,6 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class StoringLinearLayout extends LinearLayout {
@@ -26,11 +25,13 @@ public class StoringLinearLayout extends LinearLayout {
         super(context, attrs, defStyleAttr);
     }
 
+    @SuppressWarnings("unused")
     public StoringLinearLayout(Context context, List<String> namesList) {
         this(context);
         setNamesList(namesList);
     }
 
+    @SuppressWarnings("unused")
     public StoringLinearLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }

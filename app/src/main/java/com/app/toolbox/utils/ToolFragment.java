@@ -7,11 +7,9 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.app.toolbox.MainActivity;
-import com.app.toolbox.R;
 import com.app.toolbox.view.navigation.Navigable;
 import com.app.toolbox.view.navigation.NavigationItemView;
 

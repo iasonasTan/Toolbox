@@ -15,8 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.app.toolbox.fragment.CalculatorFragment;
-import com.app.toolbox.fragment.notepad.NotepadFragment;
 import com.app.toolbox.fragment.RNGFragment;
+import com.app.toolbox.fragment.notepad.NotepadFragment;
 import com.app.toolbox.fragment.stopwatch.StopwatchFragment;
 import com.app.toolbox.fragment.timer.TimerFragment;
 import com.app.toolbox.utils.ToolFragment;
@@ -31,8 +31,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.Inet4Address;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
