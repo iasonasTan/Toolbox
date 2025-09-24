@@ -46,5 +46,6 @@
     <string name="ended">ended.</string>
     <string name="delete_note">Delete Note</string>
     <string name="delete_note_desc">Are you sure you want to delete this note?</string>
+    <string name="add_a_timer">add a timer</string>
 
 </resources>

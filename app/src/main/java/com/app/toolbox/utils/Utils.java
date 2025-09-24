@@ -95,7 +95,7 @@ public abstract class Utils {
         public void onReceive(Context context, Intent intent) {
             String action=intent.getAction();
             if(receivers_map.containsKey(action))
-                // noinspection allg
+                // noinspection all
                 receivers_map.get(action).onReceive(context);
             else
                 throw new NoSuchElementException(action+" not found");

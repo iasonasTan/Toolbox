@@ -26,6 +26,7 @@
         android:layout_margin="40dp"
         android:layout_centerInParent="true"
         android:layout_alignParentBottom="true"
+        android:contentDescription="@string/add_a_timer"
         app:srcCompat="@drawable/add_icon"
         app:tint="@color/black"
         app:backgroundTint="@color/lightGray"
