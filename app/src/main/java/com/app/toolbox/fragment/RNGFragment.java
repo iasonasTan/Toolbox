@@ -26,7 +26,7 @@ public class RNGFragment extends ToolFragment {
 
     @Override
     protected NavigationItemView createNavigationItem(Context context) {
-        return new NavigationItemView(context, R.drawable.random_number);
+        return new NavigationItemView(context, R.drawable.rng_icon);
     }
 
     @Nullable

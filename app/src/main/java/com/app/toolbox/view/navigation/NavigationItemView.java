@@ -55,11 +55,8 @@ public class NavigationItemView extends LinearLayout {
     public void setCurrent(boolean curr) {
         final float SCALE=curr?1.2f:1f;
         imageView.animate()
-                .scaleX(SCALE)
-                .scaleY(SCALE)
-                .setDuration(125)
-                .start();
-
+                .scaleX(SCALE).scaleY(SCALE)
+                .setDuration(125).start();
         try {
             myInvalidate();
             myRequestLayout();

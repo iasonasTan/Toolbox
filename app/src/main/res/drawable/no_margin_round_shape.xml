@@ -9,7 +9,7 @@
 
         <shape>
             <corners android:radius="40dp" />
-            <solid android:color="@color/dark_blue" />
+            <solid android:color="@color/darkBlue" />
         </shape>
     </item>
 

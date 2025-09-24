@@ -8,12 +8,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.toolbox.R;
+import com.app.toolbox.view.storing.Named;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-public class ItemView extends LinearLayout {
+public class ItemView extends LinearLayout implements Named {
     private TextView title_view;
     private TextView contentPreview_view;
     private ImageButton delete_button;
@@ -30,13 +27,13 @@ public class ItemView extends LinearLayout {
         super(context, attrs);
     }
 
-    @SuppressWarnings("unused")
-    public void focus() {
-        ScheduledExecutorService executor= Executors.newSingleThreadScheduledExecutor();
-        setBackgroundResource(R.drawable.round_focused_border);
-        executor.schedule(() -> setBackgroundResource(R.drawable.background_with_border), 400, TimeUnit.MILLISECONDS);
-        executor.shutdown();
-    }
+//    @SuppressWarnings("unused")
+//    public void focus() {
+//        ScheduledExecutorService executor= Executors.newSingleThreadScheduledExecutor();
+//        setBackgroundResource(R.drawable.round_focused_border);
+//        executor.schedule(() -> setBackgroundResource(R.drawable.background_with_border), 400, TimeUnit.MILLISECONDS);
+//        executor.shutdown();
+//    }
 
     public void setOnDeleteListener(OnClickListener li){
         delete_button.setOnClickListener(li);
@@ -56,5 +53,10 @@ public class ItemView extends LinearLayout {
 
     public String getContent() {
         return contentPreview_view.getText().toString();
+    }
+
+    @Override
+    public String getName() {
+        return getTitle();
     }
 }

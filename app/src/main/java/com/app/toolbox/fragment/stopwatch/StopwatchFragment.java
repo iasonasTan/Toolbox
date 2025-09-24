@@ -134,7 +134,7 @@ public class StopwatchFragment extends ToolFragment {
             requireContext().startForegroundService(serviceIntent);
         });
         reset_button.setOnClickListener(v -> {
-            setUiState(StateType.PAUSED.name());
+            setUiState(StateType.BEGINNING.name());
             serviceIntent.setAction("RESET_TIMER");
             requireContext().startForegroundService(serviceIntent);
         });

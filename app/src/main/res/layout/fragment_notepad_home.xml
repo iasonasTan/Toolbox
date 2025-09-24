@@ -8,17 +8,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <com.app.toolbox.view.storing.StoringLinearLayout
             android:id="@+id/notes_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-        </LinearLayout>
+        </com.app.toolbox.view.storing.StoringLinearLayout>
 
     </ScrollView>
-
-<!--  TODO HIDE NO-NOTES-FOUND MESSAGE EFFICIENT  -->
 
     <TextView
         android:id="@+id/message"
@@ -34,12 +32,13 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
-        android:background="@drawable/background_with_border"
         android:clickable="true"
         android:layout_margin="25dp"
         android:contentDescription="@string/new_note_fab"
         android:focusable="true"
-        android:src="@drawable/add_icon"
+        app:srcCompat="@drawable/add_icon"
+        app:tint="@color/black"
+        app:backgroundTint="@color/lightGray"
         app:useCompatPadding="false"
         app:fabSize="normal" />
 

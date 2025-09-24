@@ -42,7 +42,7 @@
         android:layout_marginEnd="5dp"
         android:scaleType="fitCenter"
         android:id="@+id/deleteNote_button"
-        android:background="@color/blue"
+        android:background="@android:color/transparent"
         android:contentDescription="@string/delete"
         android:src="@drawable/delete_icon" />
 

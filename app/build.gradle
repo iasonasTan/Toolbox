@@ -10,8 +10,8 @@ android {
         applicationId "com.app.toolbox"
         minSdk 30 // 25
         targetSdk 35
-        versionCode 5
-        versionName "5.1.7"
+        versionCode 6
+        versionName "6.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
