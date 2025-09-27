@@ -75,12 +75,15 @@ public class TimerService extends Service {
                 sUntilStartTime = 0;
                 sStartTime=-1;
                 sendTime(0);
+                stopForeground(true);
+                stopSelf();
                 break;
             case "START_TIMER":
                 sStartTime = System.currentTimeMillis();
                 mHandler.post(mTimeCounter_run);
                 mHandler.post(mUpdateNotification_run);
                 sIsRunning = true;
+                mUpdateNotification_run.run();
                 break;
             case "STOP_TIMER":
                 sUntilStartTime += sFromStartTime;
@@ -88,8 +91,6 @@ public class TimerService extends Service {
                 mHandler.removeCallbacks(mUpdateNotification_run);
                 sIsRunning = false;
                 mUpdateNotification_cons.accept(sUntilStartTime);
-                stopForeground(true);
-                stopSelf();
                 break;
         }
         return START_STICKY;

@@ -13,7 +13,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 @SuppressWarnings("unused")
-public abstract class Utils {
+public final class Utils {
+    private Utils(){}
 
     /**
      * Method that converts milliseconds as long to formated string.

@@ -45,10 +45,12 @@ public class EditorFragment extends Fragment {
             } else {
                 mFileToOpen = new File(filePath);
             }
-//            Log.d("broadcast_test", "Intent received by broadcast receiver on EditorFragment");
-//            Intent intent1 = new Intent(NotepadFragment.ACTION_CHANGE_FRAGMENT).setPackage(context.getPackageName());
-//            intent1.putExtra("fragmentName", NotepadFragment.FRAGMENT_EDITOR);
-//            context.sendBroadcast(intent1);
+//            new Handler(context.getMainLooper()).post(() -> {
+//                    Log.d("broadcast_test", "Intent received by broadcast receiver on EditorFragment");
+//                    Intent intent1 = new Intent(NotepadFragment.ACTION_CHANGE_FRAGMENT).setPackage(context.getPackageName());
+//                    intent1.putExtra("fragmentName", NotepadFragment.FRAGMENT_EDITOR);
+//                    context.sendBroadcast(intent1);
+//            });
         }
     };
 

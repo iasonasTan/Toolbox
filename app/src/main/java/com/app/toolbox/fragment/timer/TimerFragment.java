@@ -58,13 +58,10 @@ public class TimerFragment extends ToolFragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FragmentTransaction transaction= getChildFragmentManager().beginTransaction();
         transaction.add(R.id.timer_container, timerSetterFragment).hide(timerSetterFragment);
-        transaction.add(R.id.timer_container, timersFragment).hide(timersFragment);
-        transaction.commit();
+        transaction.add(R.id.timer_container, timersFragment).hide(timersFragment).commit();
 
         return inflater.inflate(R.layout.fragment_timer_root, container, false);
     }

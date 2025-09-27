@@ -93,6 +93,7 @@ public class HomeFragment extends Fragment {
     private ItemView getNoteView(File file) {
         ItemView nv = new ItemView(getContext());
         nv.setClickable(true);
+        Log.d("intent_stuff", "creating note with file path "+file.getAbsolutePath());
         nv.setOnClickListener(v -> {
             // switch to editor with it's data
             Log.d("broadcast_stats", "Sending intent to open file "+file.getAbsolutePath());
@@ -113,7 +114,7 @@ public class HomeFragment extends Fragment {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String firstLine = reader.readLine();
             if (firstLine != null) {
-                nv.setContent(title);
+                nv.setContent(firstLine);
             }
             reader.close();
         } catch (IOException e) {

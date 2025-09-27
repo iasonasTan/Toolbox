@@ -77,7 +77,8 @@ public class NotepadFragment extends ToolFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getChildFragmentManager().beginTransaction().replace(R.id.notepad_fragment_container, mHome).commit();
+        getChildFragmentManager().beginTransaction().add(R.id.notepad_fragment_container, mEditor).show(mEditor).commit();
+        getChildFragmentManager().beginTransaction().hide(mEditor).replace(R.id.notepad_fragment_container, mHome).commit();
         ContextCompat.registerReceiver(requireContext(), mCommandReceiver, new IntentFilter(NotepadFragment.ACTION_CHANGE_FRAGMENT), ContextCompat.RECEIVER_NOT_EXPORTED);
     }
 
