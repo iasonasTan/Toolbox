@@ -19,6 +19,7 @@ import com.app.toolbox.fragment.RNGFragment;
 import com.app.toolbox.fragment.notepad.NotepadFragment;
 import com.app.toolbox.fragment.stopwatch.StopwatchFragment;
 import com.app.toolbox.fragment.timer.TimerFragment;
+import com.app.toolbox.fragment.timer.TimerService;
 import com.app.toolbox.utils.ToolFragment;
 import com.app.toolbox.view.navigation.NavigationItemView;
 import com.app.toolbox.view.navigation.NavigationView;
@@ -70,6 +71,18 @@ public final class MainActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         storeFragmentUsages();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        TimerService.sIsActivityInForeground = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        TimerService.sIsActivityInForeground = true;
     }
 
     private void storeFragmentUsages() {
@@ -164,7 +177,7 @@ public final class MainActivity extends AppCompatActivity {
         new Thread(this::checkForUpdates).start();
     }
 
-    public void checkForUpdates() {
+    private void checkForUpdates() {
         try {
             Log.d("net-test", "Checking for updates...");
             // noinspection all

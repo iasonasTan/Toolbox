@@ -29,18 +29,8 @@ public class StopwatchFragment extends ToolFragment {
     private Button start_button, reset_button, stop_button;
     private TextView timeView;
 
-    @Override
-    protected String fragmentName() {
-        return "STOPWATCH_FRAGMENT";
-    }
-
-    @Override
-    protected NavigationItemView createNavigationItem(Context context) {
-        return new NavigationItemView(context, R.drawable.stopwatch_icon);
-    }
-
     // listening on event STOPWATCH_UPDATE and names of each constant of enum fragment.stopwatch.StateType
-    private final BroadcastReceiver broadcastReceiver =new BroadcastReceiver() {
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = Objects.requireNonNull(intent.getAction());
@@ -52,6 +42,16 @@ public class StopwatchFragment extends ToolFragment {
             }
         }
     };
+
+    @Override
+    protected String fragmentName() {
+        return "STOPWATCH_FRAGMENT";
+    }
+
+    @Override
+    protected NavigationItemView createNavigationItem(Context context) {
+        return new NavigationItemView(context, R.drawable.stopwatch_icon);
+    }
 
     private void initNotifications() {
         NotificationChannel channel = new NotificationChannel("stopwatch_channel", "Stopwatch Notifications", NotificationManager.IMPORTANCE_LOW);
@@ -73,11 +73,11 @@ public class StopwatchFragment extends ToolFragment {
         }
         ContextCompat.registerReceiver(requireContext(), broadcastReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
 
-        if(TimerService.sIsRunning) {
+        if(StopwatchService.sIsRunning) {
             setUiState(StateType.RUNNING.name());
         } else {
             setUiState(StateType.PAUSED.name());
-            if(TimerService.sStartTime<0) {
+            if(StopwatchService.sStartTime<0) {
                 setUiState(StateType.BEGINNING.name());
             }
         }
@@ -122,7 +122,7 @@ public class StopwatchFragment extends ToolFragment {
         timeView = view.findViewById(R.id.time_view);
         stop_button = view.findViewById(R.id.stop_button);
 
-        final Intent serviceIntent=new Intent(getActivity(), TimerService.class);
+        final Intent serviceIntent=new Intent(getActivity(), StopwatchService.class);
         start_button.setOnClickListener(v -> {
             setUiState(StateType.RUNNING.name());
             serviceIntent.setAction("START_TIMER");

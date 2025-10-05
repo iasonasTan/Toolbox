@@ -19,7 +19,7 @@ import com.app.toolbox.utils.Utils;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class TimerService extends Service {
+public class StopwatchService extends Service {
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private Runnable mTimeCounter_run, mUpdateNotification_run;
     private Consumer<Long> mUpdateNotification_cons;
@@ -60,6 +60,7 @@ public class TimerService extends Service {
                     .setContentTitle(ContextCompat.getString(getApplicationContext(), R.string.stopwatch_running))
                     .setContentIntent(Utils.createShowPendingIntent(MainActivity.getFragment(StopwatchFragment.class), getApplicationContext()))
                     .setOnlyAlertOnce(true).addAction(action).setSilent(true).setOngoing(true).addAction(action2).setSmallIcon(R.drawable.stopwatch_icon)
+                    .setOngoing(true)
                     .setContentText(ContextCompat.getString(getApplicationContext(), R.string.time) + Utils.longToTime(time_millis, false));
             startForeground(M_NOTIFICATION_ID, mTime_notification.build());
         };

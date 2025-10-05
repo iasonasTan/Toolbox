@@ -4,7 +4,8 @@
     <!-- Buttons Actions -->
     <string name="start">Start</string>
     <string name="reset">Reset</string>
-    <string name="stop">Pause</string>
+    <string name="pause">Pause</string>
+    <string name="stop">Stop</string>
     <string name="delete">Delete</string>
     <string name="back">Back</string>
     <string name="cancel">Cancel</string>
@@ -47,5 +48,6 @@
     <string name="delete_note">Delete Note</string>
     <string name="delete_note_desc">Are you sure you want to delete this note?</string>
     <string name="add_a_timer">add a timer</string>
+    <string name="timers_running">" timer(s) are running."</string>
 
 </resources>

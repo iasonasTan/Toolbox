@@ -2,7 +2,8 @@
 <resources>
     <string name="start">Начать</string>
     <string name="reset">Сбросить</string>
-    <string name="stop">Пауза</string>
+    <string name="stop">Останавливаться</string>
+    <string name="pause">Пауза</string>
     <string name="delete">Удалить заметку</string>
     <string name="back">Назад</string>
     <string name="item_stopwatch">Секундомер</string>

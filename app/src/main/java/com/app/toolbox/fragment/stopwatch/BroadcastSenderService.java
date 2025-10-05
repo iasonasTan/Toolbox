@@ -21,7 +21,7 @@ public final class BroadcastSenderService extends Service {
             // android is testing, or logic error
             return START_STICKY;
 
-        Intent serviceIntent = new Intent(getApplicationContext(), TimerService.class);
+        Intent serviceIntent = new Intent(getApplicationContext(), StopwatchService.class);
         switch (Objects.requireNonNull(intent.getAction())) {
             case "STOP":
                 serviceIntent.setAction("STOP_TIMER");

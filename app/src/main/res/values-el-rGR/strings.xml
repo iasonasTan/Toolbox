@@ -2,7 +2,8 @@
 <resources>
     <string name="start">Ξεκίνα</string>
     <string name="reset">Επαναφορά</string>
-    <string name="stop">Παύση</string>
+    <string name="stop">Σταμάτα</string>
+    <string name="pause">Παύση</string>
     <string name="delete">Διαγραφή Σημείωσης</string>
     <string name="back">Πίσω</string>
     <string name="item_stopwatch">Χρονόμετρο</string>

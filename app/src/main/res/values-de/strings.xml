@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Toolbox</string>
 
     <!-- Buttons Actions -->
     <string name="start">Start</string>
     <string name="reset">Zurücksetzen</string>
-    <string name="stop">Pause</string>
+    <string name="stop">Stoppen</string>
+    <string name="pause">Pause</string>
     <string name="delete">Löschen</string>
     <string name="back">Zurück</string>
     <string name="cancel">Abbrechen</string>
-    <string name="ok" translatable="false">OK</string>
 
     <!-- Fragments -->
     <string name="item_stopwatch">Stoppuhr</string>
