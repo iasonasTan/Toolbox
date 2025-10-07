@@ -38,10 +38,6 @@ public class NavigationView extends LinearLayout {
         super.onDraw(canvas);
     }
 
-    public void addItem(NavigationItemView item) {
-        addView(item);
-    }
-
     public void replaceItemWithSameIcon(NavigationItemView newNavigationItem) {
         for (int i = 0; i < getChildCount(); i++) {
             View child=getChildAt(i);
