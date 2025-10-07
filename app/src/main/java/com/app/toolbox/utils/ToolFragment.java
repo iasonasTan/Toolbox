@@ -1,6 +1,7 @@
 package com.app.toolbox.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,12 +32,15 @@ public abstract class ToolFragment extends Fragment implements Comparable<ToolFr
     }
 
     @Override
-    public final NavigationItemView getNavItem(MainActivity mainActivity) throws IllegalArgumentException {
+    public final NavigationItemView getNavItem(Context context) {
         if (navigationItem == null) {
             Log.d("initialization_spoil", "Initializing new navigation item view for fragment "+this);
-            navigationItem = createNavigationItem(mainActivity);
-            mainActivity.bnv.replaceItemWithSameIcon(navigationItem);
-            navigationItem.setOnClickListener(av -> mainActivity.setFragment(MainActivity.getFragment(getClass())));
+            navigationItem = createNavigationItem(context);
+            navigationItem.setOnClickListener(av -> {
+                Intent intent = new Intent(MainActivity.SWITCH_PAGE).setPackage(context.getPackageName());
+                intent.putExtra("pageName", name());
+                context.sendBroadcast(intent);
+            });
         }
         return navigationItem;
     }
@@ -61,7 +65,7 @@ public abstract class ToolFragment extends Fragment implements Comparable<ToolFr
     @Override
     public void onResume() {
         super.onResume();
-        getNavItem((MainActivity) requireActivity()).setCurrent(true);
+        getNavItem(requireContext()).setCurrent(true);
         var scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         Log.d("action_spoil", "Check will start in 3 secs");
         scheduledExecutorService.schedule(() -> {
@@ -86,7 +90,7 @@ public abstract class ToolFragment extends Fragment implements Comparable<ToolFr
     @Override
     public void onPause() {
         super.onPause();
-        getNavItem((MainActivity)requireActivity()).setCurrent(false);
+        getNavItem(requireContext()).setCurrent(false);
     }
 
     public final void setUsages(long v) {

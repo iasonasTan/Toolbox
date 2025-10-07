@@ -58,7 +58,7 @@
             android:layout_margin="2dp"
             android:layout_height="60dp"
             android:background="@drawable/background_with_border"
-            android:text="@string/stop"
+            android:text="@string/pause"
             android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="gone" />

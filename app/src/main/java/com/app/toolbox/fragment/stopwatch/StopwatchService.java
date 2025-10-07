@@ -12,7 +12,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
-import com.app.toolbox.MainActivity;
 import com.app.toolbox.R;
 import com.app.toolbox.utils.Utils;
 
@@ -51,14 +50,14 @@ public class StopwatchService extends Service {
         mUpdateNotification_cons = time_millis -> {
             NotificationCompat.Action action, action2 = null;
             if (sIsRunning) {
-                action = new NotificationCompat.Action(R.drawable.delete_icon, ContextCompat.getString(getApplicationContext(), R.string.stop), getPendingIntent(ActionType.STOP));
+                action = new NotificationCompat.Action(R.drawable.delete_icon, ContextCompat.getString(getApplicationContext(), R.string.pause), getPendingIntent(ActionType.STOP));
             } else {
                 action = new NotificationCompat.Action(R.drawable.timer_icon, ContextCompat.getString(getApplicationContext(), R.string.start), getPendingIntent(ActionType.START));
                 action2 = new NotificationCompat.Action(R.drawable.delete_icon, ContextCompat.getString(getApplicationContext(), R.string.reset), getPendingIntent(ActionType.RESET));
             }
             mTime_notification = new NotificationCompat.Builder(getApplicationContext(), "stopwatch_channel")
                     .setContentTitle(ContextCompat.getString(getApplicationContext(), R.string.stopwatch_running))
-                    .setContentIntent(Utils.createShowPendingIntent(MainActivity.getFragment(StopwatchFragment.class), getApplicationContext()))
+                    .setContentIntent(Utils.createShowPagePendingIntent("STOPWATCH_FRAGMENT", getApplicationContext()))
                     .setOnlyAlertOnce(true).addAction(action).setSilent(true).setOngoing(true).addAction(action2).setSmallIcon(R.drawable.stopwatch_icon)
                     .setOngoing(true)
                     .setContentText(ContextCompat.getString(getApplicationContext(), R.string.time) + Utils.longToTime(time_millis, false));

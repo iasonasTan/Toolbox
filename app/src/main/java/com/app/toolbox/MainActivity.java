@@ -2,7 +2,10 @@ package com.app.toolbox;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -11,7 +14,12 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.app.toolbox.fragment.CalculatorFragment;
@@ -20,6 +28,7 @@ import com.app.toolbox.fragment.notepad.NotepadFragment;
 import com.app.toolbox.fragment.stopwatch.StopwatchFragment;
 import com.app.toolbox.fragment.timer.TimerFragment;
 import com.app.toolbox.fragment.timer.TimerService;
+import com.app.toolbox.utils.IntentContentsMissingException;
 import com.app.toolbox.utils.ToolFragment;
 import com.app.toolbox.view.navigation.NavigationItemView;
 import com.app.toolbox.view.navigation.NavigationView;
@@ -40,10 +49,20 @@ import java.util.NoSuchElementException;
 import java.util.Properties;
 
 public final class MainActivity extends AppCompatActivity {
+    public static final String SWITCH_PAGE = "toolbox.mainActivity.switchPage";
     private static final String USAGES_FILE_NAME = "usages.dat";
     public NavigationView bnv;
-    public static List<ToolFragment> fragments;
+    private List<ToolFragment> fragments;
     private ViewPager2 vpg2;
+
+    private final BroadcastReceiver mSwitchPageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String name = intent.getStringExtra("pageName");
+            if(name == null) throw new IntentContentsMissingException();
+            setFragmentByName(name);
+        }
+    };
 
     public void setFragmentByName(String requiredName) {
         for(ToolFragment toolFragment: fragments) {
@@ -57,7 +76,7 @@ public final class MainActivity extends AppCompatActivity {
         throw new NoSuchElementException("could not found item with name "+requiredName+ "\n"+ "Available names are:\n"+ codes);
     }
 
-    public static ToolFragment getFragment(Class<? extends ToolFragment> clazz) {
+    public ToolFragment getFragment(Class<? extends ToolFragment> clazz) {
         if (clazz==null) throw new NullPointerException("Class is null.");
         for (ToolFragment fragment: fragments) {
             if (fragment.getClass().isAssignableFrom(clazz)) {
@@ -151,8 +170,15 @@ public final class MainActivity extends AppCompatActivity {
         fragments.forEach(frag -> {
             frag.removeNavItem();
             NavigationItemView nv=frag.getNavItem(this);
-            bnv.addItem(nv);
+            bnv.replaceItemWithSameIcon(nv);
+            //bnv.addItem(nv);
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getApplicationContext().unregisterReceiver(mSwitchPageReceiver);
     }
 
     @Override
@@ -161,6 +187,7 @@ public final class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         EdgeToEdge.enable(this);
 
+        ContextCompat.registerReceiver(getApplicationContext(), mSwitchPageReceiver, new IntentFilter(SWITCH_PAGE), ContextCompat.RECEIVER_NOT_EXPORTED);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU&&
                 checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
 
@@ -237,4 +264,21 @@ public final class MainActivity extends AppCompatActivity {
         vpg2.setCurrentItem(fragments.indexOf(fragment));
     }
 
+    public class ToolAdapter extends FragmentStateAdapter {
+
+        public ToolAdapter(@NonNull FragmentActivity fragmentActivity) {
+            super(fragmentActivity);
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return fragments.get(position);
+        }
+
+        @Override
+        public int getItemCount() {
+            return fragments.size();
+        }
+    }
 }

@@ -34,4 +34,6 @@
     <string name="ended">Τελείωσε</string>
     <string name="delete_note">Διαγραφή σημείωσης</string>
     <string name="delete_note_desc">Είσαι σίγουρος οτι θέλεις να διαγράψεις αυτή τη σειμείωση;</string>
+    <string name="add_a_timer">Πρόσθεσε ένα χρονόμετρο</string>
+    <string name="timers_running">Χρονόμετρο/α τρέχουν</string>
 </resources>

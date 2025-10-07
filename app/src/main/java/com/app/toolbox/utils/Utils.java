@@ -51,10 +51,10 @@ public final class Utils {
      * @param fragToShow the fragment you want to show
      * @return {@link PendingIntent} which starts activity and shows the fragment passed
      */
-    public static PendingIntent createShowPendingIntent(ToolFragment fragToShow, Context context) {
+    public static PendingIntent createShowPagePendingIntent(String fragToShow, Context context) {
         Intent intent = new Intent(context, MainActivity.class);
-        intent.setAction(fragToShow.name());
-        intent.putExtra("FRAGMENT_NAME", fragToShow.name());
+        intent.setAction(fragToShow);
+        intent.putExtra("FRAGMENT_NAME", fragToShow);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
     }

@@ -1,7 +1,7 @@
 package com.app.toolbox.view.navigation;
 
-import com.app.toolbox.MainActivity;
+import android.content.Context;
 
 public interface Navigable {
-    NavigationItemView getNavItem(MainActivity mainActivity) throws IllegalArgumentException;
+    NavigationItemView getNavItem(Context context);
 }

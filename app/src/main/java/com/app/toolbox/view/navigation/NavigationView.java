@@ -54,5 +54,6 @@ public class NavigationView extends LinearLayout {
                 }
             }
         }
+        addView(newNavigationItem);
     }
 }

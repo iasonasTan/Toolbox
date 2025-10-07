@@ -46,5 +46,7 @@
     <string name="ended">beendet.</string>
     <string name="delete_note">Notiz löschen</string>
     <string name="delete_note_desc">Möchtest du diese Notiz wirklich löschen?</string>
+    <string name="add_a_timer">einen Timer hinzufügen</string>
+    <string name="timers_running">Timer laufen</string>
 
 </resources>

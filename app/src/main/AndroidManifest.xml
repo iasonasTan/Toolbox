@@ -21,9 +21,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
-        <activity
-            android:name=".fragment.timer.TimerAlertActivity"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".fragment.timer.TimerAlertActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".MainActivity"
             android:exported="true"

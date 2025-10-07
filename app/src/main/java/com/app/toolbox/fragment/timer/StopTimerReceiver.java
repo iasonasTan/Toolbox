@@ -22,6 +22,9 @@ public final class StopTimerReceiver extends BroadcastReceiver {
                 Log.d("action_spoil", "timer "+currentID+" killed!");
                 timer.terminate();
                 iter.remove();
+                Intent intent2 = new Intent(context, TimerService.class);
+                intent2.setAction(TimerService.UPDATE_TIMERS);
+                context.startForegroundService(intent2);
                 return;
             }
          }
