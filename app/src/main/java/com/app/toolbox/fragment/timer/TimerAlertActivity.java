@@ -24,6 +24,7 @@ import com.app.toolbox.utils.IntentContentsMissingException;
  */
 
 @Deprecated(forRemoval = true)
+@SuppressWarnings("all")
 public class TimerAlertActivity extends AppCompatActivity {
     static final String ACTION_SHOW_MESSAGE = "toolbox.timer.showMessageActivity";
 

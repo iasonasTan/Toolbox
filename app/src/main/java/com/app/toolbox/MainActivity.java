@@ -76,6 +76,7 @@ public final class MainActivity extends AppCompatActivity {
         throw new NoSuchElementException("could not found item with name "+requiredName+ "\n"+ "Available names are:\n"+ codes);
     }
 
+    @Deprecated(forRemoval = true)
     public ToolFragment getFragment(Class<? extends ToolFragment> clazz) {
         if (clazz==null) throw new NullPointerException("Class is null.");
         for (ToolFragment fragment: fragments) {

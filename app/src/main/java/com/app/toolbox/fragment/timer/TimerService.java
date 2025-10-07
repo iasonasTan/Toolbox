@@ -7,11 +7,9 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Icon;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -38,7 +36,6 @@ public class TimerService extends Service implements Runnable {
     static final String STOP_ALL_TIMERS = "toolbox.timerService.stopTimers";
 
     static final String SILENT_NOTIFICATION = "toolbox.timerService.notificationChannel.silent";
-    private NotificationCompat.Builder mServiceNotificationBuilder;
     private PendingIntent mStopAllTimersPendingIntent, mShowTimersPendingIntent;
 
     private static final List<Timer> sTimers =new ArrayList<>();
@@ -47,8 +44,6 @@ public class TimerService extends Service implements Runnable {
     private static boolean sRunning = true;
     private static boolean sPaused = false;
     private static boolean sStartActivity = false;
-    private static int sTimerID = -5;
-    private static String sTimerName = "unknown";
     public static boolean sIsActivityInForeground = true;
 
     @Override
@@ -103,10 +98,10 @@ public class TimerService extends Service implements Runnable {
     }
 
     void sendStatusNotification() {
-        mServiceNotificationBuilder = new NotificationCompat.Builder(getApplicationContext(), TimerService.SILENT_NOTIFICATION)
+        NotificationCompat.Builder mServiceNotificationBuilder = new NotificationCompat.Builder(getApplicationContext(), TimerService.SILENT_NOTIFICATION)
                 .setContentIntent(mShowTimersPendingIntent)
                 .setSmallIcon(R.drawable.timer_icon)
-                .setContentTitle(sTimers.size()+getString(R.string.timers_running));
+                .setContentTitle(sTimers.size() + getString(R.string.timers_running));
         if(!sTimers.isEmpty())
             mServiceNotificationBuilder.addAction(R.drawable.delete_icon, "Stop all", mStopAllTimersPendingIntent);
         startForeground(11, mServiceNotificationBuilder.build());
@@ -261,8 +256,6 @@ public class TimerService extends Service implements Runnable {
             sRingtone.play();
             Log.d("action_spoil", "Stopping timer...");
             mFinished = true;
-            sTimerName = getName();
-            sTimerID = getTimerID();
             Intent intent = new Intent(context, TimerService.class);
             intent.setAction(TimerService.UPDATE_TIMERS);
             context.startForegroundService(intent);
