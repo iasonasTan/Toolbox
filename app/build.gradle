@@ -12,7 +12,6 @@ android {
         targetSdk 36
         versionCode 6
         versionName "6.3"
-        versionName "6.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
