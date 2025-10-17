@@ -35,7 +35,6 @@ public class TimerService extends Service implements Runnable {
     static final String UPDATE_TIMERS       = "toolbox.timerService.updateTimers";
     static final String STOP_ALL_TIMERS     = "toolbox.timerService.stopTimers";
     static final String SILENT_NOTIFICATION = "toolbox.timerService.notificationChannel.silent";
-
     private PendingIntent mStopAllTimersPendingIntent, mShowTimersPendingIntent;
     private static final List<Timer> sTimers =new ArrayList<>();
 
@@ -105,6 +104,7 @@ public class TimerService extends Service implements Runnable {
         NotificationCompat.Builder mServiceNotificationBuilder = new NotificationCompat.Builder(getApplicationContext(), TimerService.SILENT_NOTIFICATION)
                 .setContentIntent(mShowTimersPendingIntent)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setSmallIcon(R.drawable.timer_icon)
                 .setContentTitle(sTimers.size() + getString(R.string.timers_running));
         if(!sTimers.isEmpty())
             mServiceNotificationBuilder.addAction(R.drawable.delete_icon, getString(R.string.stop_all), mStopAllTimersPendingIntent);
