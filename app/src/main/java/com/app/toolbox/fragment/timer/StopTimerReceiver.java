@@ -10,9 +10,12 @@ import java.util.NoSuchElementException;
 
 // ALWAYS PUBLIC AND REGISTERED IN MANIFEST
 public final class StopTimerReceiver extends BroadcastReceiver {
+    static final String TIMER_ID_EXTRA = "toolbox.timer.timerID";
+    static final String ACTION_STOP_TIMER   = "toolbox.timer.stopTimer";
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        final int REQUIRED_ID = intent.getIntExtra("timer_id", 0);
+        final int REQUIRED_ID = intent.getIntExtra(TIMER_ID_EXTRA, 0);
         Log.d("action_spoil", "searching for timer with ID="+REQUIRED_ID);
         Iterator<TimerService.Timer> iter= TimerService.getTimers().iterator();
         while(iter.hasNext()) {

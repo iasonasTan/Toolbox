@@ -48,5 +48,11 @@
     <string name="delete_note_desc">Möchtest du diese Notiz wirklich löschen?</string>
     <string name="add_a_timer">einen Timer hinzufügen</string>
     <string name="timers_running">Timer laufen</string>
+    <string name="share">Aktie</string>
+    <string name="share_this_note">Notiz teilen</string>
+    <string name="save">speichern</string>
+    <string name="show_milliseconds_on_stopwatch">Millisekunden auf der Stoppuhr anzeigen.</string>
+    <string name="settings_udpated">Einstellungen aktualisiert</string>
+    <string name="stop_all">Hör auf mit allem</string>
 
 </resources>

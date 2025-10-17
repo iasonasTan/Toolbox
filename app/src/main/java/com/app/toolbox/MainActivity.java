@@ -9,7 +9,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -23,10 +22,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.app.toolbox.fragment.CalculatorFragment;
-import com.app.toolbox.fragment.RNGFragment;
+import com.app.toolbox.fragment.RandNumGenFragment;
 import com.app.toolbox.fragment.notepad.NotepadFragment;
-import com.app.toolbox.fragment.stopwatch.StopwatchFragment;
-import com.app.toolbox.fragment.timer.TimerFragment;
+import com.app.toolbox.fragment.stopwatch.StopwatchRootFragment;
+import com.app.toolbox.fragment.timer.TimerRootFragment;
 import com.app.toolbox.fragment.timer.TimerService;
 import com.app.toolbox.utils.IntentContentsMissingException;
 import com.app.toolbox.utils.ToolFragment;
@@ -46,25 +45,42 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Properties;
 
 public final class MainActivity extends AppCompatActivity {
-    public static final String SWITCH_PAGE = "toolbox.mainActivity.switchPage";
+    public static final String SWITCH_PAGE       = "toolbox.mainActivity.switchPage";
+    public static final String PAGE_NAME_EXTRA   = "toolbox.mainActivity.pageName";
+    public static final String CONFIG_VIEW_PAGER = "toolbox.mainActivity.configViewPager";
+    public static final String ENABLE_USER_INPUT = "toolbox.mainActivity.scrollingEnabled";
+    public static final String ACTION_SHOW_PAGE  = "toolbox.mainActivity.showPage";
     private static final String USAGES_FILE_NAME = "usages.dat";
     public NavigationView bnv;
     private List<ToolFragment> fragments;
-    private ViewPager2 vpg2;
+    private ViewPager2 mViewPager2;
 
+    // listens on event CHANGE_PAGE and CONFIG_VIEW_PAGER
     private final BroadcastReceiver mSwitchPageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String name = intent.getStringExtra("pageName");
-            if(name == null) throw new IntentContentsMissingException();
-            setFragmentByName(name);
+            String action = Objects.requireNonNull(intent.getAction());
+            switch (action) {
+                case SWITCH_PAGE:
+                    String name = intent.getStringExtra(PAGE_NAME_EXTRA);
+                    if (name == null) throw new IntentContentsMissingException();
+                    setFragmentByName(name);
+                    break;
+                case CONFIG_VIEW_PAGER:
+                    boolean enableScrolling = intent.getBooleanExtra(ENABLE_USER_INPUT, true);
+                    mViewPager2.setUserInputEnabled(enableScrolling);
+                    break;
+                default:
+                    throw new IntentContentsMissingException();
+            }
         }
     };
 
-    public void setFragmentByName(String requiredName) {
+    public void setFragmentByName(final String requiredName) {
         for(ToolFragment toolFragment: fragments) {
             if(requiredName.equals(toolFragment.name())) {
                 setFragment(toolFragment);
@@ -126,8 +142,8 @@ public final class MainActivity extends AppCompatActivity {
 
     private void initFragments() {
         List<ToolFragment> loc_fragments=new ArrayList<>();
-        Collections.addAll(loc_fragments, new TimerFragment(), new StopwatchFragment(),
-                new CalculatorFragment(), new NotepadFragment(), new RNGFragment());
+        Collections.addAll(loc_fragments, new TimerRootFragment(), new StopwatchRootFragment(),
+                new CalculatorFragment(), new NotepadFragment(), new RandNumGenFragment());
         loadFragmentUsages(loc_fragments);
 
         // sort fragments by usages
@@ -135,8 +151,8 @@ public final class MainActivity extends AppCompatActivity {
         fragments=Collections.unmodifiableList(loc_fragments);
 
         ToolAdapter fragmentStateAdapter = new ToolAdapter(this);
-        vpg2=findViewById(R.id.fragment_adapter);
-        vpg2.setAdapter(fragmentStateAdapter);
+        mViewPager2 =findViewById(R.id.fragment_adapter);
+        mViewPager2.setAdapter(fragmentStateAdapter);
     }
 
     private void loadFragmentUsages(List<ToolFragment> loc_fragments) {
@@ -188,10 +204,11 @@ public final class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         EdgeToEdge.enable(this);
 
-        ContextCompat.registerReceiver(getApplicationContext(), mSwitchPageReceiver, new IntentFilter(SWITCH_PAGE), ContextCompat.RECEIVER_NOT_EXPORTED);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU&&
-                checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SWITCH_PAGE);
+        intentFilter.addAction(CONFIG_VIEW_PAGER);
+        ContextCompat.registerReceiver(getApplicationContext(), mSwitchPageReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
+        if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
         }
         initFragments();
@@ -256,13 +273,12 @@ public final class MainActivity extends AppCompatActivity {
 
     private void handleIntent(Intent intent) {
         if(intent==null) return;
-
-        String name=intent.getStringExtra("FRAGMENT_NAME");
+        String name=intent.getStringExtra(PAGE_NAME_EXTRA);
         if(name!=null) setFragmentByName(name);
     }
 
     public void setFragment(ToolFragment fragment) {
-        vpg2.setCurrentItem(fragments.indexOf(fragment));
+        mViewPager2.setCurrentItem(fragments.indexOf(fragment));
     }
 
     public class ToolAdapter extends FragmentStateAdapter {

@@ -27,6 +27,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="2"
             android:layout_gravity="center"
             android:id="@+id/content_preview_view"
             android:textColor="@color/white"

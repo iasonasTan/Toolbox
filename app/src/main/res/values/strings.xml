@@ -49,5 +49,12 @@
     <string name="delete_note_desc">Are you sure you want to delete this note?</string>
     <string name="add_a_timer">add a timer</string>
     <string name="timers_running">" timer(s) are running."</string>
+    <string name="share">Share</string>
+    <string name="share_this_note">Share this note</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="save">save</string>
+    <string name="show_milliseconds_on_stopwatch">Show milliseconds on stopwatch.</string>
+    <string name="settings_udpated">Settings udpated</string>
+    <string name="stop_all">Stop all</string>
 
 </resources>

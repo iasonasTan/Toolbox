@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 public class NavigationItemView extends LinearLayout {
-    private final ImageView imageView=new ImageView(getContext());
+    private final ImageView imageView = new ImageView(getContext());
     private final Vibrator mVibrator;
     private int mImageSrcId;
 

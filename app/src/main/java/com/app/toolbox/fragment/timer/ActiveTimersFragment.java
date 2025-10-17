@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import com.app.toolbox.R;
 
 
-public class ActiveTimersFragment extends TimerFragment.InnerFragment {
+public class ActiveTimersFragment extends TimerRootFragment.InnerFragment {
     public LinearLayout timersList;
 
     @Nullable
@@ -33,8 +33,8 @@ public class ActiveTimersFragment extends TimerFragment.InnerFragment {
     private final class OnAddTimerPressed implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(TimerFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
-            intent.putExtra("fragmentName", TimerFragment.SETTER_FRAGMENT);
+            Intent intent = new Intent(TimerRootFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
+            intent.putExtra(TimerRootFragment.FRAGMENT_NAME_EXTRA, TimerRootFragment.SETTER_FRAGMENT);
             requireContext().sendBroadcast(intent);
         }
     }

@@ -23,21 +23,20 @@ import java.util.List;
 import java.util.Objects;
 
 public class NotepadFragment extends ToolFragment {
+    static final String STRING_ID = "toolbox.page.NOTEPAD_PAGE";
+    static final String FRAGMENT_HOME          = "toolbox.notepad.showHome";
+    static final String FRAGMENT_EDITOR        = "toolbox.notepad.showEditor";
+    static final String ACTION_CHANGE_FRAGMENT = "toolbox.notepad.changeFragment";
+
     static List<String> usedNames;
 
-    private final HomeFragment mHome =new HomeFragment();
-    static final String FRAGMENT_HOME = "notepad.fragment.home";
-
-    private final EditorFragment mEditor =new EditorFragment();
-    static final String FRAGMENT_EDITOR = "notepad.fragment.editor";
-
-    static final String ACTION_CHANGE_FRAGMENT = "CHANGE_NOTEPAD_FRAGMENT";
-    static final String ACTION_OPEN_FILE = "OPEN_FILE_IN_EDITOR";
+    private final HomeFragment mHome     = new HomeFragment();
+    private final EditorFragment mEditor = new EditorFragment();
 
     private final BroadcastReceiver mCommandReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String fragmentToSet = Objects.requireNonNull(intent.getStringExtra("fragmentName"));
+            String fragmentToSet = Objects.requireNonNull(intent.getStringExtra(STRING_ID));
             Fragment fragment;
             switch (fragmentToSet) {
                 case FRAGMENT_HOME:
@@ -66,7 +65,7 @@ public class NotepadFragment extends ToolFragment {
 
     @Override
     protected String fragmentName() {
-        return "NOTEPAD_FRAGMENT";
+        return STRING_ID;
     }
 
     @Override

@@ -36,4 +36,10 @@
     <string name="delete_note_desc">Вы уверены, что хотите удалить эту заметку?</string>
     <string name="add_a_timer">добавить таймер</string>
     <string name="timers_running">таймеры работают</string>
+    <string name="share">делиться</string>
+    <string name="share_this_note">поделиться заметкой</string>
+    <string name="save">сохранять</string>
+    <string name="show_milliseconds_on_stopwatch">Показывать миллисекунды на секундомере.</string>
+    <string name="settings_udpated">настройки обновлены</string>
+    <string name="stop_all">остановить все</string>
 </resources>

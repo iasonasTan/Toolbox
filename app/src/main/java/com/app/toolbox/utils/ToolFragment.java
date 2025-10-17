@@ -38,7 +38,7 @@ public abstract class ToolFragment extends Fragment implements Comparable<ToolFr
             navigationItem = createNavigationItem(context);
             navigationItem.setOnClickListener(av -> {
                 Intent intent = new Intent(MainActivity.SWITCH_PAGE).setPackage(context.getPackageName());
-                intent.putExtra("pageName", name());
+                intent.putExtra(MainActivity.PAGE_NAME_EXTRA, name());
                 context.sendBroadcast(intent);
             });
         }

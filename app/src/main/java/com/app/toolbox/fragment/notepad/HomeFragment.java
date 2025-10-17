@@ -35,12 +35,12 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.newNote_fab).setOnClickListener(v -> {
             Log.d("broadcast_stats", "Sending intent to open blank editor");
-            Intent intent = new Intent(NotepadFragment.ACTION_OPEN_FILE).setPackage(requireContext().getPackageName());
-            intent.putExtra("filePath", (String)null);
+            Intent intent = new Intent(EditorFragment.ACTION_OPEN_FILE).setPackage(requireContext().getPackageName());
+            intent.putExtra(EditorFragment.FILE_PATH_EXTRA, (String)null);
             requireContext().sendBroadcast(intent);
 
             Intent intent1 = new Intent(NotepadFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
-            intent1.putExtra("fragmentName", NotepadFragment.FRAGMENT_EDITOR);
+            intent1.putExtra(NotepadFragment.STRING_ID, NotepadFragment.FRAGMENT_EDITOR);
             requireContext().sendBroadcast(intent1);
         });
         noNotesFound_textview = view.findViewById(R.id.message);
@@ -97,12 +97,12 @@ public class HomeFragment extends Fragment {
         nv.setOnClickListener(v -> {
             // switch to editor with it's data
             Log.d("broadcast_stats", "Sending intent to open file "+file.getAbsolutePath());
-            Intent intent = new Intent(NotepadFragment.ACTION_OPEN_FILE).setPackage(requireContext().getPackageName());
-            intent.putExtra("filePath", file.getAbsolutePath());
+            Intent intent = new Intent(EditorFragment.ACTION_OPEN_FILE).setPackage(requireContext().getPackageName());
+            intent.putExtra(EditorFragment.FILE_PATH_EXTRA, file.getAbsolutePath());
             requireContext().sendBroadcast(intent);
 
             Intent intent1 = new Intent(NotepadFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
-            intent1.putExtra("fragmentName", NotepadFragment.FRAGMENT_EDITOR);
+            intent1.putExtra(NotepadFragment.STRING_ID, NotepadFragment.FRAGMENT_EDITOR);
             requireContext().sendBroadcast(intent1);
         });
         nv.setOnDeleteListener(getClickListener(file));

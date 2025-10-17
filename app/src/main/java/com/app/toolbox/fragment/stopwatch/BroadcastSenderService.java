@@ -6,9 +6,15 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
+import com.app.toolbox.utils.IntentContentsMissingException;
+
 import java.util.Objects;
 
 public final class BroadcastSenderService extends Service {
+    static final String ACTION_STOP  = "toolbox.broadcastSenderService.STOP";
+    static final String ACTION_START = "toolbox.broadcastSenderService.START";
+    static final String ACTION_RESET = "toolbox.broadcastSenderService.RESET";
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -23,17 +29,17 @@ public final class BroadcastSenderService extends Service {
 
         Intent serviceIntent = new Intent(getApplicationContext(), StopwatchService.class);
         switch (Objects.requireNonNull(intent.getAction())) {
-            case "STOP":
-                serviceIntent.setAction("STOP_TIMER");
+            case ACTION_STOP:
+                serviceIntent.setAction(StopwatchService.ACTION_STOP_TIMER);
                 break;
-            case "START":
-                serviceIntent.setAction("START_TIMER");
+            case ACTION_START:
+                serviceIntent.setAction(StopwatchService.ACTION_START_TIMER);
                 break;
-            case "RESET":
-                serviceIntent.setAction("RESET_TIMER");
+            case ACTION_RESET:
+                serviceIntent.setAction(StopwatchService.ACTION_RESET_TIMER);
                 break;
             default:
-                throw new IllegalArgumentException();
+                throw new IntentContentsMissingException();
         }
         getApplicationContext().startForegroundService(serviceIntent);
         sendBroadcast(new Intent(intent.getAction()).setPackage(getPackageName()));

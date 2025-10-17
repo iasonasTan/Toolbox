@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.app.toolbox.MainActivity;
 import com.app.toolbox.R;
 
 import java.io.BufferedInputStream;
@@ -30,16 +31,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class EditorFragment extends Fragment {
-    private EditText mTitleView, mMainEditor;
+    static final String FILE_PATH_EXTRA  = "toolbox.notepad.filePath";
+    static final String ACTION_OPEN_FILE = "toolbox.notepad.openFile";
+
     private boolean mIsNewFile;
-    private File mCurrentFile;
-    private File mFileToOpen;
+
+    private EditText mTitleView, mMainEditor;
+    private File mCurrentFile, mFileToOpen;
 
     // listens on action NotepadFragment.ACTION_OPEN_FILE
     private final BroadcastReceiver mCommandReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String filePath = intent.getStringExtra("filePath");
+            String filePath = intent.getStringExtra(FILE_PATH_EXTRA);
             if(filePath==null) {
                 mFileToOpen = null;
             } else {
@@ -93,7 +97,23 @@ public class EditorFragment extends Fragment {
         mTitleView = view.findViewById(R.id.title_view);
         view.findViewById(R.id.back_button).setOnClickListener(v -> exitEditor());
         mMainEditor = view.findViewById(R.id.main_edittext);
-        ContextCompat.registerReceiver(requireContext(), mCommandReceiver, new IntentFilter(NotepadFragment.ACTION_OPEN_FILE), ContextCompat.RECEIVER_NOT_EXPORTED);
+        ContextCompat.registerReceiver(requireContext(), mCommandReceiver, new IntentFilter(ACTION_OPEN_FILE), ContextCompat.RECEIVER_NOT_EXPORTED);
+
+        Intent intent = new Intent(MainActivity.CONFIG_VIEW_PAGER).setPackage(requireContext().getPackageName());
+        intent.putExtra(MainActivity.ENABLE_USER_INPUT, false);
+        requireContext().sendBroadcast(intent);
+
+        view.findViewById(R.id.share_button).setOnClickListener(v -> {
+            String name = mTitleView.getText().toString();
+            if (!name.isBlank() && !mMainEditor.getText().toString().isBlank() && isFileNameValid(name)) {
+                saveBuffer(name);
+            }
+            Intent sendIntent = new Intent(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, mMainEditor.getText());
+            sendIntent.setType("text/plain");
+            Intent shareIntent = Intent.createChooser(sendIntent, getString(R.string.share_this_note));
+            requireContext().startActivity(shareIntent);
+        });
     }
 
     @Nullable
@@ -106,6 +126,9 @@ public class EditorFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         //requireContext().unregisterReceiver(mCommandReceiver);
+        Intent intent = new Intent(MainActivity.CONFIG_VIEW_PAGER).setPackage(requireContext().getPackageName());
+        intent.putExtra(MainActivity.ENABLE_USER_INPUT, true);
+        requireContext().sendBroadcast(intent);
     }
 
     public void exitEditor() {
@@ -121,7 +144,7 @@ public class EditorFragment extends Fragment {
 
         Log.d("broadcast_stats", "Sending intent to change fragment...");
         Intent intent = new Intent(NotepadFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
-        intent.putExtra("fragmentName", NotepadFragment.FRAGMENT_HOME);
+        intent.putExtra(NotepadFragment.STRING_ID, NotepadFragment.FRAGMENT_HOME);
         requireContext().sendBroadcast(intent);
     }
 

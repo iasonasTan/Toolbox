@@ -2,6 +2,8 @@ package com.app.toolbox.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.AttributeSet;
@@ -9,6 +11,7 @@ import android.view.MotionEvent;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.app.toolbox.R;
 
@@ -22,6 +25,8 @@ public class AnimatedButton extends AppCompatButton {
 
     public AnimatedButton (Context context, AttributeSet attrs) {
         super(context, attrs);
+        Typeface typeface = ResourcesCompat.getFont(context, R.font.zalando_sans_bold);
+        setTypeface(typeface);
         setClickable(true);
         setFocusable(true);
         setBackgroundResource(R.drawable.background_with_border);

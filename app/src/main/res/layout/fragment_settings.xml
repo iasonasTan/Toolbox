@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="15dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.stopwatch.SettingsFragment">
+
+    <CheckBox
+        android:fontFamily="@font/zalando_sans_bold"
+        android:paddingHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        android:background="@drawable/background_with_border"
+        android:id="@+id/show_millis"
+        android:text="@string/show_milliseconds_on_stopwatch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.app.toolbox.view.AnimatedButton
+        android:id="@+id/save_settings"
+        android:text="@string/save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

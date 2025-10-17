@@ -15,24 +15,38 @@
             android:id="@+id/back_button"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:text="@string/back"
-            />
+            android:text="@string/back" />
 
-        <EditText
-            android:id="@+id/title_view"
-            android:layout_weight="4"
-            android:hint="@string/title"
-            android:inputType="text"
-            android:textSize="26sp"
+        <com.app.toolbox.view.AnimatedButton
+            android:layout_marginHorizontal="15dp"
+            android:layout_weight="1"
+            android:id="@+id/share_button"
             android:layout_width="0dp"
-            android:layout_height="55dp" />
+            android:layout_height="40dp"
+            android:text="@string/share" />
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"/>
     </LinearLayout>
+
+    <EditText
+        android:id="@+id/title_view"
+        android:autofillHints="title for the note"
+        android:hint="@string/title"
+        android:inputType="text"
+        android:maxLines="1"
+        android:textSize="30sp"
+        android:fontFamily="@font/poppins_semibold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <EditText
         android:id="@+id/main_edittext"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fontFamily="@font/poppins_semibold"
         android:gravity="top|start"
         android:scrollbars="vertical"
         android:inputType="textMultiLine|textCapSentences"

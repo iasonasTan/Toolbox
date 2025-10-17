@@ -23,6 +23,7 @@
 
             <TextView
                 android:id="@+id/output_textview"
+                android:fontFamily="@font/poppins_semibold"
                 android:paddingHorizontal="10dp"
                 android:textSize="50sp"
                 android:text="0.0000"

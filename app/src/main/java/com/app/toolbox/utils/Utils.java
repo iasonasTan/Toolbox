@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.app.toolbox.MainActivity;
 
@@ -48,15 +49,16 @@ public final class Utils {
     /**
      * Method that gives a {@link PendingIntent} which starts {@link MainActivity} and a {@link ToolFragment}
      *
-     * @param fragToShow the fragment you want to show
+     * @param pageID the fragment you want to show
      * @return {@link PendingIntent} which starts activity and shows the fragment passed
      */
-    public static PendingIntent createShowPagePendingIntent(String fragToShow, Context context) {
+    public static PendingIntent createShowPagePendingIntent(String pageID, Context context) {
+        Log.d("pIntentCreation", "Creating pending intent showing fragment: "+pageID);
         Intent intent = new Intent(context, MainActivity.class);
-        intent.setAction(fragToShow);
-        intent.putExtra("FRAGMENT_NAME", fragToShow);
+        intent.setAction(MainActivity.ACTION_SHOW_PAGE);
+        intent.putExtra(MainActivity.PAGE_NAME_EXTRA, pageID);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        return PendingIntent.getActivity(context, pageID.hashCode(), intent, PendingIntent.FLAG_IMMUTABLE);
     }
 
     /**
@@ -66,6 +68,7 @@ public final class Utils {
      * @param action String to specify the action.
      * @return Returns a new {@link PendingIntent}
      */
+    @Deprecated(forRemoval = true)
     public static PendingIntent createActionPendingIntent(Context context, I_BroadcastReceiver receiver, String action) {
         Intent intent = new Intent(context, PrivateReceiver.class);
         intent.setAction(action);
@@ -77,6 +80,7 @@ public final class Utils {
      * {@link BroadcastReceiver} as an Interface.
      * Made for use with {@link #createActionPendingIntent(Context, I_BroadcastReceiver, String)}
      */
+    @Deprecated(forRemoval = true)
     public interface I_BroadcastReceiver {
         void onReceive(Context context);
     }
@@ -84,6 +88,7 @@ public final class Utils {
     /**
      * Map to store receivers and IDs
      */
+    @Deprecated(forRemoval = true)
     private static final Map<String, I_BroadcastReceiver> receivers_map = new HashMap<>();
 
     /**
@@ -91,6 +96,7 @@ public final class Utils {
      * Listens to broadcasts and sends then to the right I_BroadcastReceivers
      * Must be included to AndroidManifest.xml to work
      */
+    @Deprecated(forRemoval = true)
     public static final class PrivateReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {

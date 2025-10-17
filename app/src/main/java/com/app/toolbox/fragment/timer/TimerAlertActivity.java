@@ -56,8 +56,8 @@ public class TimerAlertActivity extends AppCompatActivity {
         stopButton.setOnClickListener(l -> {
             TimerService.Timer.sRingtone.stop();
             Intent intent2 = new Intent(getApplicationContext(), StopTimerReceiver.class);
-            intent2.setAction("STOP_TIMER");
-            intent2.putExtra("timer_id", timerID);
+            intent2.setAction(StopTimerReceiver.ACTION_STOP_TIMER);
+            intent2.putExtra(StopTimerReceiver.TIMER_ID_EXTRA, timerID);
             getApplicationContext().sendBroadcast(intent2);
             Log.d("action_spoil", "Stop timer with ID="+timerID+" after it ends.");
             finish();

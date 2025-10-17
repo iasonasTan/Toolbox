@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -19,18 +20,23 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 public class StopwatchService extends Service {
+    static final String ACTION_START_TIMER  = "toolbox.stopwatchService.startTimer";
+    static final String ACTION_STOP_TIMER   = "toolbox.stopwatchService.stopTimer";
+    static final String ACTION_RESET_TIMER  = "toolbox.stopwatchService.resetTimer";
+
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private Runnable mTimeCounter_run, mUpdateNotification_run;
     private Consumer<Long> mUpdateNotification_cons;
     private NotificationCompat.Builder mTime_notification;
-    private final int M_NOTIFICATION_ID = 1;
+    private final int NOTIFICATION_ID = 1;
 
     static long sFromStartTime = 0, sStartTime = -1, sUntilStartTime;
     static boolean sIsRunning = false;
 
-    private PendingIntent getPendingIntent(ActionType type) {
+    private PendingIntent getPendingIntent(ActionType type, String action) {
         Intent intent = new Intent(getApplicationContext(), BroadcastSenderService.class);
-        intent.setAction(type.toString());
+        intent.setAction(action);
+        intent.putExtra(StopwatchFragment.STATE_TYPE_EXTRA, type);
         return PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
     }
 
@@ -47,21 +53,27 @@ public class StopwatchService extends Service {
             sendTime(sUntilStartTime + sFromStartTime);
             if (sIsRunning) mHandler.postDelayed(mTimeCounter_run, 50);
         };
+        Log.d("pIntentCreation", "Creating pending intent showing page "+StopwatchRootFragment.STRING_ID);
+        final PendingIntent pendingIntent = Utils.createShowPagePendingIntent(StopwatchRootFragment.STRING_ID, getApplicationContext());
         mUpdateNotification_cons = time_millis -> {
             NotificationCompat.Action action, action2 = null;
             if (sIsRunning) {
-                action = new NotificationCompat.Action(R.drawable.delete_icon, ContextCompat.getString(getApplicationContext(), R.string.pause), getPendingIntent(ActionType.STOP));
+                action = new NotificationCompat.Action(R.drawable.delete_icon, ContextCompat.getString(getApplicationContext(), R.string.pause), getPendingIntent(ActionType.STOP, BroadcastSenderService.ACTION_STOP));
             } else {
-                action = new NotificationCompat.Action(R.drawable.timer_icon, ContextCompat.getString(getApplicationContext(), R.string.start), getPendingIntent(ActionType.START));
-                action2 = new NotificationCompat.Action(R.drawable.delete_icon, ContextCompat.getString(getApplicationContext(), R.string.reset), getPendingIntent(ActionType.RESET));
+                action = new NotificationCompat.Action(R.drawable.timer_icon, ContextCompat.getString(getApplicationContext(), R.string.start), getPendingIntent(ActionType.START, BroadcastSenderService.ACTION_START));
+                action2 = new NotificationCompat.Action(R.drawable.delete_icon, ContextCompat.getString(getApplicationContext(), R.string.reset), getPendingIntent(ActionType.RESET, BroadcastSenderService.ACTION_RESET));
             }
-            mTime_notification = new NotificationCompat.Builder(getApplicationContext(), "stopwatch_channel")
+            mTime_notification = new NotificationCompat.Builder(getApplicationContext(), StopwatchRootFragment.NOTIFICATION_CHANNEL_ID)
                     .setContentTitle(ContextCompat.getString(getApplicationContext(), R.string.stopwatch_running))
-                    .setContentIntent(Utils.createShowPagePendingIntent("STOPWATCH_FRAGMENT", getApplicationContext()))
-                    .setOnlyAlertOnce(true).addAction(action).setSilent(true).setOngoing(true).addAction(action2).setSmallIcon(R.drawable.stopwatch_icon)
+                    .setContentIntent(pendingIntent)
+                    .setSmallIcon(R.drawable.stopwatch_icon)
+                    .addAction(action)
+                    .addAction(action2)
+                    .setOnlyAlertOnce(true)
+                    .setSilent(true)
                     .setOngoing(true)
                     .setContentText(ContextCompat.getString(getApplicationContext(), R.string.time) + Utils.longToTime(time_millis, false));
-            startForeground(M_NOTIFICATION_ID, mTime_notification.build());
+            startForeground(NOTIFICATION_ID, mTime_notification.build());
         };
     }
 
@@ -70,22 +82,21 @@ public class StopwatchService extends Service {
         if (intent == null) return START_STICKY;
         final String action = Objects.requireNonNull(intent.getAction(), "must specify intent.action");
         switch (action) {
-            case "RESET_TIMER":
-                stopForeground(true);
+            case ACTION_RESET_TIMER:
+                stopForeground(Service.STOP_FOREGROUND_REMOVE);
                 sUntilStartTime = 0;
                 sStartTime=-1;
                 sendTime(0);
-                stopForeground(true);
                 stopSelf();
                 break;
-            case "START_TIMER":
+            case ACTION_START_TIMER:
                 sStartTime = System.currentTimeMillis();
                 mHandler.post(mTimeCounter_run);
                 mHandler.post(mUpdateNotification_run);
                 sIsRunning = true;
                 mUpdateNotification_run.run();
                 break;
-            case "STOP_TIMER":
+            case ACTION_STOP_TIMER:
                 sUntilStartTime += sFromStartTime;
                 mHandler.removeCallbacks(mTimeCounter_run);
                 mHandler.removeCallbacks(mUpdateNotification_run);
@@ -97,8 +108,8 @@ public class StopwatchService extends Service {
     }
 
     private void sendTime(long time) {
-        Intent intent = new Intent("STOPWATCH_UPDATE").setPackage(getPackageName());
-        intent.putExtra("elapsed_time", time);
+        Intent intent = new Intent(StopwatchFragment.ACTION_UPDATE_STOPWATCH).setPackage(getPackageName());
+        intent.putExtra(StopwatchFragment.ELAPSED_TIME_EXTRA, time);
         sendBroadcast(intent);
     }
 

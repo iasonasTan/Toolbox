@@ -26,12 +26,13 @@ import com.app.toolbox.view.navigation.NavigationItemView;
 
 import java.util.Objects;
 
-public class TimerFragment extends ToolFragment {
-    static final String ACTION_CHANGE_FRAGMENT = "toolbox.timer.changeFragment";
-    static final String HOME_FRAGMENT = "toolbox.timer.showHome";
-    static final String SETTER_FRAGMENT = "toolbox.timer.showSetter";
-
-    static final String NOTIFICATION_CHANNEL_ID="timer_channel";
+public class TimerRootFragment extends ToolFragment {
+    public static final String STRING_ID        = "toolbox.page.TIMER_PAGE";
+    static final String ACTION_CHANGE_FRAGMENT  = "toolbox.timer.changeFragment";
+    static final String FRAGMENT_NAME_EXTRA     = "toolbox.timer.fragmentName";
+    static final String HOME_FRAGMENT           = "toolbox.timer.showHome";
+    static final String SETTER_FRAGMENT         = "toolbox.timer.showSetter";
+    static final String NOTIFICATION_CHANNEL_ID = "toolbox.timer.notificationChannel";
 
     private final TimerSetterFragment timerSetterFragment =new TimerSetterFragment();
     private final ActiveTimersFragment timersFragment=new ActiveTimersFragment();
@@ -42,7 +43,7 @@ public class TimerFragment extends ToolFragment {
             Fragment fragment;
             String action = Objects.requireNonNull(intent.getAction());
             if(!action.equals(ACTION_CHANGE_FRAGMENT)) throw new IntentContentsMissingException();
-            String fragmentName = Objects.requireNonNull(intent.getStringExtra("fragmentName"));
+            String fragmentName = Objects.requireNonNull(intent.getStringExtra(FRAGMENT_NAME_EXTRA));
             switch(fragmentName) {
                 case HOME_FRAGMENT: fragment = timersFragment; break;
                 case SETTER_FRAGMENT: fragment = timerSetterFragment; break;
@@ -65,7 +66,7 @@ public class TimerFragment extends ToolFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ContextCompat.registerReceiver(requireContext(), mChangeFragmentReceiver, new IntentFilter(ACTION_CHANGE_FRAGMENT), ContextCompat.RECEIVER_NOT_EXPORTED);
-        NotificationChannel channel=new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Timer Notifications", NotificationManager.IMPORTANCE_HIGH);
+        NotificationChannel channel=new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Timer Notifications", NotificationManager.IMPORTANCE_LOW);
         NotificationManager manager= requireContext().getSystemService(NotificationManager.class);
         manager.createNotificationChannel(channel);
         getChildFragmentManager().beginTransaction().hide(timerSetterFragment).show(timersFragment).commit();
@@ -93,7 +94,7 @@ public class TimerFragment extends ToolFragment {
 
     @Override
     protected String fragmentName() {
-        return "TIMER_FRAGMENT";
+        return STRING_ID;
     }
 
     @Override
@@ -104,6 +105,7 @@ public class TimerFragment extends ToolFragment {
     public void addTimer(long time, String name) {
         long endTime=System.currentTimeMillis()+time;
         ItemView itemView=new ItemView(requireContext());
+        itemView.setFont(requireContext(), R.font.poppins_bold);
         TimerService.Timer timer=new TimerService.Timer(requireContext(), itemView, endTime, name);
         TimerService.addTimer(timer);
         Intent intent = new Intent(requireContext(), TimerService.class);
@@ -112,9 +114,9 @@ public class TimerFragment extends ToolFragment {
     }
 
     static abstract class InnerFragment extends Fragment {
-        private TimerFragment parentFragment;
+        private TimerRootFragment parentFragment;
 
-        protected TimerFragment getParentTimerFragment() {
+        protected TimerRootFragment getParentTimerFragment() {
             return parentFragment;
         }
 
@@ -123,8 +125,8 @@ public class TimerFragment extends ToolFragment {
             super.onAttach(context);
 
             Fragment parent = getParentFragment();
-            if (parent instanceof TimerFragment) {
-                this.parentFragment = (TimerFragment) parent;
+            if (parent instanceof TimerRootFragment) {
+                this.parentFragment = (TimerRootFragment) parent;
             } else {
                 throw new IllegalStateException("Parent fragment is not TimerFragment");
             }

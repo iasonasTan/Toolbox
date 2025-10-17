@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat;
 import com.app.toolbox.R;
 import com.app.toolbox.view.TimeInput;
 
-public class TimerSetterFragment extends TimerFragment.InnerFragment {
+public class TimerSetterFragment extends TimerRootFragment.InnerFragment {
     private TimeInput mTimeInput;
     private EditText mNameInput;
     private Intent mShowTimeHomeIntent;
@@ -65,8 +65,8 @@ public class TimerSetterFragment extends TimerFragment.InnerFragment {
         view.findViewById(R.id.start_timer_button).setOnClickListener(new OnStartTimerHandler());
         mNameInput = view.findViewById(R.id.name_input);
         mTimeInput = view.findViewById(R.id.time_input);
-        mShowTimeHomeIntent = new Intent(TimerFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
-        mShowTimeHomeIntent.putExtra("fragmentName", TimerFragment.HOME_FRAGMENT);
+        mShowTimeHomeIntent = new Intent(TimerRootFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
+        mShowTimeHomeIntent.putExtra(TimerRootFragment.FRAGMENT_NAME_EXTRA, TimerRootFragment.HOME_FRAGMENT);
     }
 
 }

@@ -32,12 +32,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class TimerService extends Service implements Runnable {
-    static final String UPDATE_TIMERS = "toolbox.timerService.updateTimers";
-    static final String STOP_ALL_TIMERS = "toolbox.timerService.stopTimers";
-
+    static final String UPDATE_TIMERS       = "toolbox.timerService.updateTimers";
+    static final String STOP_ALL_TIMERS     = "toolbox.timerService.stopTimers";
     static final String SILENT_NOTIFICATION = "toolbox.timerService.notificationChannel.silent";
-    private PendingIntent mStopAllTimersPendingIntent, mShowTimersPendingIntent;
 
+    private PendingIntent mStopAllTimersPendingIntent, mShowTimersPendingIntent;
     private static final List<Timer> sTimers =new ArrayList<>();
 
     private Thread mThread;
@@ -54,7 +53,8 @@ public class TimerService extends Service implements Runnable {
         intent.setAction(STOP_ALL_TIMERS);
         mStopAllTimersPendingIntent = PendingIntent.getService(getApplicationContext(), 12, intent, PendingIntent.FLAG_IMMUTABLE);
         // show timers pIntent
-        mShowTimersPendingIntent = Utils.createShowPagePendingIntent("TIMER_FRAGMENT", getApplicationContext());
+        Log.d("pIntentCreation", "Class timerService calls createShowPageIntent()");
+        mShowTimersPendingIntent = Utils.createShowPagePendingIntent(TimerRootFragment.STRING_ID, getApplicationContext());
 
         NotificationChannel notificationChannel = new NotificationChannel(SILENT_NOTIFICATION, "Timer status", NotificationManager.IMPORTANCE_MIN);
         notificationChannel.setDescription("Status about running timers.");
@@ -74,6 +74,10 @@ public class TimerService extends Service implements Runnable {
             sRunning = true;
             mThread.start();
             sendStatusNotification();
+            if(sTimers.isEmpty()){
+                stopForeground(Service.STOP_FOREGROUND_REMOVE);
+                stopSelf();
+            }
         } else if (action.equals(STOP_ALL_TIMERS)) {
             Log.d("timer_test", "Stopping all timers now.");
             sTimers.forEach(t -> {
@@ -100,10 +104,10 @@ public class TimerService extends Service implements Runnable {
     void sendStatusNotification() {
         NotificationCompat.Builder mServiceNotificationBuilder = new NotificationCompat.Builder(getApplicationContext(), TimerService.SILENT_NOTIFICATION)
                 .setContentIntent(mShowTimersPendingIntent)
-                .setSmallIcon(R.drawable.timer_icon)
+                .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentTitle(sTimers.size() + getString(R.string.timers_running));
         if(!sTimers.isEmpty())
-            mServiceNotificationBuilder.addAction(R.drawable.delete_icon, "Stop all", mStopAllTimersPendingIntent);
+            mServiceNotificationBuilder.addAction(R.drawable.delete_icon, getString(R.string.stop_all), mStopAllTimersPendingIntent);
         startForeground(11, mServiceNotificationBuilder.build());
     }
 
@@ -180,8 +184,8 @@ public class TimerService extends Service implements Runnable {
 
         private Intent createIntent() {
             Intent intent = new Intent(context, StopTimerReceiver.class);
-            intent.setAction("STOP_TIMER");
-            intent.putExtra("timer_id", getTimerID());
+            intent.setAction(StopTimerReceiver.ACTION_STOP_TIMER);
+            intent.putExtra(StopTimerReceiver.TIMER_ID_EXTRA, getTimerID());
             return intent;
         }
 
@@ -210,9 +214,10 @@ public class TimerService extends Service implements Runnable {
 
         private void initNotification() {
             if(sNotificationMan == null) sNotificationMan = context.getSystemService(NotificationManager.class);
-            time_notification = new NotificationCompat.Builder(context, TimerFragment.NOTIFICATION_CHANNEL_ID)
+            Log.d("pIntentCreation", "Class timerService calls createShowPageIntent() (initializing)");
+            time_notification = new NotificationCompat.Builder(context, TimerRootFragment.NOTIFICATION_CHANNEL_ID)
                     .setContentTitle(ContextCompat.getString(context, R.string.timer_running)+"("+getName()+")")
-                    .setContentIntent(Utils.createShowPagePendingIntent("TIMER_FRAGMENT", context))
+                    .setContentIntent(Utils.createShowPagePendingIntent(TimerRootFragment.STRING_ID, context))
                     .setSmallIcon(R.drawable.timer_icon)
                     .setAutoCancel(true)
                     .setOnlyAlertOnce(true)

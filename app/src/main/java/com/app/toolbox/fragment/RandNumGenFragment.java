@@ -17,11 +17,11 @@ import com.app.toolbox.view.navigation.NavigationItemView;
 
 import java.util.Locale;
 
-public class RNGFragment extends ToolFragment {
+public class RandNumGenFragment extends ToolFragment {
 
     @Override
     protected String fragmentName() {
-        return "RANDOM_NUMBER_GENERATOR_FRAGMENT";
+        return "toolbox.page.RANDOM_NUMBER_GENERATOR_PAGE";
     }
 
     @Override
@@ -64,6 +64,7 @@ public class RNGFragment extends ToolFragment {
 
             }
         });
+        bar.setProgress(20);
 
     }
 
