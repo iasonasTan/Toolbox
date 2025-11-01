@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.app.toolbox.R;
+import com.app.toolbox.utils.IllegalIntentContentsException;
 import com.app.toolbox.utils.IntentContentsMissingException;
 import com.app.toolbox.utils.ToolFragment;
 import com.app.toolbox.view.ItemView;
@@ -27,12 +28,12 @@ import com.app.toolbox.view.navigation.NavigationItemView;
 import java.util.Objects;
 
 public class TimerRootFragment extends ToolFragment {
-    public static final String STRING_ID        = "toolbox.page.TIMER_PAGE";
-    static final String ACTION_CHANGE_FRAGMENT  = "toolbox.timer.changeFragment";
-    static final String FRAGMENT_NAME_EXTRA     = "toolbox.timer.fragmentName";
-    static final String HOME_FRAGMENT           = "toolbox.timer.showHome";
-    static final String SETTER_FRAGMENT         = "toolbox.timer.showSetter";
-    static final String NOTIFICATION_CHANNEL_ID = "toolbox.timer.notificationChannel";
+    public static final String STRING_ID              = "toolbox.page.TIMER_PAGE";
+    public static final String ACTION_CHANGE_FRAGMENT = "toolbox.timer.changeFragment";
+    public static final String FRAGMENT_NAME_EXTRA    = "toolbox.timer.fragmentName";
+    public static final String HOME_FRAGMENT          = "toolbox.timer.showHome";
+    public static final String SETTER_FRAGMENT        = "toolbox.timer.showSetter";
+    static final String NOTIFICATION_CHANNEL_ID       = "toolbox.timer.notificationChannel";
 
     private final TimerSetterFragment timerSetterFragment =new TimerSetterFragment();
     private final ActiveTimersFragment timersFragment=new ActiveTimersFragment();
@@ -42,12 +43,12 @@ public class TimerRootFragment extends ToolFragment {
         public void onReceive(Context context, Intent intent) {
             Fragment fragment;
             String action = Objects.requireNonNull(intent.getAction());
-            if(!action.equals(ACTION_CHANGE_FRAGMENT)) throw new IntentContentsMissingException();
+            if(!action.equals(ACTION_CHANGE_FRAGMENT)) throw new IllegalIntentContentsException();
             String fragmentName = Objects.requireNonNull(intent.getStringExtra(FRAGMENT_NAME_EXTRA));
             switch(fragmentName) {
                 case HOME_FRAGMENT: fragment = timersFragment; break;
                 case SETTER_FRAGMENT: fragment = timerSetterFragment; break;
-                default: throw new IntentContentsMissingException();
+                default: throw new IllegalIntentContentsException();
             }
             setFragment(fragment);
         }

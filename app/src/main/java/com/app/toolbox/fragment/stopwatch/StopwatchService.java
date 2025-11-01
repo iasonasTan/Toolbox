@@ -20,7 +20,8 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 public class StopwatchService extends Service {
-    static final String ACTION_START_TIMER  = "toolbox.stopwatchService.startTimer";
+    // used by action
+    public static final String ACTION_START_TIMER  = "toolbox.stopwatchService.startTimer";
     static final String ACTION_STOP_TIMER   = "toolbox.stopwatchService.stopTimer";
     static final String ACTION_RESET_TIMER  = "toolbox.stopwatchService.resetTimer";
 

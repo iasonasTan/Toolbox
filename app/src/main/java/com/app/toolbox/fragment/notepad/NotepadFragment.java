@@ -23,10 +23,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class NotepadFragment extends ToolFragment {
-    static final String STRING_ID = "toolbox.page.NOTEPAD_PAGE";
-    static final String FRAGMENT_HOME          = "toolbox.notepad.showHome";
-    static final String FRAGMENT_EDITOR        = "toolbox.notepad.showEditor";
-    static final String ACTION_CHANGE_FRAGMENT = "toolbox.notepad.changeFragment";
+    // used by shortcuts
+    public static final String FRAGMENT_EDITOR        = "toolbox.notepad.EDITOR_FRAGMENT";
+    public static final String ACTION_CHANGE_FRAGMENT = "toolbox.notepad.CHANGE_FRAGMENT";
+    public static final String STRING_ID              = "toolbox.page.NOTEPAD_PAGE";
+    public static final String FRAGMENT_HOME          = "toolbox.notepad.HOME_FRAGMENT";
 
     static List<String> usedNames;
 
@@ -39,18 +40,17 @@ public class NotepadFragment extends ToolFragment {
             String fragmentToSet = Objects.requireNonNull(intent.getStringExtra(STRING_ID));
             Fragment fragment;
             switch (fragmentToSet) {
-                case FRAGMENT_HOME:
-                    fragment = mHome;
-                    break;
-                case FRAGMENT_EDITOR:
-                    fragment = mEditor;
-                    break;
-                default:
-                    fragment = null;
+                case FRAGMENT_HOME: fragment = mHome; break;
+                case FRAGMENT_EDITOR: fragment = mEditor; break;
+                default: fragment = null;
             }
+            Log.d("notepad_open", "Showing notepad fragment "+fragmentToSet);
             Log.d("broadcast_test", "Intent received by broadcast receiver on NotepadFragment");
             if(fragment != null) {
-                getChildFragmentManager().beginTransaction().replace(R.id.notepad_fragment_container, fragment).commit();
+                if(!isStateSaved())
+                    getChildFragmentManager().beginTransaction()
+                            .replace(R.id.notepad_fragment_container, fragment)
+                            .commit();
             } else {
                 Log.w("fragment-transaction", "Fragment not changed!");
             }

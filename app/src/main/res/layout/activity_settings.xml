@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingsActivity">
+
+    <com.app.toolbox.view.TitleView
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginHorizontal="10dp"
+        android:text="@string/toolbox_settings"
+        android:background="@drawable/no_background_border"
+        android:paddingStart="10dp"
+        android:paddingEnd="6dp"
+        android:maxLines="2"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp" />
+
+    <ScrollView
+        android:layout_weight="11"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <LinearLayout
+            android:layout_margin="10dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+<!--            START OF SETTINGS ELEMENTS-->
+
+            <LinearLayout
+                android:background="@drawable/no_background_border"
+                android:padding="10dp"
+                android:layout_marginBottom="15dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_marginBottom="10dp"
+                    android:textSize="25sp"
+                    android:fontFamily="@font/zalando_sans_bold"
+                    android:text="@string/button_background_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <com.app.toolbox.view.AnimatedButton
+                    android:id="@+id/select_buttons_background_button"
+                    android:text="@string/choose_button_background"
+                    android:layout_width="wrap_content"
+                    android:paddingHorizontal="10dp"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@drawable/no_background_border"
+                android:padding="10dp"
+                android:layout_marginBottom="15dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_marginBottom="10dp"
+                    android:textSize="25sp"
+                    android:fontFamily="@font/zalando_sans_bold"
+                    android:text="@string/borders"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:background="@drawable/background_with_border"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <CheckBox
+                        android:id="@+id/enable_borders_checkbox"
+                        android:text="@string/enable_borders"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <CheckBox
+                        android:id="@+id/round_corners_checkbox"
+                        android:text="@string/round_corners"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <SeekBar
+                    android:id="@+id/border_weight_seekbar"
+                    android:background="@drawable/background_with_border"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp" />
+
+                <com.app.toolbox.view.AnimatedButton
+                    android:id="@+id/select_border_color_button"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/choose_color"
+                    android:padding="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@drawable/no_background_border"
+                android:padding="10dp"
+                android:layout_marginBottom="15dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_marginBottom="10dp"
+                    android:textSize="25sp"
+                    android:fontFamily="@font/zalando_sans_bold"
+                    android:text="@string/about_toolbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/app_version"
+                    android:fontFamily="@font/pt_mono_regular"
+                    android:textSize="15sp"
+                    android:text="@string/app_version"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:fontFamily="@font/pt_mono_regular"
+                    android:textSize="15sp"
+                    android:text="@string/developer_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:fontFamily="@font/pt_mono_regular"
+                    android:textSize="15sp"
+                    android:text="@string/contact_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/copyright_view"
+                    android:fontFamily="@font/pt_mono_regular"
+                    android:textSize="15sp"
+                    android:text="© "
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+
+            <!--            END OF SETTINGS ELEMENTS-->
+        </LinearLayout>
+    </ScrollView>
+
+    <com.app.toolbox.view.AnimatedButton
+        android:id="@+id/back_button"
+        android:text="@string/back"
+        android:textSize="25sp"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+</LinearLayout>

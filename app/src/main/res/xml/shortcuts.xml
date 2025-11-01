@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <shortcut
+        android:shortcutId="start_stopwatch"
+        android:enabled="true"
+        android:icon="@drawable/start_stopwatch"
+        android:shortcutShortLabel="@string/start_stopwatch"
+        android:shortcutLongLabel="@string/start_stopwatch"
+        android:shortcutDisabledMessage="@string/not_available">
+
+        <intent
+            android:action="toolbox.mainActivity.startStopwatch"
+            android:targetPackage="com.app.toolbox"
+            android:targetClass="com.app.toolbox.MainActivity" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="new_note"
+        android:enabled="true"
+        android:icon="@drawable/new_note"
+        android:shortcutShortLabel="@string/new_note_fab"
+        android:shortcutLongLabel="@string/new_note_fab"
+        android:shortcutDisabledMessage="@string/not_available">
+
+        <intent
+            android:action="toolbox.mainActivity.newNote"
+            android:targetPackage="com.app.toolbox"
+            android:targetClass="com.app.toolbox.MainActivity" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="add_timer"
+        android:enabled="true"
+        android:icon="@drawable/add_timer"
+        android:shortcutShortLabel="@string/add_a_timer"
+        android:shortcutLongLabel="@string/add_a_timer"
+        android:shortcutDisabledMessage="@string/not_available">
+
+        <intent
+            android:action="toolbox.mainActivity.addTimer"
+            android:targetPackage="com.app.toolbox"
+            android:targetClass="com.app.toolbox.MainActivity" />
+    </shortcut>
+
+</shortcuts>

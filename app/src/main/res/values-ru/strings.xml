@@ -42,4 +42,22 @@
     <string name="show_milliseconds_on_stopwatch">Показывать миллисекунды на секундомере.</string>
     <string name="settings_udpated">настройки обновлены</string>
     <string name="stop_all">остановить все</string>
+    <string name="start_stopwatch">Включить секундомер</string>
+    <string name="not_available">сейчас недоступно</string>
+    <string name="settings">настройки</string>
+    <string name="toolbox_settings">Toolbox Настройки</string>
+    <string name="untitled_note">Заметка без названия</string>
+    <string name="choose_button_background">Выбрать фон кнопки</string>
+    <string name="are_you_sure">Вы уверены?</string>
+    <string name="exit_for_sure">Вы уверены, что хотите выйти, не сохраняя заметку?</string>
+    <string name="about_toolbox">О Toolbox</string>
+    <string name="app_version">Версия приложения:</string>
+    <string name="developer_info">Разработано Джейсоном Тантаросом</string>
+    <string name="contact_info">Контакт: iasonas.tan@gmail.com</string>
+    <string name="developer_name">" Jason Tantaros"</string>
+    <string name="button_background_color">Цвет фона кнопки:</string>
+    <string name="borders">границы</string>
+    <string name="enable_borders">включить границы</string>
+    <string name="round_corners">круглые углы</string>
+    <string name="choose_color">выберите цвет</string>
 </resources>

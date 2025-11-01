@@ -44,4 +44,22 @@
     <string name="show_milliseconds_on_stopwatch">Προβολή χιλιοστών του δευτερολέπτου</string>
     <string name="settings_udpated">Οι ρυθμίσεις αποθηκεύτηκαν</string>
     <string name="stop_all">Διακοπή όλων</string>
+    <string name="start_stopwatch">Start Stopwatch</string>
+    <string name="not_available">Δεν είναι διαθέσημο προς το παρόν.</string>
+    <string name="settings">Ρυθμίσεις</string>
+    <string name="toolbox_settings">Toolbox Ρυθμίσεις</string>
+    <string name="untitled_note">Σημείωση μου</string>
+    <string name="choose_button_background">Διάλεξε χρώμα κουμπιών</string>
+    <string name="are_you_sure">Είσαι σίγουρος?</string>
+    <string name="exit_for_sure">Είσαι σίγουρος οτι θες να κλείσεις το σημειωματάριο πρίν το αποθηκέυσεις?</string>
+    <string name="about_toolbox">Toolbox - Σχετικά</string>
+    <string name="app_version">"Έκδωση εφαρμογής: "</string>
+    <string name="developer_info">Δημηουργήθικε απο τον Ιάσονα Τάνταρο</string>
+    <string name="contact_info">Επικοινωνία: iasonas.tan@gmail.com</string>
+    <string name="developer_name">" Ιάσονας Τάνταρος"</string>
+    <string name="button_background_color">Χρώμα κουμπιών</string>
+    <string name="borders">Σύνορα:</string>
+    <string name="enable_borders">Εμφάνηση συνόρων</string>
+    <string name="round_corners">Στρογγυλές γωνίες</string>
+    <string name="choose_color">Διάλεξε χρώμα</string>
 </resources>

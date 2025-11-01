@@ -54,5 +54,23 @@
     <string name="show_milliseconds_on_stopwatch">Millisekunden auf der Stoppuhr anzeigen.</string>
     <string name="settings_udpated">Einstellungen aktualisiert</string>
     <string name="stop_all">Hör auf mit allem</string>
+    <string name="start_stopwatch">Stoppuhr starten</string>
+    <string name="not_available">This is not available right now.</string>
+    <string name="settings">Einstellungen</string>
+    <string name="toolbox_settings">Toolbox Einstellungen</string>
+    <string name="untitled_note">Unbenannte_Notiz</string>
+    <string name="choose_button_background">Wählen Sie den Schaltflächenhintergrund:</string>
+    <string name="are_you_sure">Bist du sicher?</string>
+    <string name="exit_for_sure">Möchten Sie wirklich beenden, ohne die Notiz zu speichern?</string>
+    <string name="about_toolbox">Über Toolbox</string>
+    <string name="app_version">"App-Version: "</string>
+    <string name="developer_info">Entwickelt von Jason Tantaros</string>
+    <string name="contact_info">Kontakt: iasonas.tan@gmail.com</string>
+    <string name="developer_name">" Jason Tantaros"</string>
+    <string name="button_background_color">Hintergrundfarbe der Schaltfläche:</string>
+    <string name="borders">Grenzen:</string>
+    <string name="enable_borders">Rahmen aktivieren</string>
+    <string name="round_corners">Runde Ecken</string>
+    <string name="choose_color">Farbe wählen</string>
 
 </resources>

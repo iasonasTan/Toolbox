@@ -9,7 +9,7 @@
 
     <ImageView
         android:contentDescription="timer icon"
-        android:src="@drawable/clock"
+
         android:layout_width="match_parent"
         android:layout_above="@id/timer_view"
         android:layout_height="200dp"

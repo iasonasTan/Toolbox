@@ -2,6 +2,7 @@ package com.app.toolbox.fragment.notepad;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import androidx.fragment.app.Fragment;
 
 import com.app.toolbox.MainActivity;
 import com.app.toolbox.R;
+import com.app.toolbox.utils.Utils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -29,23 +31,33 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Objects;
 
 public class EditorFragment extends Fragment {
-    static final String FILE_PATH_EXTRA  = "toolbox.notepad.filePath";
-    static final String ACTION_OPEN_FILE = "toolbox.notepad.openFile";
+    // used with shortcuts
+    public static final String FILE_PATH_EXTRA  = "toolbox.notepad.filePath";
+    public static final String ACTION_OPEN_FILE = "toolbox.notepad.openFile";
+    public static final String TEXT_EXTRA       = "toolbox.notepad.appendText";
+    public static final String PATH_NONE_EXTRA  = "toolbox.notepad.noText";
 
     private boolean mIsNewFile;
+    private String mTextToAppend;
 
-    private EditText mTitleView, mMainEditor;
+    private EditText mTitleEditor, mMainEditor;
     private File mCurrentFile, mFileToOpen;
 
     // listens on action NotepadFragment.ACTION_OPEN_FILE
     private final BroadcastReceiver mCommandReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String filePath = intent.getStringExtra(FILE_PATH_EXTRA);
-            if(filePath==null) {
+            Utils.checkIntent(intent, FILE_PATH_EXTRA);
+            String filePath = Objects.requireNonNull(intent.getStringExtra(FILE_PATH_EXTRA));
+            Log.d("notepad_open", "Opening notepad editor.");
+            if(filePath.equals(PATH_NONE_EXTRA)) {
+                String text = intent.getStringExtra(TEXT_EXTRA);
+                Log.d("notepad_open", "Creating new note. Appending text "+text);
                 mFileToOpen = null;
+                mTextToAppend = text;
             } else {
                 mFileToOpen = new File(filePath);
             }
@@ -54,13 +66,13 @@ public class EditorFragment extends Fragment {
 
     private void newFile() {
         mIsNewFile = true;
-        mTitleView.setText("");
+        mTitleEditor.setText("");
         mMainEditor.setText("");
     }
 
     private void loadFile(File file) {
         mIsNewFile = false;
-        mTitleView.setText("");
+        mTitleEditor.setText("");
         mMainEditor.setText("");
         mCurrentFile = file;
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file))) {
@@ -69,7 +81,7 @@ public class EditorFragment extends Fragment {
             while ((bytesRead = bufferedInputStream.read(buffer)) != -1) {
                 mMainEditor.append(new String(buffer, 0, bytesRead));
             }
-            mTitleView.setText(file.getName());
+            mTitleEditor.setText(file.getName());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -82,6 +94,12 @@ public class EditorFragment extends Fragment {
             newFile();
         else
             loadFile(mFileToOpen);
+
+        if(mMainEditor!=null&&mTextToAppend!=null&&mIsNewFile) {
+            mMainEditor.append(mTextToAppend);
+            mTitleEditor.append(ContextCompat.getString(requireContext(), R.string.untitled_note));
+            Log.d("notepad_open", "Appending text to main editor...");
+        }
     }
 
     @Override
@@ -94,7 +112,7 @@ public class EditorFragment extends Fragment {
                         exitEditor();
                     }
                 });
-        mTitleView = view.findViewById(R.id.title_view);
+        mTitleEditor = view.findViewById(R.id.title_view);
         view.findViewById(R.id.back_button).setOnClickListener(v -> exitEditor());
         mMainEditor = view.findViewById(R.id.main_edittext);
         ContextCompat.registerReceiver(requireContext(), mCommandReceiver, new IntentFilter(ACTION_OPEN_FILE), ContextCompat.RECEIVER_NOT_EXPORTED);
@@ -104,7 +122,7 @@ public class EditorFragment extends Fragment {
         requireContext().sendBroadcast(intent);
 
         view.findViewById(R.id.share_button).setOnClickListener(v -> {
-            String name = mTitleView.getText().toString();
+            String name = mTitleEditor.getText().toString();
             if (!name.isBlank() && !mMainEditor.getText().toString().isBlank() && isFileNameValid(name)) {
                 saveBuffer(name);
             }
@@ -132,20 +150,41 @@ public class EditorFragment extends Fragment {
     }
 
     public void exitEditor() {
-        String name = mTitleView.getText().toString();
-        if (!name.isBlank() && !mMainEditor.getText().toString().isBlank() && isFileNameValid(name)) {
+        String name = mTitleEditor.getText().toString();
+        boolean saved;
+        if (!name.isBlank() && isFileNameValid(name)) {
             // if document exists, save it.
-            boolean saved = saveBuffer(name);
+            saved = saveBuffer(name);
             System.out.println("Buffer saved: " + saved);
+        } else {
+            saved = false;
         }
         // hide on-screen keyboard
         InputMethodManager imm = requireContext().getSystemService(InputMethodManager.class);
         imm.hideSoftInputFromWindow(mMainEditor.getWindowToken(), 0);
 
-        Log.d("broadcast_stats", "Sending intent to change fragment...");
-        Intent intent = new Intent(NotepadFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
-        intent.putExtra(NotepadFragment.STRING_ID, NotepadFragment.FRAGMENT_HOME);
-        requireContext().sendBroadcast(intent);
+        if(!saved)
+            new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.are_you_sure)
+                .setMessage(R.string.exit_for_sure)
+                .setCancelable(false)
+                .setNegativeButton(R.string.ok, (dialog, which) -> {
+                    Log.d("doc_saving", "User exited editor without saving file");
+                    dialog.dismiss();
+                    Log.d("broadcast_sent", "Sending intent to change fragment...");
+                    Intent intent = new Intent(NotepadFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
+                    intent.putExtra(NotepadFragment.STRING_ID, NotepadFragment.FRAGMENT_HOME);
+                    requireContext().sendBroadcast(intent);
+                }).setPositiveButton(R.string.cancel, (dialog, which) -> {
+                    dialog.dismiss();
+                    Log.d("doc_saving", "User saved document");
+                }).show();
+        else {
+            Log.d("broadcast_sent", "Sending intent to change fragment...");
+            Intent intent = new Intent(NotepadFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
+            intent.putExtra(NotepadFragment.STRING_ID, NotepadFragment.FRAGMENT_HOME);
+            requireContext().sendBroadcast(intent);
+        }
     }
 
     public boolean isFileNameValid(String name) {

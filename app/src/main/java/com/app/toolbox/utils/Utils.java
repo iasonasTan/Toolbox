@@ -6,12 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.app.toolbox.MainActivity;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public final class Utils {
@@ -24,26 +27,19 @@ public final class Utils {
      * @param millisOnFormat the string format will contain milliseconds in the end.
      * @return time format: HH:MM:SS:MM (hours:minutes:seconds:milliseconds)
      */
-    public static String longToTime(long millis, boolean millisOnFormat) {
-        final boolean INPUT_POSITIVE = millis >= 0;
-        millis = Math.abs(millis);
-        long secs = 0, mins = 0, hours = 0;
-        while (millis >= 1000) {
-            secs += 1;
-            millis -= 1000;
-        }
-        while (secs >= 60) {
-            mins += 1;
-            secs -= 60;
-        }
-        while (mins >= 60) {
-            hours += 1;
-            mins -= 60;
-        }
-        millis /= 10;
-        String timeFormated = String.format(Locale.ENGLISH, "%s%02d:%02d:%02d",
-                INPUT_POSITIVE ? "" : "-", hours, mins, secs);
-        return millisOnFormat ? timeFormated + "." + millis : timeFormated;
+    public static String longToTime(final long millis, final boolean millisOnFormat) {
+        long mut_millis = Math.abs(millis);
+        long hours = mut_millis / (1000 * 60 * 60);
+        long mins = (mut_millis / (1000 * 60)) % 60;
+        long secs = (mut_millis / 1000) % 60;
+        long ms = mut_millis % 1000;
+
+        String sign = millis >= 0 ? "" : "-";
+        String timeFormatted = String.format(Locale.getDefault(), "%s%02d:%02d:%02d", sign, hours, mins, secs);
+
+        return millisOnFormat
+                ? String.format(Locale.getDefault(), "%s.%03d", timeFormatted, ms)
+                : timeFormatted;
     }
 
     /**
@@ -59,6 +55,17 @@ public final class Utils {
         intent.putExtra(MainActivity.PAGE_NAME_EXTRA, pageID);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         return PendingIntent.getActivity(context, pageID.hashCode(), intent, PendingIntent.FLAG_IMMUTABLE);
+    }
+
+    public static void checkIntent(@NonNull Intent intent, String... extras) {
+        Objects.requireNonNull(intent);
+        for (String extra : extras) {
+            if(!intent.hasExtra(extra))
+                throw new IntentContentsMissingException();
+        }
+        if(intent.getAction()==null) {
+            throw new IntentContentsMissingException();
+        }
     }
 
     /**

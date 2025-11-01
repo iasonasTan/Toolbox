@@ -6,10 +6,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
@@ -23,8 +26,10 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.app.toolbox.fragment.CalculatorFragment;
 import com.app.toolbox.fragment.RandNumGenFragment;
+import com.app.toolbox.fragment.notepad.EditorFragment;
 import com.app.toolbox.fragment.notepad.NotepadFragment;
 import com.app.toolbox.fragment.stopwatch.StopwatchRootFragment;
+import com.app.toolbox.fragment.stopwatch.StopwatchService;
 import com.app.toolbox.fragment.timer.TimerRootFragment;
 import com.app.toolbox.fragment.timer.TimerService;
 import com.app.toolbox.utils.IntentContentsMissingException;
@@ -68,7 +73,7 @@ public final class MainActivity extends AppCompatActivity {
                 case SWITCH_PAGE:
                     String name = intent.getStringExtra(PAGE_NAME_EXTRA);
                     if (name == null) throw new IntentContentsMissingException();
-                    setFragmentByName(name);
+                    setPageByName(name);
                     break;
                 case CONFIG_VIEW_PAGER:
                     boolean enableScrolling = intent.getBooleanExtra(ENABLE_USER_INPUT, true);
@@ -80,10 +85,10 @@ public final class MainActivity extends AppCompatActivity {
         }
     };
 
-    public void setFragmentByName(final String requiredName) {
+    public void setPageByName(final String requiredName) {
         for(ToolFragment toolFragment: fragments) {
             if(requiredName.equals(toolFragment.name())) {
-                setFragment(toolFragment);
+                setPageByName(toolFragment);
                 return;
             }
         }
@@ -153,6 +158,10 @@ public final class MainActivity extends AppCompatActivity {
         ToolAdapter fragmentStateAdapter = new ToolAdapter(this);
         mViewPager2 =findViewById(R.id.fragment_adapter);
         mViewPager2.setAdapter(fragmentStateAdapter);
+
+        // remove one usage from first fragment
+        // because first fragment shows automatically it increases usages
+        fragments.get(0).decreaseUsages();
     }
 
     private void loadFragmentUsages(List<ToolFragment> loc_fragments) {
@@ -204,22 +213,26 @@ public final class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         EdgeToEdge.enable(this);
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(SWITCH_PAGE);
+        IntentFilter intentFilter = new IntentFilter(SWITCH_PAGE);
         intentFilter.addAction(CONFIG_VIEW_PAGER);
         ContextCompat.registerReceiver(getApplicationContext(), mSwitchPageReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
-        if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
-        }
+
+        if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
+            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1007);
+
         initFragments();
         initNavBar();
-
-        // remove one usage from first fragment
-        // because first fragment shows automatically it increases usages
-        fragments.get(0).decreaseUsages();
         handleIntent(getIntent());
 
+        findViewById(R.id.settings_button).setOnClickListener(v -> {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        });
+
         new Thread(this::checkForUpdates).start();
+
+        Greeter greeter = new Greeter(this);
+        greeter.greet();
     }
 
     private void checkForUpdates() {
@@ -273,11 +286,60 @@ public final class MainActivity extends AppCompatActivity {
 
     private void handleIntent(Intent intent) {
         if(intent==null) return;
-        String name=intent.getStringExtra(PAGE_NAME_EXTRA);
-        if(name!=null) setFragmentByName(name);
+        final String action=Objects.requireNonNull(intent.getAction());
+        final String name=intent.getStringExtra(PAGE_NAME_EXTRA);
+        final String type = intent.getType();
+
+        if(name!=null) setPageByName(name);
+
+        if (action.equals("toolbox.mainActivity.startStopwatch")) {
+            setPageByName(StopwatchRootFragment.STRING_ID);
+            Intent startTimerIntent = new Intent(this, StopwatchService.class);
+            startTimerIntent.setAction(StopwatchService.ACTION_START_TIMER);
+            startForegroundService(startTimerIntent);
+        }
+
+        if (action.equals("toolbox.mainActivity.newNote")) {
+            setPageByName(NotepadFragment.STRING_ID, () -> {
+                Intent intent1 = new Intent(NotepadFragment.ACTION_CHANGE_FRAGMENT).setPackage(getPackageName());
+                intent1.putExtra(NotepadFragment.STRING_ID, NotepadFragment.FRAGMENT_EDITOR);
+                sendBroadcast(intent1);
+
+                Intent newNoteIntent = new Intent(EditorFragment.ACTION_OPEN_FILE).setPackage(getPackageName());
+                newNoteIntent.putExtra(EditorFragment.FILE_PATH_EXTRA, EditorFragment.PATH_NONE_EXTRA);
+                sendBroadcast(newNoteIntent);
+            });
+        }
+
+        if (action.equals(Intent.ACTION_SEND) && "text/plain".equals(type)) {
+            String text = intent.getStringExtra(Intent.EXTRA_TEXT);
+            setPageByName(NotepadFragment.STRING_ID, () -> {
+                Intent changeFragmentIntent = new Intent(NotepadFragment.ACTION_CHANGE_FRAGMENT).setPackage(getPackageName());
+                changeFragmentIntent.putExtra(NotepadFragment.STRING_ID, NotepadFragment.FRAGMENT_EDITOR);
+                sendBroadcast(changeFragmentIntent);
+
+                Intent newNoteIntent = new Intent(EditorFragment.ACTION_OPEN_FILE).setPackage(getPackageName());
+                newNoteIntent.putExtra(EditorFragment.FILE_PATH_EXTRA, EditorFragment.PATH_NONE_EXTRA);
+                newNoteIntent.putExtra(EditorFragment.TEXT_EXTRA, text);
+                sendBroadcast(newNoteIntent);
+            });
+        }
+
+        if (action.equals("toolbox.mainActivity.addTimer")||action.equals("com.android.intent.action.SET_TIMER")) {
+            setPageByName(TimerRootFragment.STRING_ID, () -> {
+                Intent changeFragmentIntent = new Intent(TimerRootFragment.ACTION_CHANGE_FRAGMENT).setPackage(getPackageName());
+                changeFragmentIntent.putExtra(NotepadFragment.STRING_ID, TimerRootFragment.SETTER_FRAGMENT);
+                sendBroadcast(changeFragmentIntent);
+            });
+        }
     }
 
-    public void setFragment(ToolFragment fragment) {
+    public void setPageByName(String name, Runnable action) {
+        setPageByName(name);
+        new Handler(Looper.getMainLooper()).postDelayed(action, 200);
+    }
+
+    public void setPageByName(ToolFragment fragment) {
         mViewPager2.setCurrentItem(fragments.indexOf(fragment));
     }
 
