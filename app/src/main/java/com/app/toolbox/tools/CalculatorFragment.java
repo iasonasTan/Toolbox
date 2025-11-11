@@ -1,4 +1,4 @@
-package com.app.toolbox.fragment;
+package com.app.toolbox.tools;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.app.toolbox.R;
-import com.app.toolbox.utils.ToolFragment;
+import com.app.toolbox.utils.PageFragment;
 import com.app.toolbox.view.AnimatedButton;
 import com.app.toolbox.view.navigation.NavigationItemView;
 
@@ -26,7 +26,7 @@ import org.mozilla.javascript.Scriptable;
 
 import java.math.BigInteger;
 
-public class CalculatorFragment extends ToolFragment implements View.OnClickListener {
+public class CalculatorFragment extends PageFragment implements View.OnClickListener {
     private TextView mMainTv;
     private boolean mHadError =false;
 
@@ -94,7 +94,7 @@ public class CalculatorFragment extends ToolFragment implements View.OnClickList
         mMainTv = view.findViewById(R.id.result);
     }
 
-    public BigInteger factorial (long val) {
+    public BigInteger factorial (double val) {
         BigInteger bigInteger=BigInteger.ONE;
         for (long i = 2; i <= val; i++) {
             bigInteger = bigInteger.multiply(BigInteger.valueOf(i));
@@ -160,36 +160,26 @@ public class CalculatorFragment extends ToolFragment implements View.OnClickList
     }
 
     public String doOperations(String buttonText, double oldResult) {
-        String newResult = null;
-        switch (buttonText) {
-            case "!":
-                if (oldResult > 5000) {
-                    newResult = "Too big!";
-                } else {
-                    newResult = factorial((long) oldResult).toString();
-                }
-                break;
-            case "L":
-                newResult = Math.log(oldResult) + "";
-                break;
-            case "√":
-                newResult = Math.sqrt(oldResult) + "";
-                break;
-            case "x²":
-                newResult = Math.pow(oldResult, 2) + "";
-                break;
-            default:
-                if(mMainTv.getText().equals("0")) {
+        return switch (buttonText) {
+            case "!" -> oldResult > 5000 ?
+                    "Too big!" :
+                    factorial(oldResult).toString();
+            case "L" -> Math.log(oldResult) + "";
+            case "√" -> Math.sqrt(oldResult) + "";
+            case "x²" -> Math.pow(oldResult, 2) + "";
+            default -> {
+                if (mMainTv.getText().equals("0")) {
                     mMainTv.setText("");
                 }
                 mMainTv.post(() -> mMainTv.append(buttonText));
-        }
-        return newResult;
+                yield null;
+            }
+        };
     }
 
     public String getResult (String code) {
         try {
-            org.mozilla.javascript.Context context = org.mozilla.javascript.Context.enter();
+            var context = org.mozilla.javascript.Context.enter();
             context.setOptimizationLevel(-1);
             Scriptable scriptable = context.initStandardObjects();
             String finalResult = context.evaluateString(scriptable,

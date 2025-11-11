@@ -1,4 +1,4 @@
-package com.app.toolbox.fragment;
+package com.app.toolbox.tools;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,12 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.app.toolbox.R;
-import com.app.toolbox.utils.ToolFragment;
+import com.app.toolbox.utils.PageFragment;
 import com.app.toolbox.view.navigation.NavigationItemView;
 
 import java.util.Locale;
 
-public class RandNumGenFragment extends ToolFragment {
+public class RandNumGenFragment extends PageFragment {
 
     @Override
     protected String fragmentName() {

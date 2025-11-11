@@ -35,29 +35,43 @@
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND_MULTIPLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
-            </intent-filter>
+
             <intent-filter>
                 <action android:name="com.android.intent.action.SET_TIMER" />
             </intent-filter>
         </activity>
 
-        <service android:name=".fragment.stopwatch.StopwatchService" android:exported="false" android:foregroundServiceType="dataSync" />
-        <service android:name=".fragment.timer.TimerService" android:exported="false" android:foregroundServiceType="dataSync" />
-        <service android:name=".fragment.stopwatch.BroadcastSenderService" android:exported="false" />
-        <receiver android:name=".fragment.timer.StopTimerReceiver" android:exported="false" />
+        <service android:name=".tools.stopwatch.StopwatchService" android:exported="false" android:foregroundServiceType="dataSync" />
+        <service android:name=".tools.timer.TimerService" android:exported="false" android:foregroundServiceType="dataSync" />
+        <receiver android:name=".tools.timer.StopTimerReceiver" android:exported="false" />
+
+        <receiver
+            android:name=".tools.stopwatch.widget.StopwatchWidget"
+            android:icon="@drawable/stopwatch_icon"
+            android:label="@string/item_stopwatch"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.eightbitcloud.example.widget.ACTION_WIDGET_RECEIVER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/stopwatch_widget_info" />
+        </receiver>
     </application>
 
 </manifest>

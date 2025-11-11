@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -24,16 +23,15 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.app.toolbox.fragment.CalculatorFragment;
-import com.app.toolbox.fragment.RandNumGenFragment;
-import com.app.toolbox.fragment.notepad.EditorFragment;
-import com.app.toolbox.fragment.notepad.NotepadFragment;
-import com.app.toolbox.fragment.stopwatch.StopwatchRootFragment;
-import com.app.toolbox.fragment.stopwatch.StopwatchService;
-import com.app.toolbox.fragment.timer.TimerRootFragment;
-import com.app.toolbox.fragment.timer.TimerService;
+import com.app.toolbox.tools.CalculatorFragment;
+import com.app.toolbox.tools.RandNumGenFragment;
+import com.app.toolbox.tools.notepad.EditorFragment;
+import com.app.toolbox.tools.notepad.NotepadFragment;
+import com.app.toolbox.tools.stopwatch.StopwatchRootFragment;
+import com.app.toolbox.tools.stopwatch.StopwatchService;
+import com.app.toolbox.tools.timer.TimerRootFragment;
 import com.app.toolbox.utils.IntentContentsMissingException;
-import com.app.toolbox.utils.ToolFragment;
+import com.app.toolbox.utils.PageFragment;
 import com.app.toolbox.view.navigation.NavigationItemView;
 import com.app.toolbox.view.navigation.NavigationView;
 
@@ -54,41 +52,33 @@ import java.util.Objects;
 import java.util.Properties;
 
 public final class MainActivity extends AppCompatActivity {
+    private static final String USAGES_FILE_NAME = "usages.dat";
     public static final String SWITCH_PAGE       = "toolbox.mainActivity.switchPage";
     public static final String PAGE_NAME_EXTRA   = "toolbox.mainActivity.pageName";
     public static final String CONFIG_VIEW_PAGER = "toolbox.mainActivity.configViewPager";
-    public static final String ENABLE_USER_INPUT = "toolbox.mainActivity.scrollingEnabled";
+    public static final String USER_INPUT_EXTRA  = "toolbox.mainActivity.scrollingEnabled";
     public static final String ACTION_SHOW_PAGE  = "toolbox.mainActivity.showPage";
-    private static final String USAGES_FILE_NAME = "usages.dat";
+
     public NavigationView bnv;
-    private List<ToolFragment> fragments;
+    private List<PageFragment> fragments;
     private ViewPager2 mViewPager2;
 
     // listens on event CHANGE_PAGE and CONFIG_VIEW_PAGER
     private final BroadcastReceiver mSwitchPageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
+        @Override public void onReceive(Context context, Intent intent) {
             String action = Objects.requireNonNull(intent.getAction());
-            switch (action) {
-                case SWITCH_PAGE:
-                    String name = intent.getStringExtra(PAGE_NAME_EXTRA);
-                    if (name == null) throw new IntentContentsMissingException();
-                    setPageByName(name);
-                    break;
-                case CONFIG_VIEW_PAGER:
-                    boolean enableScrolling = intent.getBooleanExtra(ENABLE_USER_INPUT, true);
-                    mViewPager2.setUserInputEnabled(enableScrolling);
-                    break;
-                default:
-                    throw new IntentContentsMissingException();
+            switch(action) {
+                case SWITCH_PAGE -> setPageByName(intent.getStringExtra(PAGE_NAME_EXTRA));
+                case CONFIG_VIEW_PAGER -> mViewPager2.setUserInputEnabled(intent.getBooleanExtra(USER_INPUT_EXTRA, true));
+                default -> throw new IntentContentsMissingException();
             }
         }
     };
 
-    public void setPageByName(final String requiredName) {
-        for(ToolFragment toolFragment: fragments) {
-            if(requiredName.equals(toolFragment.name())) {
-                setPageByName(toolFragment);
+    public void setPageByName(String requiredName) {
+        for(PageFragment pageFragment : fragments) {
+            if(requiredName.equals(pageFragment.name())) {
+                setPageByName(pageFragment);
                 return;
             }
         }
@@ -98,9 +88,9 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     @Deprecated(forRemoval = true)
-    public ToolFragment getFragment(Class<? extends ToolFragment> clazz) {
+    public PageFragment getFragment(Class<? extends PageFragment> clazz) {
         if (clazz==null) throw new NullPointerException("Class is null.");
-        for (ToolFragment fragment: fragments) {
+        for (PageFragment fragment: fragments) {
             if (fragment.getClass().isAssignableFrom(clazz)) {
                 return fragment;
             }
@@ -114,22 +104,9 @@ public final class MainActivity extends AppCompatActivity {
         storeFragmentUsages();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        TimerService.sIsActivityInForeground = false;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        TimerService.sIsActivityInForeground = true;
-    }
-
     private void storeFragmentUsages() {
-        // save fragment usages to file
         Properties usages=new Properties();
-        for(ToolFragment tf: fragments) {
+        for(PageFragment tf: fragments) {
             usages.setProperty(tf.getClass().toString(), tf.getUsages()+"");
         }
         try {
@@ -146,7 +123,7 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     private void initFragments() {
-        List<ToolFragment> loc_fragments=new ArrayList<>();
+        List<PageFragment> loc_fragments=new ArrayList<>();
         Collections.addAll(loc_fragments, new TimerRootFragment(), new StopwatchRootFragment(),
                 new CalculatorFragment(), new NotepadFragment(), new RandNumGenFragment());
         loadFragmentUsages(loc_fragments);
@@ -164,7 +141,7 @@ public final class MainActivity extends AppCompatActivity {
         fragments.get(0).decreaseUsages();
     }
 
-    private void loadFragmentUsages(List<ToolFragment> loc_fragments) {
+    private void loadFragmentUsages(List<PageFragment> loc_fragments) {
         Properties usages=new Properties();
         try {
             File usage_file=new File(getFilesDir(), USAGES_FILE_NAME);
@@ -183,7 +160,7 @@ public final class MainActivity extends AppCompatActivity {
             final String className=(String)k;
             final long classUsages=Long.parseLong((String)v);
 
-            for(ToolFragment frag: loc_fragments) {
+            for(PageFragment frag: loc_fragments) {
                 if(className.equals(frag.getClass().toString()))
                     frag.setUsages(classUsages);
             }
@@ -191,10 +168,9 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     private void initNavBar() {
-        Log.d("action_spoil", "Initializing navigation bar.");
+        Log.d("initialization", "Initializing navigation bar.");
         bnv = findViewById(R.id.bottom_navigation);
         fragments.forEach(frag -> {
-            frag.removeNavItem();
             NavigationItemView nv=frag.getNavItem(this);
             bnv.replaceItemWithSameIcon(nv);
             //bnv.addItem(nv);
@@ -339,7 +315,7 @@ public final class MainActivity extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).postDelayed(action, 200);
     }
 
-    public void setPageByName(ToolFragment fragment) {
+    public void setPageByName(PageFragment fragment) {
         mViewPager2.setCurrentItem(fragments.indexOf(fragment));
     }
 

@@ -1,4 +1,4 @@
-package com.app.toolbox.fragment.timer;
+package com.app.toolbox.tools.timer;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,13 +16,12 @@ public final class StopTimerReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         final int REQUIRED_ID = intent.getIntExtra(TIMER_ID_EXTRA, 0);
-        Log.d("action_spoil", "searching for timer with ID="+REQUIRED_ID);
         Iterator<TimerService.Timer> iter= TimerService.getTimers().iterator();
         while(iter.hasNext()) {
             TimerService.Timer timer=iter.next();
             int currentID = timer.getTimerID();
             if (currentID == REQUIRED_ID) {
-                Log.d("action_spoil", "timer "+currentID+" killed!");
+                Log.d("kill-timer", "timer "+currentID+" killed!");
                 timer.terminate();
                 iter.remove();
                 Intent intent2 = new Intent(context, TimerService.class);

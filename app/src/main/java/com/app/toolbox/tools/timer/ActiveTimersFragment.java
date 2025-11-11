@@ -1,4 +1,4 @@
-package com.app.toolbox.fragment.timer;
+package com.app.toolbox.tools.timer;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,11 +10,12 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.app.toolbox.R;
 
 
-public class ActiveTimersFragment extends TimerRootFragment.InnerFragment {
+public class ActiveTimersFragment extends Fragment {
     public LinearLayout timersList;
 
     @Nullable
@@ -40,7 +41,7 @@ public class ActiveTimersFragment extends TimerRootFragment.InnerFragment {
     }
 
     public void loadTimersToUI() {
-        Log.d("action_spoil", "Loading timers to gui...");
+        Log.d("timer_loading", "Loading timers to gui...");
         for (TimerService.Timer t: TimerService.getTimers()) {
             View timerView = t.getView();
             LinearLayout parent = (LinearLayout) timerView.getParent();

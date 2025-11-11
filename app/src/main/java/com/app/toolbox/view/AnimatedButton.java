@@ -2,13 +2,9 @@ package com.app.toolbox.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.provider.Settings;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
@@ -17,7 +13,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.app.toolbox.R;
-import com.app.toolbox.SettingsActivity;
 
 public class AnimatedButton extends AppCompatButton {
     public static int sBackground = -1;

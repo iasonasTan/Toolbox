@@ -1,11 +1,10 @@
-package com.app.toolbox.fragment.notepad;
+package com.app.toolbox.tools.notepad;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,43 +15,34 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.app.toolbox.R;
-import com.app.toolbox.utils.ToolFragment;
+import com.app.toolbox.utils.PageFragment;
 import com.app.toolbox.view.navigation.NavigationItemView;
 
 import java.util.List;
 import java.util.Objects;
 
-public class NotepadFragment extends ToolFragment {
-    // used by shortcuts
+public class NotepadFragment extends PageFragment {
     public static final String FRAGMENT_EDITOR        = "toolbox.notepad.EDITOR_FRAGMENT";
     public static final String ACTION_CHANGE_FRAGMENT = "toolbox.notepad.CHANGE_FRAGMENT";
     public static final String STRING_ID              = "toolbox.page.NOTEPAD_PAGE";
     public static final String FRAGMENT_HOME          = "toolbox.notepad.HOME_FRAGMENT";
 
     static List<String> usedNames;
-
-    private final HomeFragment mHome     = new HomeFragment();
+    private final HomeFragment   mHome   = new HomeFragment();
     private final EditorFragment mEditor = new EditorFragment();
 
     private final BroadcastReceiver mCommandReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String fragmentToSet = Objects.requireNonNull(intent.getStringExtra(STRING_ID));
-            Fragment fragment;
-            switch (fragmentToSet) {
-                case FRAGMENT_HOME: fragment = mHome; break;
-                case FRAGMENT_EDITOR: fragment = mEditor; break;
-                default: fragment = null;
-            }
-            Log.d("notepad_open", "Showing notepad fragment "+fragmentToSet);
-            Log.d("broadcast_test", "Intent received by broadcast receiver on NotepadFragment");
-            if(fragment != null) {
-                if(!isStateSaved())
-                    getChildFragmentManager().beginTransaction()
-                            .replace(R.id.notepad_fragment_container, fragment)
-                            .commit();
-            } else {
-                Log.w("fragment-transaction", "Fragment not changed!");
+        @Override public void onReceive(Context context, Intent intent) {
+            Fragment fragment = switch(
+                    Objects.requireNonNull(intent.getStringExtra(STRING_ID))) {
+                case FRAGMENT_HOME -> mHome;
+                case FRAGMENT_EDITOR -> mEditor;
+                default -> null;
+            };
+            if(fragment != null&&!isStateSaved()) {
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.notepad_fragment_container, fragment)
+                        .commit();
             }
         }
     };

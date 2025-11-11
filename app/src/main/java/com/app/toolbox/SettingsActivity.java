@@ -77,8 +77,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void showColorPicker(int initialColor, Consumer<Integer> colorConsumer) {
         AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, initialColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
-            public void onCancel(AmbilWarnaDialog dialog) {}
-            public void onOk(AmbilWarnaDialog dialog, int color) {
+            @Override public void onCancel(AmbilWarnaDialog dialog) {}
+            @Override public void onOk(AmbilWarnaDialog dialog, int color) {
                 colorConsumer.accept(color);
             }
         });

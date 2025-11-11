@@ -1,4 +1,4 @@
-package com.app.toolbox.fragment.stopwatch;
+package com.app.toolbox.tools.stopwatch;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -26,29 +26,27 @@ import com.app.toolbox.utils.IntentContentsMissingException;
 import com.app.toolbox.utils.Utils;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class StopwatchFragment extends Fragment {
-    static final String ACTION_UPDATE_STOPWATCH = "toolbox.stopwatch.updateStopwatch";
-    static final String ELAPSED_TIME_EXTRA      = "toolbox.stopwatch.elapsedTimeExtra";
-    static final String ACTION_CHANGE_STATE     = "toolbox.stopwatch.changeState";
-    static final String STATE_TYPE_EXTRA        = "toolbox.stopwatch.stateTypeExtra";
-    static final String PREFERENCES_NAME        = "toolbox.stopwatch.preferencesName";
-    static final String MILLIS_PREFERENCE       = "toolbox.stopwatch.prefsMillis";
+    static final String ACTION_UPDATE_VIEW  = "toolbox.stopwatch.updateStopwatch";
+    static final String ELAPSED_TIME_EXTRA  = "toolbox.stopwatch.elapsedTimeExtra";
+    static final String ACTION_CHANGE_STATE = "toolbox.stopwatch.changeState";
+    static final String STATE_TYPE_EXTRA    = "toolbox.stopwatch.stateTypeExtra";
+    static final String PREFERENCES_NAME    = "toolbox.stopwatch.preferencesName";
+    static final String MILLIS_PREFERENCE   = "toolbox.stopwatch.prefsMillis";
 
     private Button mStartButton, mResetButton, mStopButton;
     private TextView mTimeView;
     private boolean mShowMillis;
 
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = Objects.requireNonNull(intent.getAction());
-            switch (action) {
-                case ACTION_UPDATE_STOPWATCH:
-                    final int CONTENTS_MISSING = -16;
-                    long time = intent.getLongExtra(ELAPSED_TIME_EXTRA, CONTENTS_MISSING);
-                    if (time == CONTENTS_MISSING) throw new IntentContentsMissingException();
+        @Override public void onReceive(Context context, Intent intent) {
+            switch (Objects.requireNonNull(intent.getAction())) {
+                case ACTION_UPDATE_VIEW:
+                    long time = intent.getLongExtra(ELAPSED_TIME_EXTRA, 0);
                     String timeStr =Utils.longToTime(time, mShowMillis);
+                    Log.d("stopwatch_service", "Updating time, new time is: "+timeStr);
                     mTimeView.setText(timeStr);
                     break;
                 case ACTION_CHANGE_STATE:
@@ -79,22 +77,7 @@ public class StopwatchFragment extends Fragment {
         mTimeView = view.findViewById(R.id.time_view);
         mStopButton = view.findViewById(R.id.stop_button);
 
-        final Intent serviceIntent=new Intent(getActivity(), StopwatchService.class);
-        mStartButton.setOnClickListener(v -> {
-            setUiState(UIState.RUNNING);
-            serviceIntent.setAction(StopwatchService.ACTION_START_TIMER);
-            requireContext().startForegroundService(serviceIntent);
-        });
-        mStopButton.setOnClickListener(v -> {
-            setUiState(UIState.PAUSED);
-            serviceIntent.setAction(StopwatchService.ACTION_STOP_TIMER);
-            requireContext().startForegroundService(serviceIntent);
-        });
-        mResetButton.setOnClickListener(v -> {
-            setUiState(UIState.BEGINNING);
-            serviceIntent.setAction(StopwatchService.ACTION_RESET_TIMER);
-            requireContext().startForegroundService(serviceIntent);
-        });
+        addButtonListeners();
 
         SharedPreferences preferences = requireContext().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
         mShowMillis = preferences.getBoolean(MILLIS_PREFERENCE, false);
@@ -109,6 +92,26 @@ public class StopwatchFragment extends Fragment {
         });
     }
 
+    private void addButtonListeners() {
+        Consumer<String> intentSender = action -> {
+            Intent intent = new Intent(requireContext(), StopwatchService.class);
+            intent.setAction(action);
+            requireContext().startForegroundService(intent);
+        };
+        mStartButton.setOnClickListener(v -> {
+            setUiState(UIState.RUNNING);
+            intentSender.accept(StopwatchService.ACTION_START_TIMER);
+        });
+        mStopButton.setOnClickListener(v -> {
+            setUiState(UIState.PAUSED);
+            intentSender.accept(StopwatchService.ACTION_STOP_TIMER);
+        });
+        mResetButton.setOnClickListener(v -> {
+            setUiState(UIState.BEGINNING);
+            intentSender.accept(StopwatchService.ACTION_RESET_TIMER);
+        });
+    }
+
     private void adjustTimeViewSize() {
         String template = mShowMillis?"00:00:00.00 ":"00:00:00 ";
         mTimeView.setText(template);
@@ -120,7 +123,7 @@ public class StopwatchFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        IntentFilter filter = new IntentFilter(ACTION_UPDATE_STOPWATCH);
+        IntentFilter filter = new IntentFilter(ACTION_UPDATE_VIEW);
         filter.addAction(ACTION_CHANGE_STATE);
         ContextCompat.registerReceiver(requireContext(), mBroadcastReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
 
@@ -137,26 +140,24 @@ public class StopwatchFragment extends Fragment {
         //requireContext().unregisterReceiver(mBroadcastReceiver);
     }
 
-    public void setUiState(UIState state) {
+    public void setUiState(@NonNull UIState state) {
         Log.d("debug-info", "Stopwatch ui state updated to "+state.string);
-        switch(state.string) {
-            case UIStateConstants.RUNNING_STR:
+        switch(state) {
+            case BEGINNING:
+                mResetButton.setVisibility(View.GONE);
+                mStartButton.setVisibility(View.VISIBLE);
+                mStopButton.setVisibility(View.GONE);
+                break;
+            case RUNNING:
                 mResetButton.setVisibility(View.GONE);
                 mStartButton.setVisibility(View.GONE);
                 mStopButton.setVisibility(View.VISIBLE);
                 break;
-            case UIStateConstants.PAUSED_STR:
+            case PAUSED:
                 mResetButton.setVisibility(View.VISIBLE);
                 mStartButton.setVisibility(View.VISIBLE);
                 mStopButton.setVisibility(View.GONE);
                 break;
-            case UIStateConstants.BEGINNING_STR:
-                mResetButton.setVisibility(View.GONE);
-                mStartButton.setVisibility(View.VISIBLE);
-                mStopButton.setVisibility(View.GONE);
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown state "+state);
         }
     }
 

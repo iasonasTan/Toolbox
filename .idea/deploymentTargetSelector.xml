@@ -15,10 +15,10 @@
       </SelectionState>
       <SelectionState runConfigName="buildrun">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-11-01T13:43:46.852503356Z">
+        <DropdownSelection timestamp="2025-11-11T15:13:40.462534528Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=R92W50F1JXD" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/home/iasonas/.android/avd/Medium_Phone.avd" />
             </handle>
           </Target>
         </DropdownSelection>

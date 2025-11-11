@@ -5,18 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.util.Date;
 
 public final class Greeter {
     private final Context context;
     private static final String GREETER_PREFS_NAME = "toolbox.greeter.PREFERENCES";
-    private static final String GREET_STATUS = "toolbox.greeter.key.greetShown";
+    private static final String GREET_STATUS       = "toolbox.greeter.key.greetShown";
     private static final String GREET_NEVER        = "toolbox.greeter.value.shown";
     private static final String GREET_AT_DATE      = "toolbox.greeter.value.lastPostponed";
     private static final long DAY_MILLIS           = 86_400_000;

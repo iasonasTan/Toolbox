@@ -1,17 +1,17 @@
-package com.app.toolbox.fragment.stopwatch;
+package com.app.toolbox.tools.stopwatch;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-public enum UIState implements UIStateConstants, Parcelable {
-    ERROR(ERROR_STR),
-    BEGINNING(BEGINNING_STR),
-    PAUSED(PAUSED_STR),
-    RUNNING(RUNNING_STR);
+public enum UIState implements Parcelable {
+    ERROR("toolbox.stopwatch.stateError"),
+    BEGINNING("toolbox.stopwatch.stateBeginning"),
+    PAUSED("toolbox.stopwatch.statePaused"),
+    RUNNING("toolbox.stopwatch.stateRunning");
 
-    final String string;
+    public final String string;
 
     UIState(String name) {
         this.string = name;
@@ -23,8 +23,7 @@ public enum UIState implements UIStateConstants, Parcelable {
     }
 
     public static final Creator<UIState> CREATOR = new Creator<>() {
-        @Override
-        public UIState createFromParcel(Parcel source) {
+        @Override public UIState createFromParcel(Parcel source) {
             String requiredName = source.readString();
             for (UIState value : UIState.values()) {
                 if (value.string.equals(requiredName)) {
@@ -34,8 +33,7 @@ public enum UIState implements UIStateConstants, Parcelable {
             return ERROR;
         }
 
-        @Override
-        public UIState[] newArray(int size) {
+        @Override public UIState[] newArray(int size) {
             return new UIState[0];
         }
     };

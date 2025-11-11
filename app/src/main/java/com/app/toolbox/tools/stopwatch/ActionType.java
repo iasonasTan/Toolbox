@@ -1,4 +1,4 @@
-package com.app.toolbox.fragment.stopwatch;
+package com.app.toolbox.tools.stopwatch;
 
 public enum ActionType {
     START,

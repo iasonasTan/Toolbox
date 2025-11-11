@@ -1,8 +1,7 @@
-package com.app.toolbox.fragment.notepad;
+package com.app.toolbox.tools.notepad;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -31,7 +30,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Objects;
 
 public class EditorFragment extends Fragment {
     // used with shortcuts
@@ -48,17 +46,17 @@ public class EditorFragment extends Fragment {
 
     // listens on action NotepadFragment.ACTION_OPEN_FILE
     private final BroadcastReceiver mCommandReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
+        @Override public void onReceive(Context context, Intent intent) {
             Utils.checkIntent(intent, FILE_PATH_EXTRA);
-            String filePath = Objects.requireNonNull(intent.getStringExtra(FILE_PATH_EXTRA));
+            String filePath = intent.getStringExtra(FILE_PATH_EXTRA);
             Log.d("notepad_open", "Opening notepad editor.");
-            if(filePath.equals(PATH_NONE_EXTRA)) {
+            if(PATH_NONE_EXTRA.equals(filePath)) {
                 String text = intent.getStringExtra(TEXT_EXTRA);
                 Log.d("notepad_open", "Creating new note. Appending text "+text);
                 mFileToOpen = null;
                 mTextToAppend = text;
             } else {
+                // noinspection all
                 mFileToOpen = new File(filePath);
             }
         }
@@ -107,8 +105,7 @@ public class EditorFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
                 new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
+                    @Override public void handleOnBackPressed() {
                         exitEditor();
                     }
                 });
@@ -118,7 +115,7 @@ public class EditorFragment extends Fragment {
         ContextCompat.registerReceiver(requireContext(), mCommandReceiver, new IntentFilter(ACTION_OPEN_FILE), ContextCompat.RECEIVER_NOT_EXPORTED);
 
         Intent intent = new Intent(MainActivity.CONFIG_VIEW_PAGER).setPackage(requireContext().getPackageName());
-        intent.putExtra(MainActivity.ENABLE_USER_INPUT, false);
+        intent.putExtra(MainActivity.USER_INPUT_EXTRA, false);
         requireContext().sendBroadcast(intent);
 
         view.findViewById(R.id.share_button).setOnClickListener(v -> {
@@ -145,7 +142,7 @@ public class EditorFragment extends Fragment {
         super.onDestroy();
         //requireContext().unregisterReceiver(mCommandReceiver);
         Intent intent = new Intent(MainActivity.CONFIG_VIEW_PAGER).setPackage(requireContext().getPackageName());
-        intent.putExtra(MainActivity.ENABLE_USER_INPUT, true);
+        intent.putExtra(MainActivity.USER_INPUT_EXTRA, true);
         requireContext().sendBroadcast(intent);
     }
 
@@ -197,12 +194,6 @@ public class EditorFragment extends Fragment {
             return false;
         }
         return true;
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        Log.d("action_spoil", this + " Is attached to context " + context);
     }
 
     @SuppressWarnings("all")

@@ -1,4 +1,4 @@
-package com.app.toolbox.fragment.timer;
+package com.app.toolbox.tools.timer;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,43 +12,36 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.app.toolbox.R;
 import com.app.toolbox.view.TimeInput;
 
-public class TimerSetterFragment extends TimerRootFragment.InnerFragment {
+public class TimerSetterFragment extends Fragment {
     private TimeInput mTimeInput;
     private EditText mNameInput;
-    private Intent mShowTimeHomeIntent;
+    private Intent mShowHomeIntent;
 
     public final class OnStartTimerHandler implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
+        @Override public void onClick(View v) {
             long totalTime_millis = mTimeInput.getTimeMillis();
             if (totalTime_millis==0) {
                 showOther();
                 return;
             }
-            getParentTimerFragment().addTimer(totalTime_millis, mNameInput.getText().toString());
+            Intent addTimerIntent = new Intent(TimerRootFragment.ACTION_NEW_TIMER).setPackage(requireContext().getPackageName());
+            addTimerIntent.putExtra(TimerRootFragment.TIMER_NAME_EXTRA, mNameInput.getText().toString());
+            addTimerIntent.putExtra(TimerRootFragment.TIME_MILLIS_EXTRA, totalTime_millis);
+            requireContext().sendBroadcast(addTimerIntent);
+
             Toast.makeText(requireContext(), ContextCompat.getString(requireContext(), R.string.timer_set), Toast.LENGTH_SHORT).show();
             showOther();
         }
     }
 
-    public final class OnBackPressed extends OnBackPressedCallback {
-        public OnBackPressed() {
-            super(true);
-        }
-
-        @Override
-        public void handleOnBackPressed() {
-            showOther();
-        }
-    }
-
     private void showOther() {
-        requireContext().sendBroadcast(mShowTimeHomeIntent);
-        mTimeInput.setToZero();
+        requireContext().sendBroadcast(mShowHomeIntent);
+        mTimeInput.resetTime();
         mNameInput.setText("");
     }
 
@@ -61,12 +54,17 @@ public class TimerSetterFragment extends TimerRootFragment.InnerFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressed());
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override public void handleOnBackPressed() {
+                showOther();
+            }
+        });
         view.findViewById(R.id.start_timer_button).setOnClickListener(new OnStartTimerHandler());
+
         mNameInput = view.findViewById(R.id.name_input);
         mTimeInput = view.findViewById(R.id.time_input);
-        mShowTimeHomeIntent = new Intent(TimerRootFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
-        mShowTimeHomeIntent.putExtra(TimerRootFragment.FRAGMENT_NAME_EXTRA, TimerRootFragment.HOME_FRAGMENT);
+        mShowHomeIntent = new Intent(TimerRootFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
+        mShowHomeIntent.putExtra(TimerRootFragment.FRAGMENT_NAME_EXTRA, TimerRootFragment.HOME_FRAGMENT);
     }
 
 }

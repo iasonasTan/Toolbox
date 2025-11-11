@@ -1,4 +1,4 @@
-package com.app.toolbox.fragment.timer;
+package com.app.toolbox.tools.timer;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -41,18 +41,12 @@ public class TimerService extends Service implements Runnable {
     private Thread mThread;
     private static boolean sRunning = true;
     private static boolean sPaused = false;
-    private static boolean sStartActivity = false;
-    public static boolean sIsActivityInForeground = true;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        // stop timers pIntent
-        Intent intent = new Intent(getApplicationContext(), TimerService.class);
-        intent.setAction(STOP_ALL_TIMERS);
+        Intent intent = new Intent(getApplicationContext(), TimerService.class).setAction(STOP_ALL_TIMERS);
         mStopAllTimersPendingIntent = PendingIntent.getService(getApplicationContext(), 12, intent, PendingIntent.FLAG_IMMUTABLE);
-        // show timers pIntent
-        Log.d("pIntentCreation", "Class timerService calls createShowPageIntent()");
         mShowTimersPendingIntent = Utils.createShowPagePendingIntent(TimerRootFragment.STRING_ID, getApplicationContext());
 
         NotificationChannel notificationChannel = new NotificationChannel(SILENT_NOTIFICATION, "Timer status", NotificationManager.IMPORTANCE_MIN);
@@ -64,30 +58,35 @@ public class TimerService extends Service implements Runnable {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(intent==null) return START_STICKY;
-        String action = Objects.requireNonNull(intent.getAction());
-        if (action.equals(UPDATE_TIMERS)) {
-            sRunning = false;
-            if(mThread != null)
-                mThread.interrupt();
-            mThread = new Thread(this);
-            sRunning = true;
-            mThread.start();
-            sendStatusNotification();
-            if(sTimers.isEmpty()){
-                stopForeground(Service.STOP_FOREGROUND_REMOVE);
-                stopSelf();
+        switch (Objects.requireNonNull(intent.getAction())) {
+            case UPDATE_TIMERS -> {
+                restartThread();
+                sendStatusNotification();
+                if (sTimers.isEmpty()) {
+                    stopForeground(Service.STOP_FOREGROUND_REMOVE);
+                    stopSelf();
+                }
             }
-        } else if (action.equals(STOP_ALL_TIMERS)) {
-            Log.d("timer_test", "Stopping all timers now.");
-            sTimers.forEach(t -> {
-                Intent intent2= t.createIntent();
-                sendBroadcast(intent2);
-                Log.d("action_spoil", "Stop also timer with ID="+t.getTimerID());
-            });
-        } else {
-            throw new IntentContentsMissingException();
+            case STOP_ALL_TIMERS -> {
+                Log.d("timer_test", "Stopping all timers now.");
+                sTimers.forEach(t -> {
+                    Intent intent2 = t.createIntent();
+                    sendBroadcast(intent2);
+                    Log.d("timer_service", "Stop also timer with ID=" + t.getTimerID());
+                });
+            }
+            default -> throw new IntentContentsMissingException();
         }
         return START_STICKY;
+    }
+
+    public void restartThread() {
+        sRunning = false;
+        if (mThread != null)
+            mThread.interrupt();
+        mThread = new Thread(this);
+        sRunning = true;
+        mThread.start();
     }
 
     static void addTimer(Timer timer) {
@@ -123,17 +122,6 @@ public class TimerService extends Service implements Runnable {
         while(sRunning) {
             if(sPaused) continue;
             sTimers.forEach(t -> new Thread(t).start());
-            if(sStartActivity&&sIsActivityInForeground) {
-                Log.d("activity_log", "Timers activity is removed/deprecated.");
-//                PendingIntent pendingIntent = TimerAlertActivity.createPIntent(getApplicationContext(), "Timer "+sTimerName+" ended.", sTimerID);
-//                Log.d("activity-log", "trying to start activity");
-//                try {
-//                    sStartActivity = false;
-//                    pendingIntent.send();
-//                } catch (PendingIntent.CanceledException e) {
-//                    throw new RuntimeException(e);
-//                }
-            }
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -168,9 +156,8 @@ public class TimerService extends Service implements Runnable {
 
             view.setContent(name.isBlank()?context.getString(R.string.unnamed):name);
             view.setOnDeleteListener(v -> {
-                Intent intent= createIntent();
-                context.sendBroadcast(intent);
-                Log.d("action_spoil", "Stop intent sent with ID="+ getTimerID());
+                context.sendBroadcast(createIntent());
+                Log.d("stopping_timer", "Stop intent sent with ID="+ getTimerID());
             });
 
             initNotification();
@@ -252,14 +239,12 @@ public class TimerService extends Service implements Runnable {
                 endTimer();
             }
             sHandler.post(() -> mView.setTitle(Utils.longToTime(ELL_T, false)));
-//            sHandler.postDelayed(this, 90);
         }
 
         private void endTimer() {
-            sStartActivity = true;
             mIsRunning = false;
             sRingtone.play();
-            Log.d("action_spoil", "Stopping timer...");
+            Log.d("end_timer", "Stopping timer...");
             mFinished = true;
             Intent intent = new Intent(context, TimerService.class);
             intent.setAction(TimerService.UPDATE_TIMERS);

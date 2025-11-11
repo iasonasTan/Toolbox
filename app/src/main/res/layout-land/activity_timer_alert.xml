@@ -6,7 +6,7 @@
     android:paddingHorizontal="20dp"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    tools:context=".fragment.timer.TimerAlertActivity">
+    tools:context=".tools.timer.TimerAlertActivity">
 
     <LinearLayout
         android:orientation="vertical"

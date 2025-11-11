@@ -1,5 +1,6 @@
-package com.app.toolbox.fragment.stopwatch;
+package com.app.toolbox.tools.stopwatch;
 
+@Deprecated(forRemoval = true)
 public interface UIStateConstants {
     String ERROR_STR     = "toolbox.stopwatch.stateError";
     String BEGINNING_STR = "toolbox.stopwatch.stateBeginning";

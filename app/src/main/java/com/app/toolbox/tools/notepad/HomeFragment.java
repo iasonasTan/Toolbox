@@ -1,4 +1,4 @@
-package com.app.toolbox.fragment.notepad;
+package com.app.toolbox.tools.notepad;
 
 import android.content.Intent;
 import android.os.Bundle;

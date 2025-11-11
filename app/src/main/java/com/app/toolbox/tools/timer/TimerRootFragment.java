@@ -1,4 +1,4 @@
-package com.app.toolbox.fragment.timer;
+package com.app.toolbox.tools.timer;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -20,36 +20,43 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.app.toolbox.R;
 import com.app.toolbox.utils.IllegalIntentContentsException;
-import com.app.toolbox.utils.IntentContentsMissingException;
-import com.app.toolbox.utils.ToolFragment;
+import com.app.toolbox.utils.PageFragment;
+import com.app.toolbox.utils.Utils;
 import com.app.toolbox.view.ItemView;
 import com.app.toolbox.view.navigation.NavigationItemView;
 
-import java.util.Objects;
-
-public class TimerRootFragment extends ToolFragment {
+public class TimerRootFragment extends PageFragment {
     public static final String STRING_ID              = "toolbox.page.TIMER_PAGE";
     public static final String ACTION_CHANGE_FRAGMENT = "toolbox.timer.changeFragment";
     public static final String FRAGMENT_NAME_EXTRA    = "toolbox.timer.fragmentName";
     public static final String HOME_FRAGMENT          = "toolbox.timer.showHome";
     public static final String SETTER_FRAGMENT        = "toolbox.timer.showSetter";
+    public static final String ACTION_NEW_TIMER       = "toolbox.timer.newTimer";
+    public static final String TIMER_NAME_EXTRA       = "toolbox.timer.timeName";
+    public static final String TIME_MILLIS_EXTRA      = "toolbox.timer.timeMillis";
     static final String NOTIFICATION_CHANNEL_ID       = "toolbox.timer.notificationChannel";
 
     private final TimerSetterFragment timerSetterFragment =new TimerSetterFragment();
     private final ActiveTimersFragment timersFragment=new ActiveTimersFragment();
 
+    private final BroadcastReceiver mAddTimerReceiver = new BroadcastReceiver() {
+        @Override public void onReceive(Context context, Intent intent) {
+            Utils.checkIntent(intent, TIMER_NAME_EXTRA, TIME_MILLIS_EXTRA);
+            addTimer(intent.getLongExtra(TIME_MILLIS_EXTRA, 2000),
+                    intent.getStringExtra(TIMER_NAME_EXTRA));
+        }
+    };
+
     private final BroadcastReceiver mChangeFragmentReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Fragment fragment;
-            String action = Objects.requireNonNull(intent.getAction());
-            if(!action.equals(ACTION_CHANGE_FRAGMENT)) throw new IllegalIntentContentsException();
-            String fragmentName = Objects.requireNonNull(intent.getStringExtra(FRAGMENT_NAME_EXTRA));
-            switch(fragmentName) {
-                case HOME_FRAGMENT: fragment = timersFragment; break;
-                case SETTER_FRAGMENT: fragment = timerSetterFragment; break;
-                default: throw new IllegalIntentContentsException();
-            }
+        @Override public void onReceive(Context context, Intent intent) {
+            Utils.checkIntent(intent, FRAGMENT_NAME_EXTRA);
+            String fragmentName = intent.getStringExtra(FRAGMENT_NAME_EXTRA);
+            //noinspection all
+            Fragment fragment = switch(fragmentName) {
+                case HOME_FRAGMENT -> timersFragment;
+                case SETTER_FRAGMENT -> timerSetterFragment;
+                default -> throw new IllegalIntentContentsException();
+            };
             setFragment(fragment);
         }
         private void setFragment(Fragment fragment) {
@@ -67,6 +74,8 @@ public class TimerRootFragment extends ToolFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ContextCompat.registerReceiver(requireContext(), mChangeFragmentReceiver, new IntentFilter(ACTION_CHANGE_FRAGMENT), ContextCompat.RECEIVER_NOT_EXPORTED);
+        ContextCompat.registerReceiver(requireContext(), mAddTimerReceiver, new IntentFilter(ACTION_NEW_TIMER), ContextCompat.RECEIVER_NOT_EXPORTED);
+
         NotificationChannel channel=new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Timer Notifications", NotificationManager.IMPORTANCE_LOW);
         NotificationManager manager= requireContext().getSystemService(NotificationManager.class);
         manager.createNotificationChannel(channel);
@@ -109,28 +118,10 @@ public class TimerRootFragment extends ToolFragment {
         itemView.setFont(requireContext(), R.font.poppins_bold);
         TimerService.Timer timer=new TimerService.Timer(requireContext(), itemView, endTime, name);
         TimerService.addTimer(timer);
+
         Intent intent = new Intent(requireContext(), TimerService.class);
         intent.setAction(TimerService.UPDATE_TIMERS);
         requireContext().startForegroundService(intent);
     }
 
-    static abstract class InnerFragment extends Fragment {
-        private TimerRootFragment parentFragment;
-
-        protected TimerRootFragment getParentTimerFragment() {
-            return parentFragment;
-        }
-
-        @Override
-        public void onAttach(@NonNull Context context) {
-            super.onAttach(context);
-
-            Fragment parent = getParentFragment();
-            if (parent instanceof TimerRootFragment) {
-                this.parentFragment = (TimerRootFragment) parent;
-            } else {
-                throw new IllegalStateException("Parent fragment is not TimerFragment");
-            }
-        }
-    }
 }
