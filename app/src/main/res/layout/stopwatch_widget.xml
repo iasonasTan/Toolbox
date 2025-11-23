@@ -13,8 +13,6 @@
         android:fontFamily="@font/poppins_bold"
         android:textSize="50sp"
         android:id="@+id/time_view"
-        android:textColor="?attr/colorOnPrimary"
-        android:background="@drawable/background_with_border"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:ignore="HardcodedText" />
@@ -33,8 +31,6 @@
             android:id="@+id/start_button"
             android:text="@string/start"
             android:textSize="20sp"
-            android:textColor="?attr/colorOnPrimary"
-            android:background="@drawable/background_with_border"
             android:fontFamily="@font/zalando_sans_bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -45,8 +41,6 @@
             android:id="@+id/stop_button"
             android:textSize="20sp"
             android:text="@string/stop"
-            android:textColor="?attr/colorOnPrimary"
-            android:background="@drawable/background_with_border"
             android:fontFamily="@font/zalando_sans_bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -55,8 +49,6 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_margin="5dp"
             android:textSize="20sp"
-            android:textColor="?attr/colorOnPrimary"
-            android:background="@drawable/background_with_border"
             android:id="@+id/reset_button"
             android:fontFamily="@font/zalando_sans_bold"
             android:text="@string/reset"

@@ -3,9 +3,7 @@ package com.app.toolbox.utils;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.util.Log;
-import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
 
@@ -14,7 +12,11 @@ import com.app.toolbox.MainActivity;
 import java.math.BigInteger;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.function.Consumer;
 
+import yuku.ambilwarna.AmbilWarnaDialog;
+
+@SuppressWarnings("unused")
 public final class Utils {
     /**
      * Private constructor to prevent instantiation.
@@ -101,6 +103,25 @@ public final class Utils {
             bigInteger = bigInteger.multiply(BigInteger.valueOf(i));
         }
         return bigInteger;
+    }
+
+    /**
+     * Shows a color picker and executes taken code.
+     * @param onCancel     {@link Runnable} to execute when dialog is ignored.
+     * @param initialColor Color to start the picker from.
+     * @param onOk         {@link Consumer<Integer>} executes when a color is selected.
+     * @param context      Context used to show the dialog.
+     */
+    public static void showColorPicker(int initialColor, Consumer<Integer> onOk, Runnable onCancel, Context context) {
+        AmbilWarnaDialog dialog = new AmbilWarnaDialog(context, initialColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+            @Override public void onCancel(AmbilWarnaDialog dialog) {
+                onCancel.run();
+            }
+            @Override public void onOk(AmbilWarnaDialog dialog, int color) {
+                onOk.accept(color);
+            }
+        });
+        dialog.show();
     }
 
 }

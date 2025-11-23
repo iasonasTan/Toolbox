@@ -8,7 +8,6 @@ import android.util.Log;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-// ALWAYS PUBLIC AND REGISTERED IN MANIFEST
 public final class StopTimerReceiver extends BroadcastReceiver {
     static final String TIMER_ID_EXTRA = "toolbox.timer.timerID";
     static final String ACTION_STOP_TIMER   = "toolbox.timer.stopTimer";

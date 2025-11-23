@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -33,7 +32,7 @@ public class TimerSetterFragment extends Fragment {
                 return;
             }
             Intent addTimerIntent = new Intent(TimerRootFragment.ACTION_NEW_TIMER).setPackage(requireContext().getPackageName());
-            addTimerIntent.putExtra(TimerRootFragment.TIMER_NAME_EXTRA, mNameInput.getText().toString());
+            addTimerIntent.putExtra(TimerRootFragment.TIMER_NAME_EXTRA, String.valueOf(mNameInput.getText()));
             addTimerIntent.putExtra(TimerRootFragment.TIME_MILLIS_EXTRA, totalTime_millis);
             requireContext().sendBroadcast(addTimerIntent);
 

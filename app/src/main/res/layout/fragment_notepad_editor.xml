@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent">
@@ -13,7 +14,7 @@
         <com.app.toolbox.view.AnimatedButton
             android:id="@+id/back_button"
             android:layout_width="120dp"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:layout_margin="2dp"
             android:layout_gravity="center"
             android:text="@string/back"
@@ -24,7 +25,7 @@
         <com.app.toolbox.view.AnimatedButton
             android:id="@+id/share_button"
             android:layout_width="120dp"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:layout_margin="2dp"
             android:layout_gravity="center"
             android:text="@string/share"
@@ -45,7 +46,8 @@
             android:textSize="30sp"
             android:fontFamily="@font/poppins_semibold"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:ignore="VisualLintTextFieldSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -65,7 +67,8 @@
             android:textSize="16sp"
             android:hint="@string/write_your_notes_here"
             android:importantForAutofill="no"
-            android:imeOptions="flagNoEnterAction"/>
+            android:imeOptions="flagNoEnterAction"
+            tools:ignore="VisualLintTextFieldSize" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

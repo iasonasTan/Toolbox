@@ -1,12 +1,13 @@
 package com.app.toolbox;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.PowerManager;
 import android.provider.Settings;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Date;
 
@@ -50,7 +51,7 @@ public final class Greeter {
                     .apply();
             return;
         }
-        new AlertDialog.Builder(context)
+        new MaterialAlertDialogBuilder(context)
                 .setTitle(R.string.permission_helps)
                 .setMessage(context.getString(R.string.battery_warning))
                 .setNegativeButton(R.string.never_ask_again, (dialog, which) -> {

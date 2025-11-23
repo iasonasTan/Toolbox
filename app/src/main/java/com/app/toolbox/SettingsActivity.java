@@ -8,8 +8,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -22,9 +20,6 @@ import com.app.toolbox.view.AnimatedButton;
 import com.google.android.material.color.DynamicColors;
 
 import java.util.Calendar;
-import java.util.function.Consumer;
-
-import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class SettingsActivity extends AppCompatActivity {
     public static final String PREFERENCES_NAME       = "toolbox.settings.preferences";
@@ -75,16 +70,6 @@ public class SettingsActivity extends AppCompatActivity {
 //                showColorPicker(mButtonBackgroundColor, color -> mButtonBackgroundColor = color));
 //        findViewById(R.id.select_border_color_button).setOnClickListener(v ->
 //                showColorPicker(mBorderColor, color -> mBorderColor = color));
-    }
-
-    private void showColorPicker(int initialColor, Consumer<Integer> colorConsumer) {
-        AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, initialColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
-            @Override public void onCancel(AmbilWarnaDialog dialog) {}
-            @Override public void onOk(AmbilWarnaDialog dialog, int color) {
-                colorConsumer.accept(color);
-            }
-        });
-        dialog.show();
     }
 
     private void initAboutSection() {

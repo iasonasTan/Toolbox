@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ScrollView
+        android:contentDescription="@string/write_your_notes_here"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -32,14 +34,15 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
-        android:clickable="true"
         android:layout_margin="25dp"
+        android:clickable="true"
         android:contentDescription="@string/new_note_fab"
         android:focusable="true"
+        app:backgroundTint="?attr/colorSecondary"
+        app:fabSize="normal"
         app:srcCompat="@drawable/add_icon"
         app:tint="@color/black"
-        app:backgroundTint="@color/lightGray"
         app:useCompatPadding="false"
-        app:fabSize="normal" />
+        tools:ignore="ClassNameCheck" />
 
 </RelativeLayout>

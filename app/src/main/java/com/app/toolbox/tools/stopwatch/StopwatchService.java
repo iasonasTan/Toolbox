@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.os.Parcelable;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -17,9 +15,7 @@ import com.app.toolbox.R;
 import com.app.toolbox.tools.stopwatch.widget.StopwatchWidget;
 import com.app.toolbox.utils.Utils;
 
-import java.io.Serializable;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class StopwatchService extends Service {

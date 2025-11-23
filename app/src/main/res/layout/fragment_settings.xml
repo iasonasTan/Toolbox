@@ -36,7 +36,7 @@
         <com.app.toolbox.view.AnimatedButton
             android:id="@+id/save_settings"
             android:layout_width="160dp"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:layout_margin="2dp"
             android:layout_gravity="center"
             android:text="@string/save"

@@ -1,7 +1,6 @@
 package com.app.toolbox;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -36,6 +34,7 @@ import com.app.toolbox.utils.PageFragment;
 import com.app.toolbox.view.navigation.NavigationItemView;
 import com.app.toolbox.view.navigation.NavigationView;
 import com.google.android.material.color.DynamicColors;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -237,7 +236,7 @@ public final class MainActivity extends AppCompatActivity {
                 Log.d("net-test", "App version: " + appVersion);
                 if (latestVersion > appVersion) {
                     Log.d("net-test", "Asking user to update...");
-                    runOnUiThread(() -> new AlertDialog.Builder(this)
+                    runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
                             .setTitle("Update available!")
                             .setMessage("Do you want to update?")
                             .setCancelable(false)

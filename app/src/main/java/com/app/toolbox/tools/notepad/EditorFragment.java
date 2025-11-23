@@ -16,13 +16,13 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.app.toolbox.MainActivity;
 import com.app.toolbox.R;
 import com.app.toolbox.utils.Utils;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -161,7 +161,7 @@ public class EditorFragment extends Fragment {
         imm.hideSoftInputFromWindow(mMainEditor.getWindowToken(), 0);
 
         if(!saved)
-            new AlertDialog.Builder(requireContext())
+            new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.are_you_sure)
                 .setMessage(R.string.exit_for_sure)
                 .setCancelable(false)
@@ -186,7 +186,7 @@ public class EditorFragment extends Fragment {
 
     public boolean isFileNameValid(String name) {
         if (name.isBlank() || NotepadFragment.usedNames.contains(name) && mIsNewFile) {
-            new AlertDialog.Builder(requireContext())
+            new MaterialAlertDialogBuilder(requireContext())
                     .setTitle(ContextCompat.getString(requireContext(), R.string.invalid_name))
                     .setMessage(ContextCompat.getString(requireContext(), R.string.invalid_name_desc))
                     .setPositiveButton(ContextCompat.getString(requireContext(), R.string.ok), (dialog, which) -> dialog.dismiss())

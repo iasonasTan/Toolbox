@@ -3,7 +3,6 @@ package com.app.toolbox.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.VibrationEffect;
 import android.os.Vibrator;

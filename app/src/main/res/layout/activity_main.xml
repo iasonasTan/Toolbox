@@ -36,10 +36,10 @@
         <ImageButton
             android:id="@+id/settings_button"
             android:layout_weight="1"
+            android:layout_width="0dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/settings"
             android:src="@drawable/settings_main"
-            android:layout_width="0dp"
             android:scaleType="centerInside"
             android:layout_marginVertical="5dp"
             android:layout_height="match_parent" />

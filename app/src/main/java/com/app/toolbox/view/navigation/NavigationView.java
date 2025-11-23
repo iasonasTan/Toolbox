@@ -41,8 +41,7 @@ public class NavigationView extends LinearLayout {
     public void replaceItemWithSameIcon(NavigationItemView newNavigationItem) {
         for (int i = 0; i < getChildCount(); i++) {
             View child=getChildAt(i);
-            if(child instanceof NavigationItemView) {
-                NavigationItemView navigationItem=(NavigationItemView) child;
+            if(child instanceof NavigationItemView navigationItem) {
                 if(navigationItem.getImageSrcId()==newNavigationItem.getImageSrcId()) {
                     removeViewAt(i);
                     addView(newNavigationItem, i);
