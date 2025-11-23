@@ -14,7 +14,7 @@ public class TimeInput extends LinearLayout {
 
     public TimeInput(Context context, AttributeSet attrs) {
         super(context, attrs);
-        inflate(context, R.layout.time_input, this);
+        inflate(context, R.layout.view_time_input, this);
         hours_input=findViewById(R.id.hours_picker);
         mins_input=findViewById(R.id.minutes_picker);
         secs_input=findViewById(R.id.seconds_picker);

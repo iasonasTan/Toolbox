@@ -72,5 +72,7 @@
     <string name="enable_borders">Rahmen aktivieren</string>
     <string name="round_corners">Runde Ecken</string>
     <string name="choose_color">Farbe wählen</string>
+    <string name="limit">Limit:</string>
+    <string name="done" />
 
 </resources>

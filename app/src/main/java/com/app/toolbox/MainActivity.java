@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -34,6 +35,7 @@ import com.app.toolbox.utils.IntentContentsMissingException;
 import com.app.toolbox.utils.PageFragment;
 import com.app.toolbox.view.navigation.NavigationItemView;
 import com.app.toolbox.view.navigation.NavigationView;
+import com.google.android.material.color.DynamicColors;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -77,14 +79,14 @@ public final class MainActivity extends AppCompatActivity {
 
     public void setPageByName(String requiredName) {
         for(PageFragment pageFragment : fragments) {
-            if(requiredName.equals(pageFragment.name())) {
+            if(requiredName.equals(pageFragment.getPageName())) {
                 setPageByName(pageFragment);
                 return;
             }
         }
         StringBuilder codes=new StringBuilder();
-        fragments.forEach(f -> codes.append('\t').append(f.name()).append("\n"));
-        throw new NoSuchElementException("could not found item with name "+requiredName+ "\n"+ "Available names are:\n"+ codes);
+        fragments.forEach(f -> codes.append('\t').append(f.getPageName()).append("\n"));
+        throw new NoSuchElementException("could not found item with getPageName "+requiredName+ "\n"+ "Available names are:\n"+ codes);
     }
 
     @Deprecated(forRemoval = true)
@@ -107,7 +109,7 @@ public final class MainActivity extends AppCompatActivity {
     private void storeFragmentUsages() {
         Properties usages=new Properties();
         for(PageFragment tf: fragments) {
-            usages.setProperty(tf.getClass().toString(), tf.getUsages()+"");
+            usages.setProperty(tf.getClass().toString(), tf.getPageUsages()+"");
         }
         try {
             File file = new File(getApplicationContext().getFilesDir(), USAGES_FILE_NAME);
@@ -129,7 +131,7 @@ public final class MainActivity extends AppCompatActivity {
         loadFragmentUsages(loc_fragments);
 
         // sort fragments by usages
-        loc_fragments.sort((o1, o2) -> Long.compare(o2.getUsages(), o1.getUsages()));
+        loc_fragments.sort((o1, o2) -> Long.compare(o2.getPageUsages(), o1.getPageUsages()));
         fragments=Collections.unmodifiableList(loc_fragments);
 
         ToolAdapter fragmentStateAdapter = new ToolAdapter(this);
@@ -185,6 +187,7 @@ public final class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        DynamicColors.applyToActivityIfAvailable(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         EdgeToEdge.enable(this);

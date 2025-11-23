@@ -11,7 +11,7 @@ android {
         minSdk 35 // 25 // 30
         targetSdk 36
         versionCode 6
-        versionName "6.6"
+        versionName "6.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -44,4 +44,6 @@ dependencies {
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
     implementation libs.ambilwarna
+    implementation libs.material.v190
+    implementation libs.material3
 }

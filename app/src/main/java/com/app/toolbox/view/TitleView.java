@@ -8,8 +8,9 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.app.toolbox.R;
+import com.google.android.material.textview.MaterialTextView;
 
-public class TitleView extends androidx.appcompat.widget.AppCompatTextView {
+public class TitleView extends MaterialTextView {
     public TitleView(Context context) {
         this(context, null);
     }

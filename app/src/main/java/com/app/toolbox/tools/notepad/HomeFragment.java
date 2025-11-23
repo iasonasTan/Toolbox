@@ -15,7 +15,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.app.toolbox.R;
-import com.app.toolbox.view.ItemView;
+import com.app.toolbox.view.RemovableView;
 import com.app.toolbox.view.storing.StoringLinearLayout;
 
 import java.io.BufferedReader;
@@ -60,7 +60,7 @@ public class HomeFragment extends Fragment {
         File[] files = Objects.requireNonNull(notes_dir.listFiles());
         noNotesFound_textview.setVisibility(files.length == 0 && isVisible() ? View.VISIBLE : View.GONE);
         for (File file : files) {
-            ItemView nv = getNoteView(file);
+            RemovableView nv = getNoteView(file);
             mNotesList.addView(nv);
         }
     }
@@ -90,8 +90,8 @@ public class HomeFragment extends Fragment {
                 .show();
     }
 
-    private ItemView getNoteView(File file) {
-        ItemView nv = new ItemView(getContext());
+    private RemovableView getNoteView(File file) {
+        RemovableView nv = new RemovableView(getContext());
         nv.setClickable(true);
         Log.d("intent_stuff", "creating note with file path "+file.getAbsolutePath());
         nv.setOnClickListener(v -> {

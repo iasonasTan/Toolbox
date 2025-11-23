@@ -3,12 +3,15 @@ package com.app.toolbox.utils;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.util.Log;
+import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
 
 import com.app.toolbox.MainActivity;
 
+import java.math.BigInteger;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -69,6 +72,35 @@ public final class Utils {
         if(intent.getAction()==null) {
             throw new IntentContentsMissingException();
         }
+    }
+
+    /**
+     * Checks if given array contains given object.
+     * @param array array to check it's elements
+     * @param obj object that the array may contains
+     * @return returns {@code true} if given array contains given object;
+     * {@code false} otherwise.
+     */
+    public static boolean arrayContains(Object[] array, Object obj) {
+        for (Object o : array) {
+            if(o.equals(obj)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Calculates factorial of given number.
+     * @param n number to get it's factorial
+     * @return factorial of given number n
+     */
+    public static BigInteger factorial (double n) {
+        BigInteger bigInteger=BigInteger.ONE;
+        for (long i = 2; i <= n; i++) {
+            bigInteger = bigInteger.multiply(BigInteger.valueOf(i));
+        }
+        return bigInteger;
     }
 
 }

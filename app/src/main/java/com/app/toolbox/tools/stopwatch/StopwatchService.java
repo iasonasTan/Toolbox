@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -13,9 +14,13 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.app.toolbox.R;
+import com.app.toolbox.tools.stopwatch.widget.StopwatchWidget;
 import com.app.toolbox.utils.Utils;
 
+import java.io.Serializable;
 import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class StopwatchService extends Service {
     public static final String ACTION_START_TIMER  = "toolbox.stopwatchService.START_TIMER";
@@ -26,13 +31,6 @@ public class StopwatchService extends Service {
     static long sFromStartTime = 0, sStartTime = -1, sUntilStartTime;
     static boolean sIsRunning = false;
     private PendingIntent mShowPagePendingIntent;
-
-    private PendingIntent getPendingIntent(ActionType type, String action) {
-        Intent intent = new Intent(getApplicationContext(), StopwatchService.class);
-        intent.setAction(action);
-        intent.putExtra(StopwatchFragment.STATE_TYPE_EXTRA, type);
-        return PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
-    }
 
     public void countTime() {
         if(!sIsRunning) return;
@@ -54,12 +52,14 @@ public class StopwatchService extends Service {
     }
 
     public void updateNotification(Long time) {
+        Function<String, PendingIntent> intent = action ->
+                PendingIntent.getService(getApplicationContext(), action.hashCode(), new Intent(getApplicationContext(), StopwatchService.class).setAction(action), PendingIntent.FLAG_IMMUTABLE);
         NotificationCompat.Action action, action2 = null;
         if (sIsRunning) {
-            action = new NotificationCompat.Action(R.drawable.delete_icon, ContextCompat.getString(getApplicationContext(), R.string.pause), getPendingIntent(ActionType.STOP, ACTION_STOP_TIMER));
+            action = new NotificationCompat.Action(R.drawable.delete_icon, ContextCompat.getString(getApplicationContext(), R.string.pause), intent.apply(ACTION_STOP_TIMER));
         } else {
-            action = new NotificationCompat.Action(R.drawable.timer_icon, ContextCompat.getString(getApplicationContext(), R.string.start), getPendingIntent(ActionType.START, ACTION_START_TIMER));
-            action2 = new NotificationCompat.Action(R.drawable.delete_icon, ContextCompat.getString(getApplicationContext(), R.string.reset), getPendingIntent(ActionType.RESET, ACTION_RESET_TIMER));
+            action = new NotificationCompat.Action(R.drawable.timer_icon, ContextCompat.getString(getApplicationContext(), R.string.start), intent.apply(ACTION_START_TIMER));
+            action2 = new NotificationCompat.Action(R.drawable.delete_icon, ContextCompat.getString(getApplicationContext(), R.string.reset), intent.apply(ACTION_RESET_TIMER));
         }
         NotificationCompat.Builder timeNotification = new NotificationCompat.Builder(getApplicationContext(), StopwatchRootFragment.NOTIFICATION_CHANNEL_ID)
                 .setContentTitle(ContextCompat.getString(getApplicationContext(), R.string.stopwatch_running))
@@ -78,38 +78,49 @@ public class StopwatchService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent == null) return START_STICKY;
         final String action = Objects.requireNonNull(intent.getAction(), "must specify intent.action");
-        Log.d("stopwatch_service", "StopwatchService received intent "+intent.getAction());
         switch (action) {
-            case ACTION_RESET_TIMER:
-                stopForeground(Service.STOP_FOREGROUND_REMOVE);
-                sUntilStartTime = 0;
-                sStartTime=-1;
-                sendTime(0);
-                stopSelf();
-                break;
-            case ACTION_START_TIMER:
-                sStartTime = System.currentTimeMillis();
-                mHandler.post(this::countTime);
-                mHandler.post(this::updateNotification);
-                sIsRunning = true;
-                updateNotification();
-                break;
-            case ACTION_STOP_TIMER:
-                sIsRunning = false;
-                sUntilStartTime += sFromStartTime;
-                mHandler.removeCallbacks(this::countTime);
-                mHandler.removeCallbacks(this::updateNotification);
-                Log.d("stopwatch_service", "Stopwatch stopped!");
-                updateNotification(sUntilStartTime + sFromStartTime);
-                break;
+            case ACTION_RESET_TIMER -> reset();
+            case ACTION_START_TIMER -> start();
+            case ACTION_STOP_TIMER -> stop();
         }
         return START_STICKY;
     }
 
+    private void stop() {
+        sIsRunning = false;
+        updateNotification(sUntilStartTime + sFromStartTime);
+        sendTime(sUntilStartTime + sFromStartTime);
+        sUntilStartTime += sFromStartTime;
+        mHandler.removeCallbacks(this::countTime);
+        mHandler.removeCallbacks(this::updateNotification);
+    }
+
+    private void start() {
+        sStartTime = System.currentTimeMillis();
+        mHandler.post(this::countTime);
+        mHandler.post(this::updateNotification);
+        sIsRunning = true;
+        updateNotification();
+    }
+
+    private void reset() {
+        stop();
+        stopForeground(Service.STOP_FOREGROUND_REMOVE);
+        sUntilStartTime = 0;
+        sStartTime=-1;
+        sendTime(0);
+        stopSelf();
+    }
+
     private void sendTime(long time) {
-        Intent intent = new Intent(StopwatchFragment.ACTION_UPDATE_VIEW).setPackage(getPackageName());
-        intent.putExtra(StopwatchFragment.ELAPSED_TIME_EXTRA, time);
-        sendBroadcast(intent);
+        // send to gui
+        Intent uiIntent = new Intent(StopwatchFragment.ACTION_UPDATE_VIEW).setPackage(getPackageName());
+        uiIntent.putExtra(StopwatchFragment.ELAPSED_TIME_EXTRA, time);
+        sendBroadcast(uiIntent);
+        // send to widget
+        Intent widgetIntent = new Intent(getApplicationContext(), StopwatchWidget.class);
+        widgetIntent.putExtra(StopwatchWidget.TIME_EXTRA, time);
+        sendBroadcast(widgetIntent);
     }
 
     @Nullable

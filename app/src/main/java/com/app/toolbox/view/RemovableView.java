@@ -13,20 +13,20 @@ import androidx.core.content.res.ResourcesCompat;
 import com.app.toolbox.R;
 import com.app.toolbox.view.storing.Named;
 
-public class ItemView extends LinearLayout implements Named {
+public class RemovableView extends LinearLayout implements Named {
     private TextView mTitleView, mContentPreviewView;
     private ImageButton mDeleteButton;
 
-    public ItemView(Context context) {
+    public RemovableView(Context context) {
         super(context);
-        LayoutInflater.from(context).inflate(R.layout.view_item, this, true);
+        LayoutInflater.from(context).inflate(R.layout.view_removable_item, this, true);
         mTitleView =findViewById(R.id.title_view);
         mContentPreviewView =findViewById(R.id.content_preview_view);
         mDeleteButton =findViewById(R.id.deleteNote_button);
         setFont(context, R.font.zalando_sans_bold);
     }
 
-    public ItemView(Context context, AttributeSet attrs) {
+    public RemovableView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -35,14 +35,6 @@ public class ItemView extends LinearLayout implements Named {
         mTitleView.setTypeface(typeface);
         mContentPreviewView.setTypeface(typeface);
     }
-
-//    @SuppressWarnings("unused")
-//    public void focus() {
-//        ScheduledExecutorService executor= Executors.newSingleThreadScheduledExecutor();
-//        setBackgroundResource(R.drawable.round_focused_border);
-//        executor.schedule(() -> setBackgroundResource(R.drawable.background_with_border), 400, TimeUnit.MILLISECONDS);
-//        executor.shutdown();
-//    }
 
     public void setOnDeleteListener(OnClickListener li){
         mDeleteButton.setOnClickListener(li);

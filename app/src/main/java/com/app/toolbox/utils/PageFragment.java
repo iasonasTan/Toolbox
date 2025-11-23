@@ -2,12 +2,8 @@ package com.app.toolbox.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.app.toolbox.MainActivity;
@@ -18,22 +14,29 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This class represents a <b>parent</b> {@link Fragment} that lives inside {@link MainActivity}
- * and contains a <b>tool</b>. This type of fragment has the below features.<br>
- * Pages can also get changed via {@code Broadcasts} with {@link Intent}.
+ * This class represents a <b>page</b> {@link Fragment} that lives inside {@link MainActivity}
+ * and represents <b>tool</b>. This type of fragment is linked with a {@link NavigationItemView}.<br>
+ * Pages can also get changed via {@code Broadcast} with {@link Intent}.
  *
  * @see MainActivity#ACTION_SHOW_PAGE
  */
 public abstract class PageFragment extends Fragment implements Comparable<PageFragment>, Navigable {
     /**
+     * Time to wait to increase {@link #mUsages} of the fragment.
+     * @see #onResume()
+     */
+    private static final int WAIT_TIME_SECONDS = 3;
+
+    /**
      * Usages of the {@code Page}. They <i>increase</i> when fragment
-     * is used for more than <i>3 seconds continuously</i>.<br>
+     * is used for more than <i>{@link #WAIT_TIME_SECONDS} seconds continuously</i>.<br>
      * They get <i>saved</i> when {@code onDestroy()} is called
      * and <i>restored</i> when {@code onCreate()} is called.
+     * <br><b>NOTE</b>: This field is getting updated by different threads.
      * 
      * @see #setUsages(long)
      */
-    private long mUsages;
+    private volatile long mUsages;
 
     /**
      * {@code Item} that navigates to this page.
@@ -50,7 +53,8 @@ public abstract class PageFragment extends Fragment implements Comparable<PageFr
     private final String mName;
 
     /**
-     * Constructor initializes name.
+     * Constructor initializes getPageName.
+     * @see #fragmentName()
      */
     public PageFragment() {
         mName = fragmentName();
@@ -72,51 +76,73 @@ public abstract class PageFragment extends Fragment implements Comparable<PageFr
             mNavigationItem = createNavigationItem(context);
             mNavigationItem.setOnClickListener(av -> {
                 Intent intent = new Intent(MainActivity.SWITCH_PAGE).setPackage(context.getPackageName());
-                intent.putExtra(MainActivity.PAGE_NAME_EXTRA, name());
+                intent.putExtra(MainActivity.PAGE_NAME_EXTRA, getPageName());
                 context.sendBroadcast(intent);
             });
         }
         return mNavigationItem;
     }
 
+    /**
+     * Compares pages based on usages.
+     * @param o the page to be compared.
+     * @return a negative integer, zero, or a positive integer
+     * as this object's usages are less than, equal to, or greater than the specified object's usages.
+     */
     @Override
     public final int compareTo(PageFragment o) {
         return Long.compare(this.mUsages, o.mUsages);
     }
 
-    public final String name() {
+    public final String getPageName() {
         return mName;
     }
 
-    public final long getUsages() {
+    public final long getPageUsages() {
         return mUsages;
     }
 
+    /**
+     * Called when the fragment is visible to the user and actively running.
+     * This is generally tied to Activity.onResume of the containing Activity's lifecycle.
+     * <br><b>Override:</b><br>
+     * Updates page's usages and navigation item.
+     */
     @Override
     public void onResume() {
         super.onResume();
         getNavItem(requireContext()).setCurrent(true);
+        // noinspection all
         var scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         Log.d("checking_visibility", "Check will start in 3 secs");
         scheduledExecutorService.schedule(() -> {
             Log.d("checking_visibility", "Checking if fragment is currently visible...");
             if (isVisible()) {
                 Log.d("checking_visibility", "Fragment is visible! increasing usages...");
-                mUsages++;
+                setUsages(mUsages+1);
             }
-        }, 3, TimeUnit.SECONDS);
+        }, WAIT_TIME_SECONDS, TimeUnit.SECONDS);
         scheduledExecutorService.shutdown();
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
+    /**
+     * Abstract method used to request fragment's getPageName from sub-class
+     * @return getPageName of this fragment as {@code String}
+     */
     abstract protected String fragmentName();
 
+    /**
+     * Creates a navigation item for this page.
+     * @param context context is required to create views.
+     * @return {@link NavigationItemView} linked to this page
+     */
     abstract protected NavigationItemView createNavigationItem(Context context);
 
+    /**
+     * Called when the Fragment is no longer resumed.  This is generally
+     * tied to {@code Activity#onPause() Activity.onPause} of the containing
+     * Activity's lifecycle.
+     */
     @Override
     public void onPause() {
         super.onPause();
@@ -128,6 +154,7 @@ public abstract class PageFragment extends Fragment implements Comparable<PageFr
     }
 
     public final void decreaseUsages() {
-        mUsages -= 1;
+        long usages = mUsages;
+        mUsages = usages - 1;
     }
 }

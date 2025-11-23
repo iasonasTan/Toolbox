@@ -69,7 +69,7 @@ public class StopwatchFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        NotificationChannel channel = new NotificationChannel(StopwatchRootFragment.NOTIFICATION_CHANNEL_ID, "Stopwatch Notifications", NotificationManager.IMPORTANCE_LOW);
+        NotificationChannel channel = new NotificationChannel(StopwatchRootFragment.NOTIFICATION_CHANNEL_ID, "Stopwatch Notifications", NotificationManager.IMPORTANCE_HIGH);
         requireContext().getSystemService(NotificationManager.class).createNotificationChannel(channel);
 
         mStartButton = view.findViewById(R.id.start_button);
@@ -77,22 +77,15 @@ public class StopwatchFragment extends Fragment {
         mTimeView = view.findViewById(R.id.time_view);
         mStopButton = view.findViewById(R.id.stop_button);
 
-        addButtonListeners();
+        addButtonListeners(view);
 
         SharedPreferences preferences = requireContext().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
         mShowMillis = preferences.getBoolean(MILLIS_PREFERENCE, false);
-        mTimeView.setMaxLines(1);
-        adjustTimeViewSize();
-
-        view.findViewById(R.id.stopwatch_settings).setOnClickListener(v -> {
-            Intent intent = new Intent(StopwatchRootFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
-            intent.putExtra(StopwatchRootFragment.FRAGMENT_NAME_EXTRA, StopwatchRootFragment.FRAGMENT_SETTINGS_ID);
-            intent.putExtra(SettingsFragment.SHOW_MILLIS, mShowMillis);
-            requireContext().sendBroadcast(intent);
-        });
+        adjustTimeView();
+        mTimeView.setText(Utils.longToTime(StopwatchService.sUntilStartTime + StopwatchService.sFromStartTime, mShowMillis));
     }
 
-    private void addButtonListeners() {
+    private void addButtonListeners(@NonNull View view) {
         Consumer<String> intentSender = action -> {
             Intent intent = new Intent(requireContext(), StopwatchService.class);
             intent.setAction(action);
@@ -110,9 +103,16 @@ public class StopwatchFragment extends Fragment {
             setUiState(UIState.BEGINNING);
             intentSender.accept(StopwatchService.ACTION_RESET_TIMER);
         });
+        view.findViewById(R.id.stopwatch_settings).setOnClickListener(v -> {
+            Intent intent = new Intent(StopwatchRootFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
+            intent.putExtra(StopwatchRootFragment.FRAGMENT_NAME_EXTRA, StopwatchRootFragment.FRAGMENT_SETTINGS_ID);
+            intent.putExtra(SettingsFragment.SHOW_MILLIS, mShowMillis);
+            requireContext().sendBroadcast(intent);
+        });
     }
 
-    private void adjustTimeViewSize() {
+    private void adjustTimeView() {
+        mTimeView.setMaxLines(1);
         String template = mShowMillis?"00:00:00.00 ":"00:00:00 ";
         mTimeView.setText(template);
         mTimeView.measure(0, 0);

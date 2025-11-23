@@ -42,7 +42,7 @@ public class StoringLinearLayout extends LinearLayout {
 
     private void check(View view) {
         if(mNames == null)
-            throw new NullPointerException("Cannot store name in list because list is null.");
+            throw new NullPointerException("Cannot store getPageName in list because list is null.");
         if (!(view instanceof Named)) {
             throw new IllegalArgumentException("View is not an implementation of interface Named.");
         }

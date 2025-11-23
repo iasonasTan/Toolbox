@@ -60,4 +60,6 @@
     <string name="enable_borders">включить границы</string>
     <string name="round_corners">круглые углы</string>
     <string name="choose_color">выберите цвет</string>
+    <string name="limit">Limit:</string>
+    <string name="done" />
 </resources>

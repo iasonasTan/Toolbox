@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <com.app.toolbox.view.TitleView
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/item_rng" />
+
+    <LinearLayout
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/output_textview"
+            android:fontFamily="@font/poppins_semibold"
+            android:paddingHorizontal="10dp"
+            android:textSize="50sp"
+            android:text="0.00"
+            tools:ignore="HardcodedText"
+            android:textAlignment="center"
+            android:layout_marginBottom="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="85dp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:text="@string/limit"
+            android:fontFamily="@font/zalando_sans_bold"
+            android:layout_marginHorizontal="10dp"
+            android:textSize="25sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <com.google.android.material.slider.Slider
+            android:id="@+id/limitInput_slider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:valueFrom="1"
+            android:layout_marginBottom="20dp"
+            android:valueTo="100"
+            android:value="10" />
+
+        <com.app.toolbox.view.AnimatedButton
+            android:id="@+id/generate_button"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_margin="2dp"
+            android:layout_gravity="center"
+            android:text="@string/done"
+            android:textSize="18sp"
+            android:background="@drawable/background_with_border"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</RelativeLayout>

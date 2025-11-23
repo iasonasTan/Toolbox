@@ -3,4 +3,7 @@
     <declare-styleable name="TimeInput">
         <attr name="title" format="string" />
     </declare-styleable>
+    <declare-styleable name="AnimatedButton">
+        <attr name="highlighted" format="boolean" />
+    </declare-styleable>
 </resources>

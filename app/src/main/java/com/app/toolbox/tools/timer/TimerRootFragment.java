@@ -22,7 +22,7 @@ import com.app.toolbox.R;
 import com.app.toolbox.utils.IllegalIntentContentsException;
 import com.app.toolbox.utils.PageFragment;
 import com.app.toolbox.utils.Utils;
-import com.app.toolbox.view.ItemView;
+import com.app.toolbox.view.RemovableView;
 import com.app.toolbox.view.navigation.NavigationItemView;
 
 public class TimerRootFragment extends PageFragment {
@@ -114,9 +114,9 @@ public class TimerRootFragment extends PageFragment {
 
     public void addTimer(long time, String name) {
         long endTime=System.currentTimeMillis()+time;
-        ItemView itemView=new ItemView(requireContext());
-        itemView.setFont(requireContext(), R.font.poppins_bold);
-        TimerService.Timer timer=new TimerService.Timer(requireContext(), itemView, endTime, name);
+        RemovableView removableView =new RemovableView(requireContext());
+        removableView.setFont(requireContext(), R.font.poppins_bold);
+        TimerService.Timer timer=new TimerService.Timer(requireContext(), removableView, endTime, name);
         TimerService.addTimer(timer);
 
         Intent intent = new Intent(requireContext(), TimerService.class);

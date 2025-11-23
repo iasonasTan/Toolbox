@@ -4,6 +4,7 @@ ambilwarna = "2.0.1"
 appcompatVersion = "1.6.1"
 fragment = "1.8.9"
 googleMaterial = "1.11.0"
+googleMaterialVersion = "1.9.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -12,6 +13,7 @@ lintApi = "31.10.1"
 material = "1.12.0"
 activity = "1.10.1"
 constraintlayout = "2.2.1"
+material3 = "1.4.0"
 materialVersion = "1.13.0"
 rhinoAndroid = "1.6.0"
 viewpager2 = "1.1.0"
@@ -32,6 +34,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 material-v1130 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
+material-v190 = { module = "com.google.android.material:material", version.ref = "googleMaterialVersion" }
+material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 rhino-android = { module = "com.faendir.rhino:rhino-android", version.ref = "rhinoAndroid" }
 viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
 vision-interfaces = { group = "com.google.mlkit", name = "vision-interfaces", version.ref = "visionInterfaces" }

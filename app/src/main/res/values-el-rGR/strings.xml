@@ -62,4 +62,6 @@
     <string name="enable_borders">Εμφάνηση συνόρων</string>
     <string name="round_corners">Στρογγυλές γωνίες</string>
     <string name="choose_color">Διάλεξε χρώμα</string>
+    <string name="limit">Limit:</string>
+    <string name="done" />
 </resources>

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -16,10 +18,11 @@ import androidx.fragment.app.Fragment;
 
 import com.app.toolbox.R;
 import com.app.toolbox.view.TimeInput;
+import com.google.android.material.textfield.TextInputEditText;
 
 public class TimerSetterFragment extends Fragment {
     private TimeInput mTimeInput;
-    private EditText mNameInput;
+    private TextInputEditText mNameInput;
     private Intent mShowHomeIntent;
 
     public final class OnStartTimerHandler implements View.OnClickListener {
@@ -59,9 +62,16 @@ public class TimerSetterFragment extends Fragment {
                 showOther();
             }
         });
-        view.findViewById(R.id.start_timer_button).setOnClickListener(new OnStartTimerHandler());
+        final Button startTimerButton = view.findViewById(R.id.start_timer_button);
+        startTimerButton.setOnClickListener(new OnStartTimerHandler());
 
         mNameInput = view.findViewById(R.id.name_input);
+        mNameInput.setOnEditorActionListener((v, actionID, event) -> {
+            if(actionID == EditorInfo.IME_ACTION_DONE) {
+                new OnStartTimerHandler().onClick(startTimerButton);
+            }
+            return false;
+        });
         mTimeInput = view.findViewById(R.id.time_input);
         mShowHomeIntent = new Intent(TimerRootFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
         mShowHomeIntent.putExtra(TimerRootFragment.FRAGMENT_NAME_EXTRA, TimerRootFragment.HOME_FRAGMENT);

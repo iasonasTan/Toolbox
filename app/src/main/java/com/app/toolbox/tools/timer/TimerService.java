@@ -25,7 +25,7 @@ import androidx.core.content.ContextCompat;
 import com.app.toolbox.R;
 import com.app.toolbox.utils.IntentContentsMissingException;
 import com.app.toolbox.utils.Utils;
-import com.app.toolbox.view.ItemView;
+import com.app.toolbox.view.RemovableView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class TimerService extends Service implements Runnable {
     public void onCreate() {
         super.onCreate();
         Intent intent = new Intent(getApplicationContext(), TimerService.class).setAction(STOP_ALL_TIMERS);
-        mStopAllTimersPendingIntent = PendingIntent.getService(getApplicationContext(), 12, intent, PendingIntent.FLAG_IMMUTABLE);
+        mStopAllTimersPendingIntent = PendingIntent.getService(getApplicationContext(), STOP_ALL_TIMERS.hashCode(), intent, PendingIntent.FLAG_IMMUTABLE);
         mShowTimersPendingIntent = Utils.createShowPagePendingIntent(TimerRootFragment.STRING_ID, getApplicationContext());
 
         NotificationChannel notificationChannel = new NotificationChannel(SILENT_NOTIFICATION, "Timer status", NotificationManager.IMPORTANCE_MIN);
@@ -132,7 +132,7 @@ public class TimerService extends Service implements Runnable {
 
     static final class Timer implements Runnable /* ,Parcelable */ {
         private final Context context;
-        private final ItemView mView;
+        private final RemovableView mView;
         NotificationCompat.Builder time_notification;
 
         // logic
@@ -148,7 +148,7 @@ public class TimerService extends Service implements Runnable {
         private static NotificationManager sNotificationMan;
         private static final Handler sHandler =new Handler(Looper.getMainLooper());
 
-        Timer(Context ctx, ItemView view, long endTime, String name) {
+        Timer(Context ctx, RemovableView view, long endTime, String name) {
             this.mView = view;
             this.END_TIME = endTime;
             context = ctx;
@@ -196,7 +196,7 @@ public class TimerService extends Service implements Runnable {
 
         int getTimerID() { return TIMER_ID; }
 
-        ItemView getView() { return mView; }
+        RemovableView getView() { return mView; }
         String getName() { return mView.getContent(); }
 
         private void initNotification() {

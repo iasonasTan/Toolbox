@@ -28,6 +28,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/result"
                 android:textAlignment="viewEnd"
+                android:maxLines="3"
                 android:paddingEnd="20dp"
                 android:paddingStart="10dp"
                 android:text="0"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.app.toolbox.view.ItemView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.app.toolbox.view.RemovableView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:gravity="center"
@@ -15,22 +15,22 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:textColor="?attr/colorOnPrimary"
             android:id="@+id/title_view"
             android:maxLines="1"
-            android:textColor="@color/white"
             android:textSize="25sp" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="2"
+            android:textColor="?attr/colorOnPrimary"
             android:layout_gravity="center"
             android:id="@+id/content_preview_view"
-            android:textColor="@color/white"
             android:textSize="15sp" />
 
     </LinearLayout>
@@ -46,4 +46,4 @@
         android:contentDescription="@string/delete"
         android:src="@drawable/delete_icon" />
 
-</com.app.toolbox.view.ItemView>
+</com.app.toolbox.view.RemovableView>

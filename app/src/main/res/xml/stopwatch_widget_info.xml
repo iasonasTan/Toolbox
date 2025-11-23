@@ -1,11 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<AppWidgetProviderInfo xmlns:android="http://schemas.android.com/apk/res/android"
-    android:label="@string/item_stopwatch"
-    android:icon="@drawable/stopwatch_icon"
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:minWidth="100dp"
-    android:minHeight="100dp"
-    android:configure=""
-    android:updatePeriodMillis="0"
+    android:minHeight="50dp"
+    android:targetCellWidth="3"
+    android:targetCellHeight="2"
+    android:maxResizeWidth="500dp"
+    android:maxResizeHeight="200dp"
+    android:updatePeriodMillis="500"
+    android:description="@string/item_stopwatch"
+    android:previewLayout="@layout/stopwatch_widget"
     android:initialLayout="@layout/stopwatch_widget"
     android:resizeMode="horizontal|vertical"
-    android:widgetCategory="home_screen" />
+    android:widgetCategory="home_screen"
+    android:widgetFeatures="reconfigurable|configuration_optional">
+</appwidget-provider>
