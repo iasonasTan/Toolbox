@@ -34,16 +34,30 @@
 
 <!--            START OF SETTINGS ELEMENTS-->
 
-            <TextView
-                android:text="In progress..."
-                android:paddingHorizontal="10dp"
-                android:textStyle="bold"
-                android:textSize="45sp"
-                android:layout_weight="1"
+            <LinearLayout
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:background="@drawable/no_background_border"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginBottom="30dp"
-                tools:ignore="HardcodedText" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textSize="27sp"
+                    android:fontFamily="@font/zalando_sans_bold"
+                    android:text="@string/widgets"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:inputType="number"
+                    android:id="@+id/limit_input"
+                    android:hint="@string/rng_limit"
+                    android:fontFamily="@font/zalando_sans_bold"
+                    android:textSize="30sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
 
 <!--            <LinearLayout-->
 <!--                android:background="@drawable/no_background_border"-->
@@ -121,6 +135,7 @@
 <!--            </LinearLayout>-->
 
             <LinearLayout
+                android:layout_marginTop="10dp"
                 android:background="@drawable/no_background_border"
                 android:padding="10dp"
                 android:layout_marginBottom="15dp"

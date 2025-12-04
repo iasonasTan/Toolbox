@@ -9,10 +9,10 @@ import android.widget.TextView;
 
 import com.app.toolbox.R;
 
-public class TimeInput extends LinearLayout {
+public class TimeInputView extends LinearLayout {
     private final NumberPicker hours_input, mins_input, secs_input;
 
-    public TimeInput(Context context, AttributeSet attrs) {
+    public TimeInputView(Context context, AttributeSet attrs) {
         super(context, attrs);
         inflate(context, R.layout.view_time_input, this);
         hours_input=findViewById(R.id.hours_picker);
@@ -20,8 +20,8 @@ public class TimeInput extends LinearLayout {
         secs_input=findViewById(R.id.seconds_picker);
         TextView title_textview = findViewById(R.id.title_tv);
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TimeInput);
-        String title = a.getString(R.styleable.TimeInput_title);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TimeInputView);
+        String title = a.getString(R.styleable.TimeInputView_title);
         a.recycle();
 
         title_textview.setText(title);

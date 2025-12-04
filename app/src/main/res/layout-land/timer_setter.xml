@@ -37,7 +37,7 @@
 
     </LinearLayout>
 
-    <com.app.toolbox.view.TimeInput
+    <com.app.toolbox.view.TimeInputView
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

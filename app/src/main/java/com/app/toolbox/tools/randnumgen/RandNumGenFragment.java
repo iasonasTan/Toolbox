@@ -1,4 +1,4 @@
-package com.app.toolbox.tools;
+package com.app.toolbox.tools.randnumgen;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,10 +18,11 @@ import com.google.android.material.slider.Slider;
 import java.util.Locale;
 
 public class RandNumGenFragment extends PageFragment {
+    public static final String STRING_ID = "toolbox.page.RANDOM_NUMBER_GENERATOR_PAGE";
 
     @Override
     protected String fragmentName() {
-        return "toolbox.page.RANDOM_NUMBER_GENERATOR_PAGE";
+        return STRING_ID;
     }
 
     @Override

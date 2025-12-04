@@ -3,6 +3,7 @@ package com.app.toolbox.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
 
 import androidx.fragment.app.Fragment;
 
@@ -39,13 +40,6 @@ public abstract class PageFragment extends Fragment implements Comparable<PageFr
     private volatile long mUsages;
 
     /**
-     * {@code Item} that navigates to this page.
-     * 
-     * @see #createNavigationItem(Context) 
-     */
-    private NavigationItemView mNavigationItem;
-
-    /**
      * Name of fragment. Used for identifying fragment.
      * 
      * @see #fragmentName() 
@@ -71,16 +65,26 @@ public abstract class PageFragment extends Fragment implements Comparable<PageFr
      */
     @Override 
     public final NavigationItemView getNavItem(Context context) {
-        if (mNavigationItem == null) {
-            Log.d("initialization_spoil", "Initializing new navigation item for fragment "+this);
-            mNavigationItem = createNavigationItem(context);
-            mNavigationItem.setOnClickListener(av -> {
-                Intent intent = new Intent(MainActivity.SWITCH_PAGE).setPackage(context.getPackageName());
-                intent.putExtra(MainActivity.PAGE_NAME_EXTRA, getPageName());
-                context.sendBroadcast(intent);
-            });
+        NavigationItemView navView = createNavigationItem(context);
+        navView.setOnClickListener(new NavigationListener(context));
+        navView.setName(getPageName());
+        return navView;
+    }
+
+    public final class NavigationListener implements View.OnClickListener {
+        private final Context context;
+
+        public NavigationListener(Context context) {
+            this.context = context;
         }
-        return mNavigationItem;
+
+        @Override
+        public void onClick(View v) {
+            // show page
+            Intent switchPageIntent = new Intent(MainActivity.SWITCH_PAGE).setPackage(context.getPackageName());
+            switchPageIntent.putExtra(MainActivity.PAGE_NAME_EXTRA, getPageName());
+            context.sendBroadcast(switchPageIntent);
+        }
     }
 
     /**
@@ -111,7 +115,9 @@ public abstract class PageFragment extends Fragment implements Comparable<PageFr
     @Override
     public void onResume() {
         super.onResume();
-        getNavItem(requireContext()).setCurrent(true);
+        Intent configViewsIntent = new Intent(NavigationItemView.ACTION_CURRENT).setPackage(requireContext().getPackageName());
+        configViewsIntent.putExtra(NavigationItemView.NAME_EXTRA, getPageName());
+        requireContext().sendBroadcast(configViewsIntent);
         // noinspection all
         var scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         Log.d("checking_visibility", "Check will start in 3 secs");
@@ -137,17 +143,6 @@ public abstract class PageFragment extends Fragment implements Comparable<PageFr
      * @return {@link NavigationItemView} linked to this page
      */
     abstract protected NavigationItemView createNavigationItem(Context context);
-
-    /**
-     * Called when the Fragment is no longer resumed.  This is generally
-     * tied to {@code Activity#onPause() Activity.onPause} of the containing
-     * Activity's lifecycle.
-     */
-    @Override
-    public void onPause() {
-        super.onPause();
-        getNavItem(requireContext()).setCurrent(false);
-    }
 
     public final void setUsages(long v) {
         mUsages = v;

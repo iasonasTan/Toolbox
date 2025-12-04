@@ -18,6 +18,9 @@ import com.app.toolbox.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.color.MaterialColors;
 
+/**
+ * Configured material button with animations, vibration effects and custom appearance.
+ */
 public class AnimatedButton extends MaterialButton {
     public static int sBackground = -1;
     private final Vibrator mVibrator;

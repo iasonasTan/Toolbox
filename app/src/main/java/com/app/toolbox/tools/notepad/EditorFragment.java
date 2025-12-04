@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import com.app.toolbox.MainActivity;
 import com.app.toolbox.R;
+import com.app.toolbox.ReceiverOwner;
 import com.app.toolbox.utils.Utils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -31,7 +32,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class EditorFragment extends Fragment {
+public final class EditorFragment extends Fragment implements ReceiverOwner {
     // used with shortcuts
     public static final String FILE_PATH_EXTRA  = "toolbox.notepad.filePath";
     public static final String ACTION_OPEN_FILE = "toolbox.notepad.openFile";
@@ -44,7 +45,6 @@ public class EditorFragment extends Fragment {
     private EditText mTitleEditor, mMainEditor;
     private File mCurrentFile, mFileToOpen;
 
-    // listens on action NotepadFragment.ACTION_OPEN_FILE
     private final BroadcastReceiver mCommandReceiver = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
             Utils.checkIntent(intent, FILE_PATH_EXTRA);
@@ -62,7 +62,7 @@ public class EditorFragment extends Fragment {
         }
     };
 
-    private void newFile() {
+    private void openBlank() {
         mIsNewFile = true;
         mTitleEditor.setText("");
         mMainEditor.setText("");
@@ -89,7 +89,7 @@ public class EditorFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (mFileToOpen == null)
-            newFile();
+            openBlank();
         else
             loadFile(mFileToOpen);
 
@@ -103,21 +103,53 @@ public class EditorFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
-                new OnBackPressedCallback(true) {
-                    @Override public void handleOnBackPressed() {
-                        exitEditor();
-                    }
-                });
-        mTitleEditor = view.findViewById(R.id.title_view);
-        view.findViewById(R.id.back_button).setOnClickListener(v -> exitEditor());
-        mMainEditor = view.findViewById(R.id.main_edittext);
-        ContextCompat.registerReceiver(requireContext(), mCommandReceiver, new IntentFilter(ACTION_OPEN_FILE), ContextCompat.RECEIVER_NOT_EXPORTED);
 
+        // on back pressed
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPress());
+
+        // register receiver
+        ContextCompat.registerReceiver(requireContext(), mCommandReceiver, new IntentFilter(ACTION_OPEN_FILE), ContextCompat.RECEIVER_NOT_EXPORTED);
+        MainActivity.sReceiverOwners.add(this);
+
+        // disable user input (no horizontal scroll)
         Intent intent = new Intent(MainActivity.CONFIG_VIEW_PAGER).setPackage(requireContext().getPackageName());
         intent.putExtra(MainActivity.USER_INPUT_EXTRA, false);
         requireContext().sendBroadcast(intent);
 
+        initViews(view, savedInstanceState);
+    }
+
+    @Override
+    public void unregisterReceivers(Context context) {
+        context.unregisterReceiver(mCommandReceiver);
+    }
+
+    private final class OnBackPress extends OnBackPressedCallback {
+        public OnBackPress() {
+            super(true);
+        }
+
+        @Override
+        public void handleOnBackPressed() {
+            exitEditor();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putCharSequence("title", mTitleEditor.getText());
+        outState.putCharSequence("editor", mMainEditor.getText());
+    }
+
+    private void initViews(View view, Bundle inState) {
+        mTitleEditor = view.findViewById(R.id.title_view);
+        mMainEditor = view.findViewById(R.id.main_edittext);
+        if(inState!=null) {
+            mTitleEditor.setText(inState.getCharSequence("title"));
+            mMainEditor.setText(inState.getCharSequence("editor"));
+        }
+        view.findViewById(R.id.back_button).setOnClickListener(v -> exitEditor());
         view.findViewById(R.id.share_button).setOnClickListener(v -> {
             String name = mTitleEditor.getText().toString();
             if (!name.isBlank() && !mMainEditor.getText().toString().isBlank() && isFileNameValid(name)) {
@@ -140,7 +172,6 @@ public class EditorFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //requireContext().unregisterReceiver(mCommandReceiver);
         Intent intent = new Intent(MainActivity.CONFIG_VIEW_PAGER).setPackage(requireContext().getPackageName());
         intent.putExtra(MainActivity.USER_INPUT_EXTRA, true);
         requireContext().sendBroadcast(intent);
@@ -197,7 +228,7 @@ public class EditorFragment extends Fragment {
     }
 
     @SuppressWarnings("all")
-    public File newFile(String fileName) {
+    public File openBlank(String fileName) {
         File notes_dir = new File(requireContext().getFilesDir(), HomeFragment.NOTES_DIR_NAME);
         if (!notes_dir.isDirectory()) notes_dir.mkdir();
         return new File(notes_dir, fileName);
@@ -206,8 +237,8 @@ public class EditorFragment extends Fragment {
     @SuppressWarnings("all")
     public boolean saveBuffer(String name) {
         try {
-            if (!mIsNewFile) mCurrentFile.delete();
-            BufferedWriter writer = new BufferedWriter(new FileWriter(newFile(name)));
+            //if (!mIsNewFile) mCurrentFile.delete();
+            BufferedWriter writer = new BufferedWriter(new FileWriter(openBlank(name)));
             writer.write(mMainEditor.getText().toString());
             writer.close();
             Toast.makeText(requireContext(), requireContext().getString(R.string.note_saved), Toast.LENGTH_SHORT).show();

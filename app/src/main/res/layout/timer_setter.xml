@@ -6,7 +6,7 @@
     android:padding="10dp"
     android:layout_height="match_parent">
 
-    <com.app.toolbox.view.TimeInput
+    <com.app.toolbox.view.TimeInputView
         android:id="@+id/time_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

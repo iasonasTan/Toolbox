@@ -82,5 +82,8 @@
     <string name="greet_will_happen_again_on" translatable="false">"Greet will happen again on "</string>
     <string name="limit">Limit:</string>
     <string name="done">Done</string>
+    <string name="open">Open</string>
+    <string name="rng_limit">Rng limit:</string>
+    <string name="widgets">Widgets:</string>
 
 </resources>

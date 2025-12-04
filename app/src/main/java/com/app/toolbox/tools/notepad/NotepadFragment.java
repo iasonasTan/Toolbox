@@ -14,14 +14,16 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.app.toolbox.MainActivity;
 import com.app.toolbox.R;
+import com.app.toolbox.ReceiverOwner;
 import com.app.toolbox.utils.PageFragment;
 import com.app.toolbox.view.navigation.NavigationItemView;
 
 import java.util.List;
 import java.util.Objects;
 
-public class NotepadFragment extends PageFragment {
+public final class NotepadFragment extends PageFragment implements ReceiverOwner {
     public static final String FRAGMENT_EDITOR        = "toolbox.notepad.EDITOR_FRAGMENT";
     public static final String ACTION_CHANGE_FRAGMENT = "toolbox.notepad.CHANGE_FRAGMENT";
     public static final String STRING_ID              = "toolbox.page.NOTEPAD_PAGE";
@@ -48,12 +50,6 @@ public class NotepadFragment extends PageFragment {
     };
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        //requireContext().unregisterReceiver(mCommandReceiver);
-    }
-
-    @Override
     protected String fragmentName() {
         return STRING_ID;
     }
@@ -69,6 +65,7 @@ public class NotepadFragment extends PageFragment {
         getChildFragmentManager().beginTransaction().add(R.id.notepad_fragment_container, mEditor).show(mEditor).commit();
         getChildFragmentManager().beginTransaction().hide(mEditor).replace(R.id.notepad_fragment_container, mHome).commit();
         ContextCompat.registerReceiver(requireContext(), mCommandReceiver, new IntentFilter(NotepadFragment.ACTION_CHANGE_FRAGMENT), ContextCompat.RECEIVER_NOT_EXPORTED);
+        MainActivity.sReceiverOwners.add(this);
     }
 
     @Nullable
@@ -77,4 +74,8 @@ public class NotepadFragment extends PageFragment {
         return inflater.inflate(R.layout.fragment_notepad_root, container, false);
     }
 
+    @Override
+    public void unregisterReceivers(Context context) {
+        context.unregisterReceiver(mCommandReceiver);
+    }
 }

@@ -1,11 +1,12 @@
 package com.app.toolbox;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -16,20 +17,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.app.toolbox.tools.randnumgen.RandNumGenWidget;
 import com.app.toolbox.view.AnimatedButton;
 import com.google.android.material.color.DynamicColors;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
 
-public class SettingsActivity extends AppCompatActivity {
+public final class SettingsActivity extends AppCompatActivity {
     public static final String PREFERENCES_NAME       = "toolbox.settings.preferences";
-//    public static final String ENABLE_BORDERS_PREF    = "toolbox.settings.enableBorder";
-//    public static final String ROUND_CORNERS_PREF     = "toolbox.settings.roundCorners";
-//    public static final String BORDER_WEIGHT_PREF     = "toolbox.settings.borderWeight";
-    public static final String BUTTON_BACKGROUND_PREF = "toolbox.settings.buttonBackground";
-    public static final String BORDER_COLOR_PREF      = "toolbox.settings.borderColor";
-    private int mButtonBackgroundColor;
-    private int mBorderColor;
+    public static final String RNG_WIDGET_LIMIT_EXTRA = "toolbox.settings.rngWidgetLimit";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,25 +48,12 @@ public class SettingsActivity extends AppCompatActivity {
     private void restorePrefsToViews() {
         SharedPreferences preferences = getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
 
-//        CheckBox enableBordersCheckBox = findViewById(R.id.enable_borders_checkbox);
-//        enableBordersCheckBox.setChecked(preferences.getBoolean(ENABLE_BORDERS_PREF, true));
-//
-//        CheckBox roundCornersCheckBox = findViewById(R.id.round_corners_checkbox);
-//        roundCornersCheckBox.setChecked(preferences.getBoolean(ROUND_CORNERS_PREF, true));
-//
-//        SeekBar borderWeightSeekBar = findViewById(R.id.border_weight_seekbar);
-//        borderWeightSeekBar.setProgress(preferences.getInt(BORDER_WEIGHT_PREF, 2));
-
-        mButtonBackgroundColor = preferences.getInt(BUTTON_BACKGROUND_PREF, Color.BLUE);
-        mBorderColor = preferences.getInt(BORDER_COLOR_PREF, Color.BLUE);
+        TextInputEditText limitInput = findViewById(R.id.limit_input);
+        limitInput.setText(String.valueOf(preferences.getFloat(RNG_WIDGET_LIMIT_EXTRA, RandNumGenWidget.DEFAULT_LIMIT)));
     }
 
     private void addOnClickListeners() {
         findViewById(R.id.back_button).setOnClickListener(new ExitListener());
-//        findViewById(R.id.select_buttons_background_button).setOnClickListener(v ->
-//                showColorPicker(mButtonBackgroundColor, color -> mButtonBackgroundColor = color));
-//        findViewById(R.id.select_border_color_button).setOnClickListener(v ->
-//                showColorPicker(mBorderColor, color -> mBorderColor = color));
     }
 
     private void initAboutSection() {
@@ -96,20 +80,16 @@ public class SettingsActivity extends AppCompatActivity {
             SharedPreferences preferences = getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
 
-//            CheckBox enableBordersCheckBox = findViewById(R.id.enable_borders_checkbox);
-//            boolean enableBorders = enableBordersCheckBox.isChecked();
-//            editor.putBoolean(ENABLE_BORDERS_PREF, enableBorders);
-//
-//            CheckBox roundCornersCheckBox = findViewById(R.id.round_corners_checkbox);
-//            boolean roundCorners = roundCornersCheckBox.isChecked();
-//            editor.putBoolean(ROUND_CORNERS_PREF, roundCorners);
-//
-//            SeekBar borderWeightSeekBar = findViewById(R.id.border_weight_seekbar);
-//            int borderWeight = borderWeightSeekBar.getProgress();
-//            editor.putInt(BORDER_WEIGHT_PREF, borderWeight);
+            // save preferences
+            TextInputEditText limitInput = findViewById(R.id.limit_input);
+            Editable limitText = limitInput.getText();
+            float widgetLimit = Float.parseFloat(limitText!=null?limitText.toString():""+ RandNumGenWidget.DEFAULT_LIMIT);
+            editor.putFloat(RNG_WIDGET_LIMIT_EXTRA, widgetLimit);
 
-            editor.putInt(BUTTON_BACKGROUND_PREF, mButtonBackgroundColor);
-            editor.putInt(BORDER_COLOR_PREF, mBorderColor);
+            // tell widgets to update
+            Intent intent = new Intent(getApplicationContext(), RandNumGenWidget.class)
+                .setAction("android.appwidget.action.APPWIDGET_UPDATE");
+            sendBroadcast(intent);
 
             editor.apply();
             finish();

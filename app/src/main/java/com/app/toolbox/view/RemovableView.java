@@ -13,6 +13,10 @@ import androidx.core.content.res.ResourcesCompat;
 import com.app.toolbox.R;
 import com.app.toolbox.view.storing.Named;
 
+/**
+ * View with two text views and one remove button.
+ * Used for notes, timer etc.
+ */
 public class RemovableView extends LinearLayout implements Named {
     private TextView mTitleView, mContentPreviewView;
     private ImageButton mDeleteButton;

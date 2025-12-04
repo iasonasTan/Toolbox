@@ -31,7 +31,7 @@ public final class StopwatchWidget extends AppWidgetProvider {
     }
 
     private PendingIntent startIntent(Context context) {
-        String action = "toolbox.mainActivity.startStopwatch";
+        String action = "toolbox.mainActivity.showStopwatch";
         Intent startTimerIntent = new Intent(context, MainActivity.class);
         startTimerIntent.setAction(action);
         return PendingIntent.getActivity(context, action.hashCode(), startTimerIntent, PendingIntent.FLAG_IMMUTABLE);

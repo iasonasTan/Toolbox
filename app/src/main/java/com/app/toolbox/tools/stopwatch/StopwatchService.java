@@ -44,7 +44,7 @@ public class StopwatchService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        mShowPagePendingIntent = Utils.createShowPagePendingIntent(StopwatchRootFragment.STRING_ID, getApplicationContext());
+        mShowPagePendingIntent = Utils.createShowPagePendingIntent(StopwatchFragment.STRING_ID, getApplicationContext());
     }
 
     public void updateNotification(Long time) {
@@ -57,7 +57,7 @@ public class StopwatchService extends Service {
             action = new NotificationCompat.Action(R.drawable.timer_icon, ContextCompat.getString(getApplicationContext(), R.string.start), intent.apply(ACTION_START_TIMER));
             action2 = new NotificationCompat.Action(R.drawable.delete_icon, ContextCompat.getString(getApplicationContext(), R.string.reset), intent.apply(ACTION_RESET_TIMER));
         }
-        NotificationCompat.Builder timeNotification = new NotificationCompat.Builder(getApplicationContext(), StopwatchRootFragment.NOTIFICATION_CHANNEL_ID)
+        NotificationCompat.Builder timeNotification = new NotificationCompat.Builder(getApplicationContext(), StopwatchFragment.NOTIFICATION_CHANNEL_ID)
                 .setContentTitle(ContextCompat.getString(getApplicationContext(), R.string.stopwatch_running))
                 .setContentIntent(mShowPagePendingIntent)
                 .setSmallIcon(R.drawable.stopwatch_icon)
@@ -110,8 +110,8 @@ public class StopwatchService extends Service {
 
     private void sendTime(long time) {
         // send to gui
-        Intent uiIntent = new Intent(StopwatchFragment.ACTION_UPDATE_VIEW).setPackage(getPackageName());
-        uiIntent.putExtra(StopwatchFragment.ELAPSED_TIME_EXTRA, time);
+        Intent uiIntent = new Intent(StopwatchFragment.StopwatchMainFragment.ACTION_UPDATE_VIEW).setPackage(getPackageName());
+        uiIntent.putExtra(StopwatchFragment.StopwatchMainFragment.ELAPSED_TIME_EXTRA, time);
         sendBroadcast(uiIntent);
         // send to widget
         Intent widgetIntent = new Intent(getApplicationContext(), StopwatchWidget.class);

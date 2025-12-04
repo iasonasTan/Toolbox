@@ -112,7 +112,7 @@ public final class Utils {
      * @param onOk         {@link Consumer<Integer>} executes when a color is selected.
      * @param context      Context used to show the dialog.
      */
-    public static void showColorPicker(int initialColor, Consumer<Integer> onOk, Runnable onCancel, Context context) {
+    public static void showColorPicker(Context context, int initialColor, Consumer<Integer> onOk, Runnable onCancel) {
         AmbilWarnaDialog dialog = new AmbilWarnaDialog(context, initialColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
             @Override public void onCancel(AmbilWarnaDialog dialog) {
                 onCancel.run();
@@ -124,4 +124,30 @@ public final class Utils {
         dialog.show();
     }
 
+    /**
+     * Converts dp to px.
+     * @param context Application context.
+     * @param dp      Size {@code DP} to convert to Size {@code PX}.
+     * @return        returns Size {@code PX} as integer.
+     */
+    public static int dpToPx(Context context, int dp) {
+        float scale = context.getResources().getDisplayMetrics().density;
+        return Math.round(dp * scale);
+    }
+
+    /**
+     * Tries to execute given runnable.
+     * @param runnable Runnable to try to execute.
+     * @return Returns {@code false} if any exception is thrown; {@code true} otherwise.
+     */
+    @SuppressWarnings("all")
+    public static boolean execute(Runnable runnable) {
+        try {
+            runnable.run();
+            return true;
+        } catch (Exception e) {
+            Log.d("execute", "Exception "+e);
+            return false;
+        }
+    }
 }
