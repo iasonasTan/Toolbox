@@ -63,5 +63,8 @@
     <string name="round_corners">Στρογγυλές γωνίες</string>
     <string name="choose_color">Διάλεξε χρώμα</string>
     <string name="limit">Limit:</string>
-    <string name="done" />
+    <string name="done" >Τέλος</string>
+    <string name="open">Άνοιγμα</string>
+    <string name="rng_limit">Όριο ΠΤΑ:</string>
+    <string name="widgets">Γραφικά στοιχεία</string>
 </resources>

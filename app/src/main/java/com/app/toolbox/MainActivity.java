@@ -14,7 +14,6 @@ import android.os.Looper;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
-import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -196,15 +195,6 @@ public final class MainActivity extends AppCompatActivity {
 
         public void setPageByName(PageFragment fragment) {
             mViewPager2.setCurrentItem(fragments.indexOf(fragment));
-        }
-
-        public void showMostUsedPage() {
-            View view = bnv.getChildAt(0);
-            if(view instanceof NavigationItemView viv) {
-                String pageName = viv.getName();
-                Log.d("swap_page", pageName);
-                setPageByName(pageName);
-            }
         }
 
         public class ToolAdapter extends FragmentStateAdapter {

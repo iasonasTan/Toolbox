@@ -73,6 +73,9 @@
     <string name="round_corners">Runde Ecken</string>
     <string name="choose_color">Farbe wählen</string>
     <string name="limit">Limit:</string>
-    <string name="done" />
+    <string name="done" >Erledigt</string>
+    <string name="open">Offen</string>
+    <string name="rng_limit">Limit</string>
+    <string name="widgets">Widgets:</string>
 
 </resources>
