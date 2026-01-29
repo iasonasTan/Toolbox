@@ -20,16 +20,16 @@
         android:theme="@style/Theme.Toolbox"
         android:usesCleartextTraffic="true">
 
-        <activity
-            android:exported="false"
-            android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustResize"
-            android:name=".tools.timer.AddTimerActivity">
+<!--        <activity-->
+<!--            android:exported="false"-->
+<!--            android:launchMode="singleTop"-->
+<!--            android:windowSoftInputMode="adjustResize"-->
+<!--            android:name=".tools.timer.AddTimerActivity">-->
 
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
-        </activity>
+<!--            <meta-data-->
+<!--                android:name="android.app.shortcuts"-->
+<!--                android:resource="@xml/shortcuts" />-->
+<!--        </activity>-->
 
         <activity
             android:launchMode="singleTop"
@@ -90,24 +90,8 @@
                 android:resource="@xml/stopwatch_widget_info" />
         </receiver>
 
-<!--        <receiver-->
-<!--            android:name=".tools.notepad.widget.NotepadWidget"-->
-<!--            android:icon="@drawable/notepad_icon"-->
-<!--            android:label="@string/item_notepad"-->
-<!--            android:exported="true">-->
-
-<!--            <intent-filter>-->
-<!--                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>-->
-<!--                <action android:name="com.eightbitcloud.example.widget.ACTION_WIDGET_RECEIVER" />-->
-<!--            </intent-filter>-->
-
-<!--            <meta-data-->
-<!--                android:name="android.appwidget.provider"-->
-<!--                android:resource="@xml/notepad_widget_info" />-->
-<!--        </receiver>-->
-
         <receiver
-            android:name=".tools.randnumgen.RandNumGenWidget"
+            android:name=".tools.randnumgen.widget.RandNumGenWidget"
             android:icon="@drawable/rng_icon"
             android:label="@string/item_rng"
             android:exported="true">
@@ -125,6 +109,21 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/rng_widget_info" />
         </receiver>
-    </application>
 
+        <!--        <receiver-->
+        <!--            android:name=".tools.notepad.widget.NotepadWidget"-->
+        <!--            android:icon="@drawable/notepad_icon"-->
+        <!--            android:label="@string/item_notepad"-->
+        <!--            android:exported="true">-->
+
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>-->
+        <!--                <action android:name="com.eightbitcloud.example.widget.ACTION_WIDGET_RECEIVER" />-->
+        <!--            </intent-filter>-->
+
+        <!--            <meta-data-->
+        <!--                android:name="android.appwidget.provider"-->
+        <!--                android:resource="@xml/notepad_widget_info" />-->
+        <!--        </receiver>-->
+    </application>
 </manifest>

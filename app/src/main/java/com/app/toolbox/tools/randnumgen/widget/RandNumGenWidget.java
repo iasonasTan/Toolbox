@@ -1,4 +1,4 @@
-package com.app.toolbox.tools.randnumgen;
+package com.app.toolbox.tools.randnumgen.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -6,13 +6,16 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 import androidx.core.content.ContextCompat;
 
+import com.app.toolbox.MainActivity;
 import com.app.toolbox.R;
 import com.app.toolbox.SettingsActivity;
+import com.app.toolbox.tools.randnumgen.RandNumGenFragment;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -23,7 +26,7 @@ public class RandNumGenWidget extends AppWidgetProvider {
     public static final float  DEFAULT_LIMIT           = 100;
 
     private float getLimit(Context context) {
-        var prefs = context.getSharedPreferences(SettingsActivity.PREFERENCES_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences(SettingsActivity.PREFERENCES_NAME, Context.MODE_PRIVATE);
         return prefs.getFloat(SettingsActivity.RNG_WIDGET_LIMIT_EXTRA, DEFAULT_LIMIT);
     }
 
@@ -34,6 +37,7 @@ public class RandNumGenWidget extends AppWidgetProvider {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.rng_widget);
             views.setTextViewText(R.id.limit_tv, ContextCompat.getString(context, R.string.limit)+getLimit(context));
             views.setOnClickPendingIntent(R.id.generate_button, createGeneratePendingIntent(context, id));
+            views.setOnClickPendingIntent(R.id.number_tv, createShowRNGPendingIntent(context));
             manager.updateAppWidget(id, views);
         }
     }
@@ -71,6 +75,12 @@ public class RandNumGenWidget extends AppWidgetProvider {
         Intent generateIntent = new Intent(context, RandNumGenWidget.class)
                 .putExtra(WIDGET_ID_EXTRA, id)
                 .setAction(ACTION_GENERATE_NUMBER);
-        return PendingIntent.getBroadcast(context, 2200+id, generateIntent, PendingIntent.FLAG_IMMUTABLE);
+        return PendingIntent.getBroadcast(context, 2000+id, generateIntent, PendingIntent.FLAG_IMMUTABLE);
+    }
+
+    private PendingIntent createShowRNGPendingIntent(Context context) {
+        Intent showRNGIntent = new Intent(context, MainActivity.class).setAction(MainActivity.SWITCH_PAGE);
+        showRNGIntent.putExtra(MainActivity.PAGE_NAME_EXTRA, RandNumGenFragment.STRING_ID);
+        return PendingIntent.getActivity(context, 3000, showRNGIntent, PendingIntent.FLAG_IMMUTABLE);
     }
 }

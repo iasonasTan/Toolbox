@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Objects;
 
 public final class NotepadFragment extends PageFragment implements ReceiverOwner {
+    public static final String PAGE_ID = "toolbox.page.NOTEPAD_PAGE";
     public static final String FRAGMENT_EDITOR        = "toolbox.notepad.EDITOR_FRAGMENT";
     public static final String ACTION_CHANGE_FRAGMENT = "toolbox.notepad.CHANGE_FRAGMENT";
-    public static final String STRING_ID              = "toolbox.page.NOTEPAD_PAGE";
     public static final String FRAGMENT_HOME          = "toolbox.notepad.HOME_FRAGMENT";
 
     static List<String> usedNames;
@@ -35,15 +35,17 @@ public final class NotepadFragment extends PageFragment implements ReceiverOwner
 
     private final BroadcastReceiver mCommandReceiver = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
-            Fragment fragment = switch(
-                    Objects.requireNonNull(intent.getStringExtra(STRING_ID))) {
+            String pageID = Objects.requireNonNull(intent.getStringExtra(PAGE_ID));
+            Fragment fragment = switch(pageID) {
                 case FRAGMENT_HOME -> mHome;
                 case FRAGMENT_EDITOR -> mEditor;
                 default -> null;
             };
             if(fragment != null&&!isStateSaved()) {
                 getChildFragmentManager().beginTransaction()
-                        .replace(R.id.notepad_fragment_container, fragment)
+                        .hide(mHome)
+                        .hide(mEditor)
+                        .show(fragment)
                         .commit();
             }
         }
@@ -51,7 +53,7 @@ public final class NotepadFragment extends PageFragment implements ReceiverOwner
 
     @Override
     protected String fragmentName() {
-        return STRING_ID;
+        return PAGE_ID;
     }
 
     @Override
@@ -62,8 +64,13 @@ public final class NotepadFragment extends PageFragment implements ReceiverOwner
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getChildFragmentManager().beginTransaction().add(R.id.notepad_fragment_container, mEditor).show(mEditor).commit();
-        getChildFragmentManager().beginTransaction().hide(mEditor).replace(R.id.notepad_fragment_container, mHome).commit();
+        getChildFragmentManager()
+                .beginTransaction()
+                .add(R.id.notepad_fragment_container, mHome)
+                .add(R.id.notepad_fragment_container, mEditor)
+                .hide(mEditor)
+                .show(mHome)
+                .commit();
         ContextCompat.registerReceiver(requireContext(), mCommandReceiver, new IntentFilter(NotepadFragment.ACTION_CHANGE_FRAGMENT), ContextCompat.RECEIVER_NOT_EXPORTED);
         MainActivity.sReceiverOwners.add(this);
     }

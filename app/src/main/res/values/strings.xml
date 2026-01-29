@@ -85,5 +85,6 @@
     <string name="open">Open</string>
     <string name="rng_limit">Rng limit:</string>
     <string name="widgets">Widgets:</string>
+    <string name="could_not_save_note">Could not save note</string>
 
 </resources>

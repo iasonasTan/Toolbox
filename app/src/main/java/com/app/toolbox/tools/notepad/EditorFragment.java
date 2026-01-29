@@ -42,7 +42,7 @@ public final class EditorFragment extends Fragment implements ReceiverOwner {
     private boolean mIsNewFile;
     private String mTextToAppend;
 
-    private EditText mTitleEditor, mMainEditor;
+    private EditText mTitleEditText, mMainEditText;
     private File mCurrentFile, mFileToOpen;
 
     private final BroadcastReceiver mCommandReceiver = new BroadcastReceiver() {
@@ -64,39 +64,43 @@ public final class EditorFragment extends Fragment implements ReceiverOwner {
 
     private void openBlank() {
         mIsNewFile = true;
-        mTitleEditor.setText("");
-        mMainEditor.setText("");
+        mTitleEditText.setText("");
+        mMainEditText.setText("");
     }
 
     private void loadFile(File file) {
         mIsNewFile = false;
-        mTitleEditor.setText("");
-        mMainEditor.setText("");
         mCurrentFile = file;
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file))) {
             byte[] buffer = new byte[8192];
             int bytesRead;
+            mMainEditText.setText("");
             while ((bytesRead = bufferedInputStream.read(buffer)) != -1) {
-                mMainEditor.append(new String(buffer, 0, bytesRead));
+                mMainEditText.append(new String(buffer, 0, bytesRead));
+                Log.d("notepad_load", "Append to content: "+new String(buffer, 0, bytesRead));
             }
-            mTitleEditor.setText(file.getName());
+            mTitleEditText.setText(file.getName());
+            Log.d("notepad_load", "Setting title as "+file.getName());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (mFileToOpen == null)
-            openBlank();
-        else
-            loadFile(mFileToOpen);
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
 
-        if(mMainEditor!=null&&mTextToAppend!=null&&mIsNewFile) {
-            mMainEditor.append(mTextToAppend);
-            mTitleEditor.append(ContextCompat.getString(requireContext(), R.string.untitled_note));
-            Log.d("notepad_open", "Appending text to main editor...");
+        if(!hidden) {
+            if (mFileToOpen == null)
+                openBlank();
+            else
+                loadFile(mFileToOpen);
+
+            if (mMainEditText != null && mTextToAppend != null && mIsNewFile) {
+                mMainEditText.append(mTextToAppend);
+                mTitleEditText.append(ContextCompat.getString(requireContext(), R.string.untitled_note));
+                Log.d("notepad_open", "Appending text to main editor...");
+            }
         }
     }
 
@@ -110,6 +114,16 @@ public final class EditorFragment extends Fragment implements ReceiverOwner {
         // register receiver
         ContextCompat.registerReceiver(requireContext(), mCommandReceiver, new IntentFilter(ACTION_OPEN_FILE), ContextCompat.RECEIVER_NOT_EXPORTED);
         MainActivity.sReceiverOwners.add(this);
+
+        view.findViewById(R.id.delete_button).setOnClickListener(v ->
+                FileViewFactory.askToDelete((dialog, which) -> {
+                    Intent showHomeIntent = new Intent(NotepadFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
+                    showHomeIntent.putExtra(NotepadFragment.PAGE_ID, NotepadFragment.FRAGMENT_HOME);
+                    requireContext().sendBroadcast(showHomeIntent);
+                    boolean deleted = mCurrentFile.delete();
+                    if(deleted)
+                        Toast.makeText(requireContext(), "Note is deleted", Toast.LENGTH_LONG).show();
+        }, requireContext()));
 
         // disable user input (no horizontal scroll)
         Intent intent = new Intent(MainActivity.CONFIG_VIEW_PAGER).setPackage(requireContext().getPackageName());
@@ -125,38 +139,45 @@ public final class EditorFragment extends Fragment implements ReceiverOwner {
     }
 
     private final class OnBackPress extends OnBackPressedCallback {
-        public OnBackPress() {
-            super(true);
-        }
+        public OnBackPress() { super(true); }
 
-        @Override
-        public void handleOnBackPressed() {
+        @Override public void handleOnBackPressed() {
             exitEditor();
         }
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        String nameInEditor = mTitleEditText.getText().toString();
+        String name = nameInEditor.isBlank() ? "Untitled Note" : nameInEditor;
+        boolean result = saveBuffer(name);
+        if(!result)
+            Toast.makeText(requireContext(), R.string.could_not_save_note, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putCharSequence("title", mTitleEditor.getText());
-        outState.putCharSequence("editor", mMainEditor.getText());
+        outState.putCharSequence("title", mTitleEditText.getText());
+        outState.putCharSequence("editor", mMainEditText.getText());
     }
 
     private void initViews(View view, Bundle inState) {
-        mTitleEditor = view.findViewById(R.id.title_view);
-        mMainEditor = view.findViewById(R.id.main_edittext);
+        mTitleEditText = view.findViewById(R.id.title_view);
+        mMainEditText = view.findViewById(R.id.main_edittext);
         if(inState!=null) {
-            mTitleEditor.setText(inState.getCharSequence("title"));
-            mMainEditor.setText(inState.getCharSequence("editor"));
+            mTitleEditText.setText(inState.getCharSequence("title"));
+            mMainEditText.setText(inState.getCharSequence("editor"));
         }
         view.findViewById(R.id.back_button).setOnClickListener(v -> exitEditor());
         view.findViewById(R.id.share_button).setOnClickListener(v -> {
-            String name = mTitleEditor.getText().toString();
-            if (!name.isBlank() && !mMainEditor.getText().toString().isBlank() && isFileNameValid(name)) {
+            String name = mTitleEditText.getText().toString();
+            if (!name.isBlank() && !mMainEditText.getText().toString().isBlank() && isFileNameValid(name)) {
                 saveBuffer(name);
             }
             Intent sendIntent = new Intent(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, mMainEditor.getText());
+            sendIntent.putExtra(Intent.EXTRA_TEXT, mMainEditText.getText());
             sendIntent.setType("text/plain");
             Intent shareIntent = Intent.createChooser(sendIntent, getString(R.string.share_this_note));
             requireContext().startActivity(shareIntent);
@@ -178,7 +199,7 @@ public final class EditorFragment extends Fragment implements ReceiverOwner {
     }
 
     public void exitEditor() {
-        String name = mTitleEditor.getText().toString();
+        String name = mTitleEditText.getText().toString();
         boolean saved;
         if (!name.isBlank() && isFileNameValid(name)) {
             // if document exists, save it.
@@ -189,7 +210,7 @@ public final class EditorFragment extends Fragment implements ReceiverOwner {
         }
         // hide on-screen keyboard
         InputMethodManager imm = requireContext().getSystemService(InputMethodManager.class);
-        imm.hideSoftInputFromWindow(mMainEditor.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(mMainEditText.getWindowToken(), 0);
 
         if(!saved)
             new MaterialAlertDialogBuilder(requireContext())
@@ -201,7 +222,7 @@ public final class EditorFragment extends Fragment implements ReceiverOwner {
                     dialog.dismiss();
                     Log.d("broadcast_sent", "Sending intent to change fragment...");
                     Intent intent = new Intent(NotepadFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
-                    intent.putExtra(NotepadFragment.STRING_ID, NotepadFragment.FRAGMENT_HOME);
+                    intent.putExtra(NotepadFragment.PAGE_ID, NotepadFragment.FRAGMENT_HOME);
                     requireContext().sendBroadcast(intent);
                 }).setPositiveButton(R.string.cancel, (dialog, which) -> {
                     dialog.dismiss();
@@ -210,7 +231,7 @@ public final class EditorFragment extends Fragment implements ReceiverOwner {
         else {
             Log.d("broadcast_sent", "Sending intent to change fragment...");
             Intent intent = new Intent(NotepadFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
-            intent.putExtra(NotepadFragment.STRING_ID, NotepadFragment.FRAGMENT_HOME);
+            intent.putExtra(NotepadFragment.PAGE_ID, NotepadFragment.FRAGMENT_HOME);
             requireContext().sendBroadcast(intent);
         }
     }
@@ -236,10 +257,13 @@ public final class EditorFragment extends Fragment implements ReceiverOwner {
 
     @SuppressWarnings("all")
     public boolean saveBuffer(String name) {
+        if(mCurrentFile==null)
+            return true;
         try {
-            //if (!mIsNewFile) mCurrentFile.delete();
+            if (!mIsNewFile)
+                mCurrentFile.delete();
             BufferedWriter writer = new BufferedWriter(new FileWriter(openBlank(name)));
-            writer.write(mMainEditor.getText().toString());
+            writer.write(mMainEditText.getText().toString());
             writer.close();
             Toast.makeText(requireContext(), requireContext().getString(R.string.note_saved), Toast.LENGTH_SHORT).show();
             return true;

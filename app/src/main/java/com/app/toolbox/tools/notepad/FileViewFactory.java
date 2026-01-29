@@ -1,6 +1,7 @@
 package com.app.toolbox.tools.notepad;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
@@ -29,18 +30,22 @@ public final class FileViewFactory {
         return new FileViewFactory(context, update);
     }
 
-    public View.OnClickListener createClickListener(File file) {
-
-        return v -> new MaterialAlertDialogBuilder(context)
+    static void askToDelete(DialogInterface.OnClickListener action, Context context) {
+        new MaterialAlertDialogBuilder(context)
                 .setTitle(ContextCompat.getString(context, R.string.delete_note))
                 .setMessage(ContextCompat.getString(context, R.string.delete_note_desc))
-                .setPositiveButton(ContextCompat.getString(context, R.string.delete), (dialog, which) -> {
-                    // noinspection all
-                    file.delete();
-                    mUpdate.run();
-                })
+                .setPositiveButton(ContextCompat.getString(context, R.string.delete), action)
                 .setNegativeButton(ContextCompat.getString(context, R.string.cancel), null)
                 .show();
+    }
+
+    public View.OnClickListener createClickListener(File file) {
+        return v -> askToDelete((dialog, which) -> {
+            // noinspection all
+            file.delete();
+            mUpdate.run();
+            dialog.dismiss();
+        }, context);
     }
 
     public RemovableView createNoteView(File file) {
@@ -55,7 +60,7 @@ public final class FileViewFactory {
             context.sendBroadcast(intent);
 
             Intent intent1 = new Intent(NotepadFragment.ACTION_CHANGE_FRAGMENT).setPackage(context.getPackageName());
-            intent1.putExtra(NotepadFragment.STRING_ID, NotepadFragment.FRAGMENT_EDITOR);
+            intent1.putExtra(NotepadFragment.PAGE_ID, NotepadFragment.FRAGMENT_EDITOR);
             context.sendBroadcast(intent1);
         });
         nv.setOnDeleteListener(createClickListener(file));

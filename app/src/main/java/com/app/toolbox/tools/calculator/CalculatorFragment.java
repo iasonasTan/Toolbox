@@ -1,6 +1,7 @@
-package com.app.toolbox.tools;
+package com.app.toolbox.tools.calculator;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,12 +29,17 @@ import com.app.toolbox.view.navigation.NavigationItemView;
 import org.mozilla.javascript.Scriptable;
 
 public final class CalculatorFragment extends PageFragment {
+    public static final String STRING_ID = "toolbox.page.CALCULATOR_PAGE";
+
+    private static final String DEFAULT_TEXT    = "0";
+    private static final String CALCULATOR_TEXT = "toolbox.page.calculator.text";
+
     private TextView mMainTv;
     private boolean mHadError =false;
 
     @Override
     protected String fragmentName() {
-        return "toolbox.page.CALCULATOR_PAGE";
+        return STRING_ID;
     }
 
     @Override
@@ -91,10 +97,32 @@ public final class CalculatorFragment extends PageFragment {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(CALCULATOR_TEXT, mMainTv.getText().toString());
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        requireContext().getSharedPreferences(STRING_ID, Context.MODE_PRIVATE)
+                .edit()
+                .putString(CALCULATOR_TEXT, mMainTv.getText().toString())
+                .apply();
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initButtons(view);
         mMainTv = view.findViewById(R.id.result);
+        if(savedInstanceState!=null) {
+            mMainTv.setText(savedInstanceState.getString(CALCULATOR_TEXT, DEFAULT_TEXT));
+        } else {
+            // load from shared preferences
+            SharedPreferences preferences = requireContext().getSharedPreferences(STRING_ID, Context.MODE_PRIVATE);
+            mMainTv.setText(preferences.getString(CALCULATOR_TEXT, DEFAULT_TEXT));
+        }
     }
 
     private final class CalculatorListener implements View.OnClickListener {

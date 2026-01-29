@@ -6,33 +6,50 @@
     android:orientation="vertical"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <com.app.toolbox.view.AnimatedButton
-            android:id="@+id/back_button"
-            android:layout_width="120dp"
-            android:layout_height="50dp"
-            android:layout_margin="2dp"
-            android:layout_gravity="center"
-            android:text="@string/back"
-            android:textSize="18sp"
-            android:background="@drawable/background_with_border"
-            android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <com.app.toolbox.view.AnimatedButton
-            android:id="@+id/share_button"
-            android:layout_width="120dp"
-            android:layout_height="50dp"
-            android:layout_margin="2dp"
-            android:layout_gravity="center"
-            android:text="@string/share"
-            android:textSize="18sp"
-            android:background="@drawable/background_with_border"
-            android:textStyle="bold" />
-    </LinearLayout>
+            <com.app.toolbox.view.AnimatedButton
+                android:id="@+id/back_button"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:layout_margin="2dp"
+                android:layout_gravity="center"
+                android:text="@string/back"
+                android:textSize="18sp"
+                android:background="@drawable/background_with_border"
+                android:textStyle="bold" />
+
+            <com.app.toolbox.view.AnimatedButton
+                android:id="@+id/share_button"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:layout_margin="2dp"
+                android:layout_gravity="center"
+                android:text="@string/share"
+                android:textSize="18sp"
+                android:background="@drawable/background_with_border"
+                android:textStyle="bold" />
+
+            <com.app.toolbox.view.AnimatedButton
+                android:id="@+id/delete_button"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:layout_margin="2dp"
+                android:layout_gravity="center"
+                android:text="@string/delete"
+                android:textSize="18sp"
+                android:background="@drawable/background_with_border"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </HorizontalScrollView>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"

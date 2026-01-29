@@ -12,19 +12,18 @@ import com.app.toolbox.view.TimeInputView;
 
 /**
  * This activity is used with shortcuts.<br>
- * The In-Application way is to use {@link com.app.toolbox.tools.timer.TimerFragment.TimerSetterFragment}.
+ * There's a fragment that does the same thing
+ * {@link AddTimerFragment}.
  */
+@Deprecated(forRemoval = true)
 public class AddTimerActivity extends AppCompatActivity {
-
-    // TODO Do something with this class
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.timer_setter);
         TimeInputView timeInput = findViewById(R.id.time_input);
         TextView nameInput = findViewById(R.id.name_input);
-        findViewById(R.id.start_timer_button).setOnClickListener(new TimerAdder(this, timeInput, nameInput){
+        findViewById(R.id.start_timer_button).setOnClickListener(new AddTimerFragment.TimerAdder(this, timeInput, nameInput){
             @Override public void addTimer() {
                 super.addTimer();
                 Intent intent = new Intent(getApplicationContext(), TimerService.class);

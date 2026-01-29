@@ -36,9 +36,9 @@ public final class HomeFragment extends Fragment {
         noNotesFound_textview = view.findViewById(R.id.message);
         mNotesList = view.findViewById(R.id.notes_layout);
         view.findViewById(R.id.newNote_fab).setOnClickListener(v -> {
-            Log.d("broadcast_stats", "Sending intent to open blank editor");
+            Log.d("notepad_debug", "Sending intent to open blank editor");
             Intent intent1 = new Intent(NotepadFragment.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
-            intent1.putExtra(NotepadFragment.STRING_ID, NotepadFragment.FRAGMENT_EDITOR);
+            intent1.putExtra(NotepadFragment.PAGE_ID, NotepadFragment.FRAGMENT_EDITOR);
             requireContext().sendBroadcast(intent1);
 
             Intent intent = new Intent(EditorFragment.ACTION_OPEN_FILE).setPackage(requireContext().getPackageName());

@@ -3,7 +3,6 @@ package com.app.toolbox.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.view.View;
 
 import androidx.fragment.app.Fragment;
 
@@ -66,25 +65,13 @@ public abstract class PageFragment extends Fragment implements Comparable<PageFr
     @Override 
     public final NavigationItemView getNavItem(Context context) {
         NavigationItemView navView = createNavigationItem(context);
-        navView.setOnClickListener(new NavigationListener(context));
-        navView.setName(getPageName());
-        return navView;
-    }
-
-    public final class NavigationListener implements View.OnClickListener {
-        private final Context context;
-
-        public NavigationListener(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        public void onClick(View v) {
-            // show page
+        navView.setOnClickListener(v -> {
             Intent switchPageIntent = new Intent(MainActivity.SWITCH_PAGE).setPackage(context.getPackageName());
             switchPageIntent.putExtra(MainActivity.PAGE_NAME_EXTRA, getPageName());
             context.sendBroadcast(switchPageIntent);
-        }
+        });
+        navView.setName(getPageName());
+        return navView;
     }
 
     /**
@@ -149,7 +136,8 @@ public abstract class PageFragment extends Fragment implements Comparable<PageFr
     }
 
     public final void decreaseUsages() {
-        long usages = mUsages;
-        mUsages = usages - 1;
+        // accuracy doesn't really matter
+        // noinspection all
+        mUsages--;
     }
 }

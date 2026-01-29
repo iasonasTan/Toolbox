@@ -28,7 +28,6 @@ public final class NavigationItemView extends LinearLayout implements ReceiverOw
     private final Vibrator mVibrator  = ContextCompat.getSystemService(getContext(), Vibrator.class);
     private final VibrationEffect mVibEffect = VibrationEffect.createOneShot(45, VibrationEffect.EFFECT_HEAVY_CLICK);
     private final BroadcastReceiver mStateUpdatesReceiver = new StateUpdateReceiver();
-    private int mImageSrcId = 0;
     private String mName = "UNKNOWN";
 
     public NavigationItemView(Context context, int srcID) {
@@ -72,10 +71,6 @@ public final class NavigationItemView extends LinearLayout implements ReceiverOw
         });
     }
 
-    public int getImageSrcId() {
-        return mImageSrcId;
-    }
-
     private void initImage() {
         int size = Utils.dpToPx(getContext(), 30);
         LayoutParams par=new LayoutParams(size+25, size);
@@ -95,8 +90,7 @@ public final class NavigationItemView extends LinearLayout implements ReceiverOw
     }
 
     public void configImage(int imageID) {
-        mImageSrcId = imageID;
-        imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), mImageSrcId));
+        imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), imageID));
     }
 
     public void setName(String pageName) {

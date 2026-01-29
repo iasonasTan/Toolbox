@@ -17,7 +17,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.app.toolbox.tools.randnumgen.RandNumGenWidget;
+import com.app.toolbox.tools.randnumgen.widget.RandNumGenWidget;
 import com.app.toolbox.view.AnimatedButton;
 import com.google.android.material.color.DynamicColors;
 import com.google.android.material.textfield.TextInputEditText;

@@ -24,7 +24,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.app.toolbox.tools.CalculatorFragment;
+import com.app.toolbox.tools.calculator.CalculatorFragment;
 import com.app.toolbox.tools.notepad.EditorFragment;
 import com.app.toolbox.tools.notepad.NotepadFragment;
 import com.app.toolbox.tools.randnumgen.RandNumGenFragment;
@@ -60,6 +60,7 @@ import java.util.function.Consumer;
  * Integer Codes:
  * Permissions: 1000-1999
  * PendingIntents: 2000-2999, action.hashcode
+ * Launch activity: 3000-3999
  */
 
 public final class MainActivity extends AppCompatActivity {
@@ -105,7 +106,7 @@ public final class MainActivity extends AppCompatActivity {
 
         if(savedInstanceState==null) {
             new IntentProcessor(this, mManager).processIntent(getIntent());
-            new UpdateChecker().checkVersionAsynchronously();
+            //new UpdateChecker().checkVersionAsynchronously();
             new ApplicationGreeter(this).greet();
         }
     }
@@ -255,6 +256,12 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Deprecated because iasonas.duckdns.org isn't working anymore.
+     * Cause: ISP blocked ports.
+     */
+    @SuppressWarnings("unused")
+    @Deprecated
     private final class UpdateChecker {
         public void checkVersionAsynchronously() {
             new Thread(this::checkVersion).start();
@@ -351,7 +358,8 @@ public final class MainActivity extends AppCompatActivity {
             final String action=Objects.requireNonNull(intent.getAction());
             final String name=intent.getStringExtra(PAGE_NAME_EXTRA);
             final String type = intent.getType();
-            if(name!=null) mManager.setPageByName(name);
+            if(name!=null&&action.equals(SWITCH_PAGE))
+                mManager.setPageByName(name);
             if(action.equals("toolbox.mainActivity.startStopwatch")) {
                 showStopwatch(true);
             } else if (action.equals("toolbox.mainActivity.newNote")) {
@@ -381,9 +389,9 @@ public final class MainActivity extends AppCompatActivity {
 
         private void appendToNotepad(Intent intent) {
             String text = intent.getStringExtra(Intent.EXTRA_TEXT);
-            mManager.setPageByName(NotepadFragment.STRING_ID, () -> {
+            mManager.setPageByName(NotepadFragment.PAGE_ID, () -> {
                 Intent changeFragmentIntent = new Intent(NotepadFragment.ACTION_CHANGE_FRAGMENT).setPackage(context.getPackageName());
-                changeFragmentIntent.putExtra(NotepadFragment.STRING_ID, NotepadFragment.FRAGMENT_EDITOR);
+                changeFragmentIntent.putExtra(NotepadFragment.PAGE_ID, NotepadFragment.FRAGMENT_EDITOR);
                 context.sendBroadcast(changeFragmentIntent);
 
                 Intent newNoteIntent = new Intent(EditorFragment.ACTION_OPEN_FILE).setPackage(context.getPackageName());
@@ -394,9 +402,9 @@ public final class MainActivity extends AppCompatActivity {
         }
 
         private void createNote() {
-            mManager.setPageByName(NotepadFragment.STRING_ID, () -> {
+            mManager.setPageByName(NotepadFragment.PAGE_ID, () -> {
                 Intent intent1 = new Intent(NotepadFragment.ACTION_CHANGE_FRAGMENT).setPackage(context.getPackageName());
-                intent1.putExtra(NotepadFragment.STRING_ID, NotepadFragment.FRAGMENT_EDITOR);
+                intent1.putExtra(NotepadFragment.PAGE_ID, NotepadFragment.FRAGMENT_EDITOR);
                 context.sendBroadcast(intent1);
 
                 Intent newNoteIntent = new Intent(EditorFragment.ACTION_OPEN_FILE).setPackage(context.getPackageName());

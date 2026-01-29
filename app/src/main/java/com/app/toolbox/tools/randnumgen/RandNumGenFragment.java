@@ -1,6 +1,7 @@
 package com.app.toolbox.tools.randnumgen;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,15 @@ import java.util.Locale;
 
 public class RandNumGenFragment extends PageFragment {
     public static final String STRING_ID = "toolbox.page.RANDOM_NUMBER_GENERATOR_PAGE";
+
+    private static final String LAST_LIMIT_VALUE_NAME     = "toolbox.randnumgen.valueLimit";
+    private static final String LAST_DISPLAYED_VALUE_NAME = "toolbox.randnumgen.lastDisplayedValue";
+
+    private static final float DEFAULT_LIMIT = 25f;
+    private static final String DEFAULT_DISPLAYED_TEXT = "0.0";
+
+    private Slider mLimitSlider;
+    private TextView mValueField;
 
     @Override
     protected String fragmentName() {
@@ -40,13 +50,46 @@ public class RandNumGenFragment extends PageFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final Slider slider=view.findViewById(R.id.limitInput_slider);
-        final TextView output=view.findViewById(R.id.output_textview);
+        // initialize view fields
+        mLimitSlider = view.findViewById(R.id.limitInput_slider);
+        mValueField = view.findViewById(R.id.output_textview);
+
+        // restore state
+        float lastSelectedLimit;
+        String lastDisplayedValue;
+        if(savedInstanceState != null) {
+            lastSelectedLimit = savedInstanceState.getFloat(LAST_LIMIT_VALUE_NAME);
+            lastDisplayedValue= savedInstanceState.getString(LAST_DISPLAYED_VALUE_NAME);
+        } else {
+            // restore from shared preferences
+            SharedPreferences preferences = requireContext().getSharedPreferences(STRING_ID, Context.MODE_PRIVATE);
+            lastSelectedLimit = preferences.getFloat(LAST_LIMIT_VALUE_NAME, DEFAULT_LIMIT);
+            lastDisplayedValue= preferences.getString(LAST_DISPLAYED_VALUE_NAME, DEFAULT_DISPLAYED_TEXT);
+        }
+        mLimitSlider.setValue(lastSelectedLimit);
+        mValueField.setText(lastDisplayedValue);
+
+        // add listeners
         view.findViewById(R.id.generate_button).setOnClickListener(v -> {
-            float randomVal=(float)(Math.random()*slider.getValue());
-            output.setText(String.format(Locale.getDefault(), "%.2f", randomVal));
+            float randomVal=(float)(Math.random()* mLimitSlider.getValue());
+            mValueField.setText(String.format(Locale.getDefault(), "%.2f", randomVal));
         });
-        slider.setValue(20);
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putFloat(LAST_LIMIT_VALUE_NAME, mLimitSlider.getValue());
+        outState.putString(LAST_DISPLAYED_VALUE_NAME, mValueField.getText().toString());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        requireContext().getSharedPreferences(STRING_ID, Context.MODE_PRIVATE)
+                .edit()
+                .putFloat(LAST_LIMIT_VALUE_NAME, mLimitSlider.getValue())
+                .putString(LAST_DISPLAYED_VALUE_NAME, mValueField.getText().toString())
+                .apply();
+    }
 }
