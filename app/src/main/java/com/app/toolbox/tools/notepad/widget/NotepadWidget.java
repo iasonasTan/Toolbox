@@ -10,13 +10,16 @@ import android.widget.RemoteViews;
 import com.app.toolbox.MainActivity;
 import com.app.toolbox.R;
 
+/**
+ * Not enabled.
+ */
 public final class NotepadWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager manager, int[] ids) {
         for (int id : ids) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.notepad_widget);
 
-            views.setOnClickPendingIntent(R.id.open_button, createOnOpenPIntent(context, "Genders"));
+            views.setOnClickPendingIntent(R.id.open_button, createOnOpenPIntent(context, "Test"));
             views.setTextViewText(R.id.title_tv, "test1");
             views.setTextViewText(R.id.desc_tv, "test2");
 

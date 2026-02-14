@@ -8,10 +8,10 @@ android {
 
     defaultConfig {
         applicationId "com.app.toolbox"
-        minSdk 35 // 25 // 30
+        minSdk 35
         targetSdk 36
         versionCode 7
-        versionName "7.0"
+        versionName "7.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

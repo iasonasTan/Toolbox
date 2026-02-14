@@ -94,7 +94,8 @@
             android:name=".tools.randnumgen.widget.RandNumGenWidget"
             android:icon="@drawable/rng_icon"
             android:label="@string/item_rng"
-            android:exported="true">
+            android:exported="true"
+            android:permission="android.permission.BIND_APPWIDGET">
 
             <intent-filter>
                 <action android:name="toolbox.rng.widget.generateNumber" />

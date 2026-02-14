@@ -10,13 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.app.toolbox.view.storing.StoringLinearLayout
+        <LinearLayout
             android:id="@+id/notes_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="200dp">
 
-        </com.app.toolbox.view.storing.StoringLinearLayout>
+        </LinearLayout>
 
     </ScrollView>
 
@@ -24,6 +25,8 @@
         android:id="@+id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/zalando_sans_bold"
+        android:textSize="20sp"
         android:text="@string/no_notes_found"
         android:layout_centerInParent="true" />
 

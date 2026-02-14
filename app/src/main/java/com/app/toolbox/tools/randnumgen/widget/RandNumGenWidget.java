@@ -34,6 +34,7 @@ public class RandNumGenWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager manager, int[] ids) {
         super.onUpdate(context, manager, ids);
         for (int id : ids) {
+            Log.d("widget", "Updating widget "+id);
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.rng_widget);
             views.setTextViewText(R.id.limit_tv, ContextCompat.getString(context, R.string.limit)+getLimit(context));
             views.setOnClickPendingIntent(R.id.generate_button, createGeneratePendingIntent(context, id));
@@ -44,13 +45,12 @@ public class RandNumGenWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.rng_widget);
         ComponentName cName = new ComponentName(context, RandNumGenWidget.class);
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
 
         String action = Objects.requireNonNull(intent.getAction());
-        Log.d("widget_debug", action);
+        Log.d("widget", action);
         switch (action) {
             case ACTION_GENERATE_NUMBER -> {
                 float limit = getLimit(context);
@@ -58,24 +58,28 @@ public class RandNumGenWidget extends AppWidgetProvider {
                 int id = intent.getIntExtra(WIDGET_ID_EXTRA, 0); // id value
 
                 float num = (float) (Math.random() * limit);
-                Log.d("widget_debug", "Number: " + num + ", Limit: " + limit);
+                Log.d("widget", "Number: " + num + ", Limit: " + limit);
                 views.setTextViewText(R.id.number_tv, String.format(Locale.ENGLISH, "%.2f", num));
                 manager.updateAppWidget(id, views);
             }
-            case "android.appwidget.action.APPWIDGET_UPDATE" -> {
+            case AppWidgetManager.ACTION_APPWIDGET_UPDATE -> {
                 float limit = getLimit(context);
                 views.setTextViewText(R.id.limit_tv, ContextCompat.getString(context, R.string.limit) + limit);
                 int[] ids = manager.getAppWidgetIds(cName);
                 manager.updateAppWidget(ids, views);
             }
         }
+
+        // Call 'super' after
+        super.onReceive(context, intent);
     }
 
     private PendingIntent createGeneratePendingIntent(Context context, int id) {
         Intent generateIntent = new Intent(context, RandNumGenWidget.class)
                 .putExtra(WIDGET_ID_EXTRA, id)
                 .setAction(ACTION_GENERATE_NUMBER);
-        return PendingIntent.getBroadcast(context, 2000+id, generateIntent, PendingIntent.FLAG_IMMUTABLE);
+        // FLAG_UPDATE_CURRENT is important!
+        return PendingIntent.getBroadcast(context, 2000+id, generateIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private PendingIntent createShowRNGPendingIntent(Context context) {

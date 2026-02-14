@@ -41,7 +41,7 @@
 
     <!-- Alert Dialog Strings -->
     <string name="invalid_name">Invalid name!</string>
-    <string name="invalid_name_desc">Name is invalid or already used. Please choose a different name.</string>
+    <string name="invalid_name_desc">Title is invalid or already used. Please choose a different title. Hint: Titles can\'t contain the following characters: </string>
     <string name="time_is_up">Time\'s UP!</string>
     <string name="timer">"Timer: "</string>
     <string name="ended">ended.</string>

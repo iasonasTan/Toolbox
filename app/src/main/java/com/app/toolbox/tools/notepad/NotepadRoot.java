@@ -20,18 +20,17 @@ import com.app.toolbox.ReceiverOwner;
 import com.app.toolbox.utils.PageFragment;
 import com.app.toolbox.view.navigation.NavigationItemView;
 
-import java.util.List;
 import java.util.Objects;
 
-public final class NotepadFragment extends PageFragment implements ReceiverOwner {
+public final class NotepadRoot extends PageFragment implements ReceiverOwner {
     public static final String PAGE_ID = "toolbox.page.NOTEPAD_PAGE";
-    public static final String FRAGMENT_EDITOR        = "toolbox.notepad.EDITOR_FRAGMENT";
-    public static final String ACTION_CHANGE_FRAGMENT = "toolbox.notepad.CHANGE_FRAGMENT";
-    public static final String FRAGMENT_HOME          = "toolbox.notepad.HOME_FRAGMENT";
 
-    static List<String> usedNames;
-    private final HomeFragment   mHome   = new HomeFragment();
-    private final EditorFragment mEditor = new EditorFragment();
+    public static final String FRAGMENT_EDITOR        = "toolbox.notepad.EDITOR_FRAGMENT";
+    public static final String FRAGMENT_HOME          = "toolbox.notepad.HOME_FRAGMENT";
+    public static final String ACTION_CHANGE_FRAGMENT = "toolbox.notepad.CHANGE_FRAGMENT";
+
+    private final NotepadHome mHome   = new NotepadHome();
+    private final NotepadEditor mEditor = new NotepadEditor();
 
     private final BroadcastReceiver mCommandReceiver = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
@@ -42,37 +41,25 @@ public final class NotepadFragment extends PageFragment implements ReceiverOwner
                 default -> null;
             };
             if(fragment != null&&!isStateSaved()) {
-                getChildFragmentManager().beginTransaction()
-                        .hide(mHome)
-                        .hide(mEditor)
-                        .show(fragment)
+                getChildFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.notepad_fragment_container, fragment)
                         .commit();
             }
         }
     };
 
     @Override
-    protected String fragmentName() {
-        return PAGE_ID;
-    }
-
-    @Override
-    protected NavigationItemView createNavigationItem(Context context) {
-        return new NavigationItemView(context, R.drawable.notepad_icon);
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getChildFragmentManager()
-                .beginTransaction()
-                .add(R.id.notepad_fragment_container, mHome)
-                .add(R.id.notepad_fragment_container, mEditor)
-                .hide(mEditor)
-                .show(mHome)
-                .commit();
-        ContextCompat.registerReceiver(requireContext(), mCommandReceiver, new IntentFilter(NotepadFragment.ACTION_CHANGE_FRAGMENT), ContextCompat.RECEIVER_NOT_EXPORTED);
-        MainActivity.sReceiverOwners.add(this);
+        if(savedInstanceState == null) {
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.notepad_fragment_container, mHome)
+                    .commit();
+            ContextCompat.registerReceiver(requireContext(), mCommandReceiver, new IntentFilter(NotepadRoot.ACTION_CHANGE_FRAGMENT), ContextCompat.RECEIVER_NOT_EXPORTED);
+            MainActivity.sReceiverOwners.add(this);
+        }
     }
 
     @Nullable
@@ -84,5 +71,15 @@ public final class NotepadFragment extends PageFragment implements ReceiverOwner
     @Override
     public void unregisterReceivers(Context context) {
         context.unregisterReceiver(mCommandReceiver);
+    }
+
+    @Override
+    protected String fragmentName() {
+        return PAGE_ID;
+    }
+
+    @Override
+    protected NavigationItemView createNavigationItem(Context context) {
+        return new NavigationItemView(context, R.drawable.notepad_icon);
     }
 }

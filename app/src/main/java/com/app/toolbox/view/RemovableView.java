@@ -22,12 +22,17 @@ public class RemovableView extends LinearLayout implements Named {
     private ImageButton mDeleteButton;
 
     public RemovableView(Context context) {
+        this(context, true);
+    }
+
+    public RemovableView(Context context, boolean clickable) {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.view_removable_item, this, true);
         mTitleView =findViewById(R.id.title_view);
         mContentPreviewView =findViewById(R.id.content_preview_view);
         mDeleteButton =findViewById(R.id.deleteNote_button);
         setFont(context, R.font.zalando_sans_bold);
+        setClickable(clickable);
     }
 
     public RemovableView(Context context, AttributeSet attrs) {

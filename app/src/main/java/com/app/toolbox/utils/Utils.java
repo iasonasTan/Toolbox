@@ -3,7 +3,9 @@ package com.app.toolbox.utils;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -11,6 +13,7 @@ import com.app.toolbox.MainActivity;
 
 import java.math.BigInteger;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -65,6 +68,7 @@ public final class Utils {
      * @param intent {@code Intent} to check.
      * @param extras {@code Extras} that the intent must include.
      */
+    @Deprecated
     public static void checkIntent(@NonNull Intent intent, @NonNull String... extras) {
         Objects.requireNonNull(intent);
         for (String extra : extras) {
@@ -149,5 +153,26 @@ public final class Utils {
             Log.d("execute", "Exception "+e);
             return false;
         }
+    }
+
+    /**
+     * Converts boolean to int based on static visibility constants of class {@link View}.
+     * @param visible Boolean representing if the view is currently visible of hidden.
+     * @return {@link View#VISIBLE} if view is visible; {@link View#GONE} otherwise.
+     */
+    public static int booleanVisibility(boolean visible) {
+        return visible ? View.VISIBLE : View.GONE;
+    }
+
+    /**
+     * Creates an {@link IntentFilter} with given actions.
+     * @param actions Actions to add to intent filter.
+     * @return Intent filter with given actions.
+     */
+    public static IntentFilter intentFilter(String... actions) {
+        IntentFilter filter = new IntentFilter();
+        for (String action: actions)
+            filter.addAction(action);
+        return filter;
     }
 }
