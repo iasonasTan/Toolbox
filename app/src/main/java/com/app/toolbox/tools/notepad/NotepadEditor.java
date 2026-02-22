@@ -39,6 +39,7 @@ public final class NotepadEditor extends Fragment {
 
     private final char[] FORBIDDEN_CHARACTERS = {'/', '<', '>', ':', '"', '|', '?', '*', '\\'};
     private EditText mTitleEditText, mContentEditText;
+    private View mActionButtons;
     private File mCurrentFile;
 
     private final BroadcastReceiver mCommandReceiver = new BroadcastReceiver() {
@@ -80,11 +81,29 @@ public final class NotepadEditor extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initViews(view, savedInstanceState);
+
+        // On Long press Contents view, others get hidden.
+        mContentEditText.setOnLongClickListener(v -> {
+            mActionButtons.setVisibility(View.GONE);
+            mTitleEditText.setVisibility(View.GONE);
+            return true;
+        });
 
         // on back pressed
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
-            @Override public void handleOnBackPressed() {
-                exitEditor();
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+            private boolean mFirstTry = true;
+
+            @Override
+            public void handleOnBackPressed() {
+                if(mFirstTry) {
+                    mActionButtons.setVisibility(View.VISIBLE);
+                    mTitleEditText.setVisibility(View.VISIBLE);
+                    mFirstTry = false;
+                } else {
+                    exitEditor();
+                }
             }
         });
 
@@ -92,13 +111,12 @@ public final class NotepadEditor extends Fragment {
         Intent intent = new Intent(MainActivity.CONFIG_VIEW_PAGER).setPackage(requireContext().getPackageName());
         intent.putExtra(MainActivity.ENABLE_SCROLL_EXTRA, false);
         requireContext().sendBroadcast(intent);
-
-        initViews(view, savedInstanceState);
     }
 
     private void initViews(View view, Bundle inState) {
         mTitleEditText = view.findViewById(R.id.title_view);
         mContentEditText = view.findViewById(R.id.main_edittext);
+        mActionButtons = view.findViewById(R.id.action_buttons_hsv);
 
         // Restore State
         if(inState!=null) {
@@ -157,9 +175,9 @@ public final class NotepadEditor extends Fragment {
 
     public boolean trySavingBuffer(String name) {
         // If title is already used or contains forbidden symbols
-        if(mCurrentFile==null&&Storage.getInstance().noteFileExists(name)||
-                mCurrentFile!=null&&!mCurrentFile.getName().equals(name)&&Storage.getInstance().noteFileExists(name) ||
-                !isNameValid(name)) {
+        if (mCurrentFile==null&&Storage.getInstance().noteFileExists(name)||
+            mCurrentFile!=null&&!mCurrentFile.getName().equals(name)&& Storage.getInstance().noteFileExists(name) ||
+            !isNameValid(name)) {
 
             // Don't save and warn user
             showWrongNameDialog();

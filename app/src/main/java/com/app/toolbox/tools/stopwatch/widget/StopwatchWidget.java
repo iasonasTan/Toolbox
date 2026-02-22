@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import com.app.toolbox.MainActivity;
 import com.app.toolbox.R;
 import com.app.toolbox.tools.stopwatch.StopwatchService;
 import com.app.toolbox.utils.Utils;
@@ -27,7 +26,6 @@ public final class StopwatchWidget extends AppWidgetProvider {
 
             manager.updateAppWidget(id, views);
         }
-
     }
 
     @Override
