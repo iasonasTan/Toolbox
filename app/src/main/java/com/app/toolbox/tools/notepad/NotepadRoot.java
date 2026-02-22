@@ -1,9 +1,6 @@
 package com.app.toolbox.tools.notepad;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,55 +8,20 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.app.toolbox.MainActivity;
 import com.app.toolbox.R;
-import com.app.toolbox.ReceiverOwner;
-import com.app.toolbox.utils.PageFragment;
+import com.app.toolbox.utils.ParentPageFragment;
 import com.app.toolbox.view.navigation.NavigationItemView;
 
-import java.util.Objects;
+import java.util.List;
 
-public final class NotepadRoot extends PageFragment implements ReceiverOwner {
-    public static final String PAGE_ID = "toolbox.page.NOTEPAD_PAGE";
-
-    public static final String FRAGMENT_EDITOR        = "toolbox.notepad.EDITOR_FRAGMENT";
-    public static final String FRAGMENT_HOME          = "toolbox.notepad.HOME_FRAGMENT";
-    public static final String ACTION_CHANGE_FRAGMENT = "toolbox.notepad.CHANGE_FRAGMENT";
-
-    private final NotepadHome mHome   = new NotepadHome();
-    private final NotepadEditor mEditor = new NotepadEditor();
-
-    private final BroadcastReceiver mCommandReceiver = new BroadcastReceiver() {
-        @Override public void onReceive(Context context, Intent intent) {
-            String pageID = Objects.requireNonNull(intent.getStringExtra(PAGE_ID));
-            Fragment fragment = switch(pageID) {
-                case FRAGMENT_HOME -> mHome;
-                case FRAGMENT_EDITOR -> mEditor;
-                default -> null;
-            };
-            if(fragment != null&&!isStateSaved()) {
-                getChildFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.notepad_fragment_container, fragment)
-                        .commit();
-            }
-        }
-    };
+public final class NotepadRoot extends ParentPageFragment {
+    public static final String STRING_ID = "toolbox.page.NOTEPAD_PAGE";
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(savedInstanceState == null) {
-            getChildFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.notepad_fragment_container, mHome)
-                    .commit();
-            ContextCompat.registerReceiver(requireContext(), mCommandReceiver, new IntentFilter(NotepadRoot.ACTION_CHANGE_FRAGMENT), ContextCompat.RECEIVER_NOT_EXPORTED);
-            MainActivity.sReceiverOwners.add(this);
-        }
     }
 
     @Nullable
@@ -69,17 +31,30 @@ public final class NotepadRoot extends PageFragment implements ReceiverOwner {
     }
 
     @Override
-    public void unregisterReceivers(Context context) {
-        context.unregisterReceiver(mCommandReceiver);
-    }
-
-    @Override
     protected String fragmentName() {
-        return PAGE_ID;
+        return STRING_ID;
     }
 
     @Override
     protected NavigationItemView createNavigationItem(Context context) {
         return new NavigationItemView(context, R.drawable.notepad_icon);
+    }
+
+    @Override
+    protected List<Fragment> pages() {
+        return List.of(
+                new NotepadHome(),
+                new NotepadEditor()
+        );
+    }
+
+    @Override
+    protected String defaultPageClassName() {
+        return NotepadHome.class.getName();
+    }
+
+    @Override
+    protected int containerId() {
+        return R.id.notepad_fragment_container;
     }
 }

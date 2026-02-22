@@ -49,7 +49,7 @@
                     android:layout_height="wrap_content" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -63,81 +63,6 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
-
-<!--            <LinearLayout-->
-<!--                android:background="@drawable/no_background_border"-->
-<!--                android:padding="10dp"-->
-<!--                android:layout_marginBottom="15dp"-->
-<!--                android:orientation="vertical"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content" >-->
-
-<!--                <TextView-->
-<!--                    android:layout_marginBottom="10dp"-->
-<!--                    android:textSize="25sp"-->
-<!--                    android:fontFamily="@font/zalando_sans_bold"-->
-<!--                    android:text="@string/button_background_color"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"/>-->
-
-<!--                <com.app.toolbox.view.AnimatedButton-->
-<!--                    android:id="@+id/select_buttons_background_button"-->
-<!--                    android:text="@string/choose_button_background"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:paddingHorizontal="10dp"-->
-<!--                    android:layout_height="wrap_content" />-->
-<!--            </LinearLayout>-->
-
-<!--            <LinearLayout-->
-<!--                android:background="@drawable/no_background_border"-->
-<!--                android:padding="10dp"-->
-<!--                android:layout_marginBottom="15dp"-->
-<!--                android:orientation="vertical"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content" >-->
-
-<!--                <TextView-->
-<!--                    android:layout_marginBottom="10dp"-->
-<!--                    android:textSize="25sp"-->
-<!--                    android:fontFamily="@font/zalando_sans_bold"-->
-<!--                    android:text="@string/borders"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"/>-->
-
-<!--                <LinearLayout-->
-<!--                    android:orientation="vertical"-->
-<!--                    android:background="@drawable/background_with_border"-->
-<!--                    android:layout_marginBottom="10dp"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content">-->
-
-<!--                    <CheckBox-->
-<!--                        android:id="@+id/enable_borders_checkbox"-->
-<!--                        android:text="@string/enable_borders"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content" />-->
-
-<!--                    <CheckBox-->
-<!--                        android:id="@+id/round_corners_checkbox"-->
-<!--                        android:text="@string/round_corners"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content" />-->
-<!--                </LinearLayout>-->
-
-<!--                <SeekBar-->
-<!--                    android:id="@+id/border_weight_seekbar"-->
-<!--                    android:background="@drawable/background_with_border"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="30dp" />-->
-
-<!--                <com.app.toolbox.view.AnimatedButton-->
-<!--                    android:id="@+id/select_border_color_button"-->
-<!--                    android:layout_marginTop="10dp"-->
-<!--                    android:text="@string/choose_color"-->
-<!--                    android:padding="10dp"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content" />-->
-<!--            </LinearLayout>-->
 
             <LinearLayout
                 android:layout_marginTop="10dp"

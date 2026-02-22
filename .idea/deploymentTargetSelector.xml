@@ -15,10 +15,10 @@
       </SelectionState>
       <SelectionState runConfigName="buildrun">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-02-14T16:48:57.626198894Z">
+        <DropdownSelection timestamp="2026-02-18T16:42:29.027326515Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=R92W50F1JXD" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/home/iasonas/.android/avd/Pixel_6_Pro.avd" />
             </handle>
           </Target>
         </DropdownSelection>

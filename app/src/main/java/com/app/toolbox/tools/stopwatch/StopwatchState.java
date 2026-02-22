@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-public enum UIState implements Parcelable {
+public enum StopwatchState implements Parcelable {
     ERROR("toolbox.stopwatch.stateError"),
     BEGINNING("toolbox.stopwatch.stateBeginning"),
     PAUSED("toolbox.stopwatch.statePaused"),
@@ -13,7 +13,7 @@ public enum UIState implements Parcelable {
 
     public final String string;
 
-    UIState(String name) {
+    StopwatchState(String name) {
         this.string = name;
     }
 
@@ -22,10 +22,10 @@ public enum UIState implements Parcelable {
         return 0;
     }
 
-    public static final Creator<UIState> CREATOR = new Creator<>() {
-        @Override public UIState createFromParcel(Parcel source) {
+    public static final Creator<StopwatchState> CREATOR = new Creator<>() {
+        @Override public StopwatchState createFromParcel(Parcel source) {
             String requiredName = source.readString();
-            for (UIState value : UIState.values()) {
+            for (StopwatchState value : StopwatchState.values()) {
                 if (value.string.equals(requiredName)) {
                     return value;
                 }
@@ -33,8 +33,8 @@ public enum UIState implements Parcelable {
             return ERROR;
         }
 
-        @Override public UIState[] newArray(int size) {
-            return new UIState[0];
+        @Override public StopwatchState[] newArray(int size) {
+            return new StopwatchState[0];
         }
     };
 

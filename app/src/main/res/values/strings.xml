@@ -86,5 +86,6 @@
     <string name="rng_limit">Rng limit:</string>
     <string name="widgets">Widgets:</string>
     <string name="could_not_save_note">Could not save note</string>
+    <string name="status_about_running_timers">Status about running timers.</string>
 
 </resources>

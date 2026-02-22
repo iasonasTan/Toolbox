@@ -31,9 +31,11 @@ import com.app.toolbox.tools.notepad.storage.Storage;
 import com.app.toolbox.tools.randnumgen.RandNumGenFragment;
 import com.app.toolbox.tools.stopwatch.StopwatchRoot;
 import com.app.toolbox.tools.stopwatch.StopwatchService;
-import com.app.toolbox.tools.timer.TimerFragment;
+import com.app.toolbox.tools.timer.TimerEditor;
+import com.app.toolbox.tools.timer.TimerRoot;
 import com.app.toolbox.utils.IntentContentsMissingException;
 import com.app.toolbox.utils.PageFragment;
+import com.app.toolbox.utils.ParentPageFragment;
 import com.app.toolbox.utils.Utils;
 import com.app.toolbox.view.navigation.NavigationItemView;
 import com.app.toolbox.view.navigation.NavigationView;
@@ -104,11 +106,11 @@ public final class MainActivity extends AppCompatActivity {
         mManager.initFragments();
         initViews();
 
+        Storage.initIfNotInitialized(this, "notes");
         if(savedInstanceState==null) {
-            Storage.initIfUninitialized(this, "notes");
             new IntentProcessor(this, mManager).processIntent(getIntent());
-            //new UpdateChecker().checkVersionAsynchronously();
             new ApplicationGreeter(this).greet();
+            //new UpdateChecker().checkVersionAsynchronously();
         }
     }
 
@@ -179,7 +181,7 @@ public final class MainActivity extends AppCompatActivity {
 
         private void initFragments() {
             List<PageFragment> loc_fragments=new ArrayList<>();
-            Collections.addAll(loc_fragments, new TimerFragment(), new StopwatchRoot(),
+            Collections.addAll(loc_fragments, new TimerRoot(), new StopwatchRoot(),
                     new CalculatorFragment(), new NotepadRoot(), new RandNumGenFragment());
             loadFragmentUsages(loc_fragments);
 
@@ -384,18 +386,18 @@ public final class MainActivity extends AppCompatActivity {
         }
 
         private void addTimer() {
-            mManager.setPageByName(TimerFragment.STRING_ID, () -> {
-                Intent changeFragmentIntent = new Intent(TimerFragment.ACTION_CHANGE_FRAGMENT).setPackage(context.getPackageName());
-                changeFragmentIntent.putExtra(TimerFragment.FRAGMENT_NAME_EXTRA, TimerFragment.SETTER_FRAGMENT);
+            mManager.setPageByName(TimerRoot.STRING_ID, () -> {
+                Intent changeFragmentIntent = new Intent(ParentPageFragment.actionChangePage(TimerRoot.STRING_ID)).setPackage(context.getPackageName());
+                changeFragmentIntent.putExtra(ParentPageFragment.PAGE_CLASSNAME_EXTRA, TimerEditor.class.getName());
                 context.sendBroadcast(changeFragmentIntent);
             });
         }
 
         private void appendToNotepad(Intent intent) {
             String text = intent.getStringExtra(Intent.EXTRA_TEXT);
-            mManager.setPageByName(NotepadRoot.PAGE_ID, () -> {
-                Intent changeFragmentIntent = new Intent(NotepadRoot.ACTION_CHANGE_FRAGMENT).setPackage(context.getPackageName());
-                changeFragmentIntent.putExtra(NotepadRoot.PAGE_ID, NotepadRoot.FRAGMENT_EDITOR);
+            mManager.setPageByName(NotepadRoot.STRING_ID, () -> {
+                Intent changeFragmentIntent = new Intent(ParentPageFragment.actionChangePage(NotepadRoot.STRING_ID)).setPackage(context.getPackageName());
+                changeFragmentIntent.putExtra(ParentPageFragment.PAGE_CLASSNAME_EXTRA, NotepadEditor.class.getName());
                 context.sendBroadcast(changeFragmentIntent);
 
                 Intent newNoteIntent = new Intent(NotepadEditor.ACTION_LOAD).setPackage(context.getPackageName());
@@ -406,9 +408,9 @@ public final class MainActivity extends AppCompatActivity {
         }
 
         private void createNote() {
-            mManager.setPageByName(NotepadRoot.PAGE_ID, () -> {
-                Intent intent1 = new Intent(NotepadRoot.ACTION_CHANGE_FRAGMENT).setPackage(context.getPackageName());
-                intent1.putExtra(NotepadRoot.PAGE_ID, NotepadRoot.FRAGMENT_EDITOR);
+            mManager.setPageByName(NotepadRoot.STRING_ID, () -> {
+                Intent intent1 = new Intent(ParentPageFragment.actionChangePage(NotepadRoot.STRING_ID)).setPackage(context.getPackageName());
+                intent1.putExtra(ParentPageFragment.PAGE_CLASSNAME_EXTRA, NotepadEditor.class.getName());
                 context.sendBroadcast(intent1);
 
                 Intent newNoteIntent = new Intent(NotepadEditor.ACTION_LOAD).setPackage(context.getPackageName());

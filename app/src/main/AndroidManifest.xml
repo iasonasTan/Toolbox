@@ -83,6 +83,7 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.eightbitcloud.example.widget.ACTION_WIDGET_RECEIVER" />
+                <action android:name="toolbox.stopwatchService.sendTime" />
             </intent-filter>
 
             <meta-data

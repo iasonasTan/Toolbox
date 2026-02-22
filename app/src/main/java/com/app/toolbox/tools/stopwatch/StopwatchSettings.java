@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.app.toolbox.R;
+import com.app.toolbox.utils.ParentPageFragment;
 
 public class StopwatchSettings extends Fragment {
     static final String SHOW_MILLIS = "toolbox.stopwatch.showMillis";
@@ -49,8 +50,8 @@ public class StopwatchSettings extends Fragment {
                 .edit().putBoolean(StopwatchHome.MILLIS_PREFERENCE, showMillis).apply();
         Toast.makeText(requireContext(), R.string.settings_udpated, Toast.LENGTH_SHORT).show();
 
-        Intent exitIntent = new Intent(StopwatchRoot.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
-        exitIntent.putExtra(StopwatchRoot.FRAGMENT_NAME_EXTRA, StopwatchRoot.FRAGMENT_MAIN_ID);
+        Intent exitIntent = new Intent(ParentPageFragment.actionChangePage(StopwatchRoot.STRING_ID)).setPackage(requireContext().getPackageName());
+        exitIntent.putExtra(ParentPageFragment.PAGE_CLASSNAME_EXTRA, StopwatchHome.class.getName());
         requireContext().sendBroadcast(exitIntent);
     }
 

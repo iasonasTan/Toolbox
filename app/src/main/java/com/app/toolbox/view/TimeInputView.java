@@ -38,7 +38,7 @@ public class TimeInputView extends LinearLayout {
                 hours_input.getValue()*1000*60*60L;
     }
 
-    public void resetTime() {
+    public void reset() {
         hours_input.setValue(0);
         mins_input.setValue(0);
         secs_input.setValue(0);

@@ -27,6 +27,13 @@ public final class Storage implements Iterable<File> {
         sInstance=null;
     }
 
+    public static boolean initIfNotInitialized(Context context, String dirName) {
+        if(sInstance!=null)
+            return false;
+        init(context, dirName);
+        return true;
+    }
+
     public static void init(Context context, String dirName) {
         if(sInstance!=null)
             throw new IllegalStateException("Storage is already initialized.");
@@ -38,11 +45,6 @@ public final class Storage implements Iterable<File> {
         if(sInstance==null)
             throw new IllegalStateException("Storage is not initialized.");
         return sInstance;
-    }
-
-    public static void initIfUninitialized(Context context, String dirName) {
-        if(sInstance==null)
-            init(context, dirName);
     }
 
     private final File mNotesDir;

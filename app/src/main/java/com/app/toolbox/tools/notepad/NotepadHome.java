@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.app.toolbox.R;
 import com.app.toolbox.tools.notepad.storage.Storage;
+import com.app.toolbox.utils.ParentPageFragment;
 import com.app.toolbox.utils.Utils;
 import com.app.toolbox.view.RemovableView;
 
@@ -43,9 +44,9 @@ public final class NotepadHome extends Fragment {
 
     private void initViews(View view) {
         view.findViewById(R.id.newNote_fab).setOnClickListener(v -> {
-            // Show fragment
-            Intent openEditorIntent = new Intent(NotepadRoot.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
-            openEditorIntent.putExtra(NotepadRoot.PAGE_ID, NotepadRoot.FRAGMENT_EDITOR);
+            // Show editor
+            Intent openEditorIntent = new Intent(ParentPageFragment.actionChangePage(NotepadRoot.STRING_ID)).setPackage(requireContext().getPackageName());
+            openEditorIntent.putExtra(ParentPageFragment.PAGE_CLASSNAME_EXTRA, NotepadEditor.class.getName());
             requireContext().sendBroadcast(openEditorIntent);
 
             // Load empty editor
@@ -125,8 +126,8 @@ public final class NotepadHome extends Fragment {
         public View.OnClickListener createOnClickListener(File noteFile) {
             return v -> {
                 // Open editor
-                Intent changePageIntent = new Intent(NotepadRoot.ACTION_CHANGE_FRAGMENT).setPackage(context.getPackageName());
-                changePageIntent.putExtra(NotepadRoot.PAGE_ID, NotepadRoot.FRAGMENT_EDITOR);
+                Intent changePageIntent = new Intent(ParentPageFragment.actionChangePage(NotepadRoot.STRING_ID)).setPackage(context.getPackageName());
+                changePageIntent.putExtra(ParentPageFragment.PAGE_CLASSNAME_EXTRA, NotepadEditor.class.getName());
                 context.sendBroadcast(changePageIntent);
 
                 // Load data

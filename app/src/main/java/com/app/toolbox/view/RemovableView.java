@@ -31,7 +31,7 @@ public class RemovableView extends LinearLayout implements Named {
         mTitleView =findViewById(R.id.title_view);
         mContentPreviewView =findViewById(R.id.content_preview_view);
         mDeleteButton =findViewById(R.id.deleteNote_button);
-        setFont(context, R.font.zalando_sans_bold);
+        setTypeface(ResourcesCompat.getFont(context, R.font.zalando_sans_bold));
         setClickable(clickable);
     }
 
@@ -39,8 +39,7 @@ public class RemovableView extends LinearLayout implements Named {
         super(context, attrs);
     }
 
-    public void setFont(Context context, int font) {
-        Typeface typeface = ResourcesCompat.getFont(context, font);
+    public void setTypeface(Typeface typeface) {
         mTitleView.setTypeface(typeface);
         mContentPreviewView.setTypeface(typeface);
     }

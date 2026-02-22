@@ -2,11 +2,7 @@
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:minWidth="100dp"
-    android:minHeight="50dp"
-    android:targetCellWidth="3"
-    android:targetCellHeight="2"
-    android:maxResizeWidth="500dp"
-    android:maxResizeHeight="200dp"
+    android:minHeight="110dp"
     android:updatePeriodMillis="500"
     android:description="@string/item_rng"
     android:previewLayout="@layout/rng_widget"
@@ -15,3 +11,9 @@
     android:widgetCategory="home_screen"
     android:widgetFeatures="reconfigurable|configuration_optional">
 </appwidget-provider>
+
+<!--    android:targetCellWidth="3"-->
+<!--    android:targetCellHeight="3"-->
+
+<!--    android:maxResizeWidth="500dp"-->
+<!--    android:maxResizeHeight="300dp"-->

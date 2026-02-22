@@ -11,14 +11,14 @@
         android:padding="30dp"
         android:layout_centerInParent="true"
         android:orientation="vertical"
-        android:background="@drawable/background_with_border"
+        android:background="@drawable/no_background_border"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:ignore="UselessParent">
 
         <com.app.toolbox.view.TitleView
             android:text="@string/settings"
-            android:textColor="?attr/colorOnPrimary"
+            android:textColor="?attr/colorPrimary"
             android:paddingHorizontal="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -27,7 +27,7 @@
             android:fontFamily="@font/zalando_sans_bold"
             android:paddingHorizontal="10dp"
             android:layout_marginVertical="10dp"
-            android:textColor="?attr/colorOnPrimary"
+            android:textColor="?attr/colorPrimary"
             android:id="@+id/show_millis"
             android:text="@string/show_milliseconds_on_stopwatch"
             android:layout_width="wrap_content"

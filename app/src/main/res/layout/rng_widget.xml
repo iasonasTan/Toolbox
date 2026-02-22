@@ -24,6 +24,7 @@
         tools:ignore="HardcodedText" />
 
     <Button
+        style="?android:attr/buttonBarButtonStyle"
         android:fontFamily="@font/zalando_sans_bold"
         android:layout_margin="10dp"
         android:textSize="20sp"

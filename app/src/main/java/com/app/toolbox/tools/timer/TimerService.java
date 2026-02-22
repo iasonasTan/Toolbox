@@ -14,8 +14,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
-import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -23,128 +21,212 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.app.toolbox.R;
-import com.app.toolbox.utils.IntentContentsMissingException;
+import com.app.toolbox.utils.IllegalIntentContentsException;
 import com.app.toolbox.utils.Utils;
-import com.app.toolbox.view.RemovableView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-public final class TimerService extends Service implements Runnable {
-    static final String ACTION_UPDATE_TIMERS = "toolbox.timerService.updateTimers";
-    static final String ACTION_STOP_ALL_TIMERS = "toolbox.timerService.stopTimers";
-    public static final String TIMER_ID_EXTRA    = "toolbox.timer.timerID";
-    public static final String ACTION_STOP_TIMER = "toolbox.timer.stopTimer";
-    static final String SILENT_NOTIFICATION      = "toolbox.timerService.notificationChannel.silent";
-    private PendingIntent mStopAllTimersPendingIntent, mShowTimersPendingIntent;
-    private static final List<Timer> sTimers =new ArrayList<>();
+public final class TimerService extends Service {
+    static final String SILENT_NOTIFICATION = "toolbox.timerService.notificationChannel.silent";
 
-    private Thread mThread;
-    private static boolean sRunning = true;
-    private static boolean sPaused = false;
+    // Service actions
+    public static final String ACTION_ADD_TIMER  = "toolbox.timerService.actionAddTimer";
+    public static final String TIMER_NAME_EXTRA  = "toolbox.timerService.nameExtra";
+    public static final String TIME_DELTA_EXTRA  = "toolbox.timerService.deltaExtra";
+    public static final String ACTION_STOP_ALL   = "toolbox.timerService.actionStopAll";
+    public static final String ACTION_STOP_TIMER = "toolbox.timerService.actionStopTimer";
+    public static final String TIMER_ID_EXTRA    = "toolbox.timerService.timerIdExtra";
+
+    // Interface actions
+    public static final String ACTION_SEND_DATA  = "toolbox.timerService.sendData";
+    public static final String TIMERS_DATA_EXTRA = "toolbox.timerService.timersData";
+
+    private NotificationCompat.Builder mNotificationBuilder;
+    private final List<Timer> mTimers = new ArrayList<>();
+    private final Handler mTimerHandler = new Handler(Looper.getMainLooper());
+
+    private final Runnable mTimerUpdater = () -> {
+        int n = mTimers.size();
+        Data data = new Data(n);
+
+        for(int i=0; i<n; i++) {
+            Timer t = mTimers.get(i);
+            data.titles[i] = t.TITLE;
+            data.deltas[i] = t.getDelta();
+            data.ids[i] = t.ID;
+
+            mTimerHandler.post(t);
+        }
+
+        Intent interfaceDataIntent = new Intent(ACTION_SEND_DATA).setPackage(getPackageName());
+        interfaceDataIntent.putExtra(TIMERS_DATA_EXTRA, data);
+        getApplicationContext().sendBroadcast(interfaceDataIntent);
+    };
+
+    private final Runnable mTimerUpdateLoop = new Runnable() {
+        @Override
+        public void run() {
+            mTimerUpdater.run();
+            mTimerHandler.postDelayed(this, 1000);
+        }
+    };
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Intent intent = new Intent(getApplicationContext(), TimerService.class).setAction(ACTION_STOP_ALL_TIMERS);
-        mStopAllTimersPendingIntent = PendingIntent.getService(getApplicationContext(), ACTION_STOP_ALL_TIMERS.hashCode(), intent, PendingIntent.FLAG_IMMUTABLE);
-        mShowTimersPendingIntent = Utils.createShowPagePendingIntent(TimerFragment.STRING_ID, getApplicationContext());
+        PendingIntent showTimersPendingIntent = Utils.createShowPagePendingIntent(TimerRoot.STRING_ID, getApplicationContext());
+        Intent intent = new Intent(getApplicationContext(), TimerService.class).setAction(ACTION_STOP_ALL);
+        PendingIntent stopAllTimersPendingIntent = PendingIntent.getService(
+                getApplicationContext(),
+                ACTION_STOP_ALL.hashCode(),
+                intent,
+                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
+        );
+        mNotificationBuilder = new NotificationCompat.Builder(getApplicationContext(), TimerService.SILENT_NOTIFICATION)
+                .setContentIntent(showTimersPendingIntent)
+                .setSmallIcon(R.drawable.timer_icon)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .setSilent(true)
+                .setOngoing(true)
+                .addAction(R.drawable.timer_icon, getString(R.string.stop_all), stopAllTimersPendingIntent);
 
-        NotificationChannel notificationChannel = new NotificationChannel(SILENT_NOTIFICATION, "Timer status", NotificationManager.IMPORTANCE_MIN);
-        notificationChannel.setDescription("Status about running timers.");
+
+        NotificationChannel notificationChannel = new NotificationChannel(
+                SILENT_NOTIFICATION,
+                "Timer status",
+                NotificationManager.IMPORTANCE_MIN
+        );
+        notificationChannel.setDescription(getString(R.string.status_about_running_timers));
         notificationChannel.setSound(null, null);
         getSystemService(NotificationManager.class).createNotificationChannel(notificationChannel);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent==null) return START_STICKY;
         switch (Objects.requireNonNull(intent.getAction())) {
+            case ACTION_ADD_TIMER -> {
+                mTimerHandler.removeCallbacks(mTimerUpdateLoop);
+                String nullableName = intent.getStringExtra(TIMER_NAME_EXTRA);
+                // I'm sorry for this ternary-nesting
+                String nonNullName = nullableName!=null
+                        ?(nullableName.equals("null")?getString(R.string.unnamed):nullableName)
+                        :getString(R.string.unnamed);
+                long timeDelta = intent.getLongExtra(TIME_DELTA_EXTRA, /*DEFAULT VALUE:*/5000);
+                Timer timer = new Timer(getApplicationContext(), timeDelta, nonNullName);
+                mTimers.add(timer);
+                startForeground(11, mNotificationBuilder
+                        .setContentTitle(mTimers.size() + getString(R.string.timers_running))
+                        .build());
+                mTimerHandler.post(mTimerUpdateLoop);
+            }
             case ACTION_STOP_TIMER -> {
-                Utils.checkIntent(intent, TIMER_ID_EXTRA);
-                int timerID = intent.getIntExtra(TIMER_ID_EXTRA, 0);
-                Iterator<Timer> timerIterator = sTimers.iterator();
-                while(timerIterator.hasNext()) {
-                    Timer timer = timerIterator.next();
-                    if(timerID==timer.getId()) {
-                        timer.terminate();
-                        timerIterator.remove();
-                        updateTimers();
+                mTimerHandler.removeCallbacks(mTimerUpdateLoop);
+                final int id = intent.getIntExtra(TIMER_ID_EXTRA, 0);
+                Iterator<Timer> iter = mTimers.iterator();
+                while(iter.hasNext()) {
+                    Timer timer = iter.next();
+                    if(timer.ID==id) {
+                        timer.destroy();
+                        iter.remove();
                     }
                 }
+                Log.d("timer_service", "Timers n: "+mTimers.size());
+                if(!mTimers.isEmpty()) {
+                    Log.d("timer_service", "Resending notification...");
+                    startForeground(11, mNotificationBuilder
+                            .setContentTitle(mTimers.size() + getString(R.string.timers_running))
+                            .build());
+                } else {
+                    Log.d("timer_service", "Stopping service...");
+
+                    stopSelf();
+                }
+                mTimerUpdater.run();
             }
-            case ACTION_UPDATE_TIMERS -> updateTimers();
-            case ACTION_STOP_ALL_TIMERS -> {
-                Log.d("timer_service", "Stopping all timers now.");
-                sTimers.forEach(t -> {
-                    Intent intent2 = t.createIntent();
-                    startForegroundService(intent2);
-                    Log.d("timer_service", "Stop timer with ID=" + t.getId());
-                });
+            case ACTION_STOP_ALL -> {
+                mTimerHandler.removeCallbacks(mTimerUpdateLoop);
+                mTimers.forEach(Timer::destroy);
+                mTimers.clear();
+                mTimerUpdater.run();
+                stopSelf();
             }
-            default -> throw new IntentContentsMissingException();
+            default -> throw new IllegalIntentContentsException();
         }
         return START_STICKY;
     }
 
-    private void updateTimers() {
-        restartThread();
-        sendStatusNotification();
-        if (sTimers.isEmpty()) {
-            stopForeground(Service.STOP_FOREGROUND_REMOVE);
-            stopSelf();
+    private static final class Timer implements Runnable {
+        // Android
+        private final Context context;
+        private final NotificationCompat.Builder mTimeNotificationBuilder;
+        private final Ringtone mRingtone;
+        private final NotificationManager mNotificationMan;
+
+        // Constants
+        final long END_TIME;
+        final int ID;
+        final String TITLE;
+
+        Timer(Context context, long deltaTime, String name) {
+            this.context = context;
+            ID = hashCode();
+            TITLE = name;
+            END_TIME = System.currentTimeMillis() + deltaTime;
+
+            mNotificationMan = context.getSystemService(NotificationManager.class);
+            Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            mRingtone = RingtoneManager.getRingtone(context, uri);
+
+            Intent intent = new Intent(context, TimerService.class)
+                    .setAction(ACTION_STOP_TIMER)
+                    .putExtra(TIMER_ID_EXTRA, ID);
+            PendingIntent pKillIntent = PendingIntent.getForegroundService(context, ID, intent, PendingIntent.FLAG_IMMUTABLE);
+            mTimeNotificationBuilder = new NotificationCompat.Builder(context, TimerRoot.NOTIFICATION_CHANNEL_ID)
+                    .setContentTitle(context.getString(R.string.timer_running) + " \"" + TITLE + "\"")
+                    .setContentIntent(Utils.createShowPagePendingIntent(TimerRoot.STRING_ID, context))
+                    .setSmallIcon(R.drawable.timer_icon)
+                    .setAutoCancel(true)
+                    .setOnlyAlertOnce(true)
+                    .setSilent(true)
+                    .setOngoing(true)
+                    .addAction(R.drawable.delete_icon, ContextCompat.getString(context, R.string.stop), pKillIntent);
         }
-    }
 
-    public void restartThread() {
-        sRunning = false;
-        if (mThread != null)
-            mThread.interrupt();
-        mThread = new Thread(this);
-        sRunning = true;
-        mThread.start();
-    }
+        public long getDelta(){
+            return END_TIME - System.currentTimeMillis();
+        }
 
-    static void addTimer(Timer timer) {
-        sPaused = true;
-        sTimers.add(timer);
-        sPaused = false;
-    }
+        public void destroy() {
+            mRingtone.stop();
+            mNotificationMan.cancel(ID);
+            Toast.makeText(context, context.getString(R.string.timer_canceled), Toast.LENGTH_SHORT).show();
+        }
 
-    static List<Timer> getTimers() {
-        return sTimers;
-    }
-
-    void sendStatusNotification() {
-        NotificationCompat.Builder mServiceNotificationBuilder = new NotificationCompat.Builder(getApplicationContext(), TimerService.SILENT_NOTIFICATION)
-                .setContentIntent(mShowTimersPendingIntent)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setSmallIcon(R.drawable.timer_icon)
-                .setContentTitle(sTimers.size() + getString(R.string.timers_running));
-        if(!sTimers.isEmpty())
-            mServiceNotificationBuilder.addAction(R.drawable.delete_icon, getString(R.string.stop_all), mStopAllTimersPendingIntent);
-        startForeground(11, mServiceNotificationBuilder.build());
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        sRunning = false;
-    }
-
-    @Override
-    @SuppressWarnings("all")
-    public void run() {
-        while(sRunning) {
-            if(sPaused) continue;
-            sTimers.forEach(t -> new Thread(t).start());
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                // ignore
+        public Notification createNotification() {
+            if (System.currentTimeMillis() - END_TIME > 0) {
+                mTimeNotificationBuilder.setContentTitle(context.getString(R.string.time_is_up))
+                        .setContentText(context.getString(R.string.timer)+" \""+ TITLE +"\" "+context.getString(R.string.ended));
+            } else {
+                long elapsed_time = END_TIME - System.currentTimeMillis();
+                mTimeNotificationBuilder.setContentTitle(context.getString(R.string.timer_running)+" \""+ TITLE +"\"")
+                        .setContentText(context.getString(R.string.time_left) + Utils.longToTime(elapsed_time, false));
             }
+            return mTimeNotificationBuilder.build();
+        }
+
+        @Override
+        public void run() {
+            long delta = System.currentTimeMillis() - END_TIME;
+            if (delta > 0) { // finished
+                if(!mRingtone.isPlaying())
+                    mRingtone.play();
+            }
+
+            mNotificationMan.notify(ID, createNotification());
         }
     }
 
@@ -152,140 +234,5 @@ public final class TimerService extends Service implements Runnable {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
-    }
-
-    static final class Timer implements Runnable /* ,Parcelable */ {
-        private final Context context;
-        private final RemovableView mView;
-        NotificationCompat.Builder time_notification;
-
-        // logic
-        private long mLastNotificationUpdateTimeMillis = System.currentTimeMillis();
-        private boolean mIsRunning = true, mFinished = false;
-
-        // constants
-        private final long END_TIME;
-        private final int TIMER_ID;
-
-        // statics
-        static Ringtone sRingtone = null;
-        private static NotificationManager sNotificationMan;
-        private static final Handler sHandler = new Handler(Looper.getMainLooper());
-
-        Timer(Context ctx, RemovableView view, long endTime, String name) {
-            this.mView = view;
-            this.END_TIME = endTime;
-            context = ctx;
-            TIMER_ID = hashCode() + 65033; // a!=b => a+x!=b+x
-
-            view.setContent(name.isBlank() ? context.getString(R.string.unnamed) : name);
-            view.setOnDeleteListener(v -> {
-                context.startForegroundService(createIntent());
-                Log.d("stopping_timer", "Stop intent sent with ID=" + getId());
-            });
-
-            initNotification();
-            if (sRingtone == null) {
-                Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-                sRingtone = RingtoneManager.getRingtone(context, uri);
-            }
-
-            sHandler.post(this);
-        }
-
-        public Intent createIntent() {
-            Intent intent = new Intent(context, TimerService.class);
-            intent.setAction(ACTION_STOP_TIMER);
-            intent.putExtra(TIMER_ID_EXTRA, getId());
-            return intent;
-        }
-
-        private PendingIntent createPendingIntent(Intent intent) {
-            return PendingIntent.getForegroundService(context, getId(), intent, PendingIntent.FLAG_IMMUTABLE);
-        }
-
-        void terminate() {
-            mIsRunning = false;
-            sRingtone.stop();
-            sNotificationMan.cancel(getNotificationId());
-            sHandler.removeCallbacks(this);
-            removeFromParent(mView);
-            Toast.makeText(context, ContextCompat.getString(context, R.string.timer_canceled), Toast.LENGTH_SHORT).show();
-        }
-
-        private void removeFromParent(View view) {
-            LinearLayout parent = (LinearLayout) view.getParent();
-            if (parent != null) parent.removeView(view);
-        }
-
-        int getId() {
-            return TIMER_ID;
-        }
-
-        RemovableView getView() {
-            return mView;
-        }
-
-        String getName() {
-            return mView.getContent();
-        }
-
-        private void initNotification() {
-            if (sNotificationMan == null)
-                sNotificationMan = context.getSystemService(NotificationManager.class);
-            Log.d("pIntentCreation", "Class timerService calls createShowPageIntent() (initializing)");
-            time_notification = new NotificationCompat.Builder(context, TimerFragment.NOTIFICATION_CHANNEL_ID)
-                    .setContentTitle(ContextCompat.getString(context, R.string.timer_running) + "(" + getName() + ")")
-                    .setContentIntent(Utils.createShowPagePendingIntent(TimerFragment.STRING_ID, context))
-                    .setSmallIcon(R.drawable.timer_icon)
-                    .setAutoCancel(true)
-                    .setOnlyAlertOnce(true)
-                    .setSilent(true)
-                    .setOngoing(true)
-                    .addAction(R.drawable.delete_icon, ContextCompat.getString(context, R.string.stop), createPendingIntent(createIntent()));
-        }
-
-        public Notification createNotification() {
-            if (mFinished) {
-                time_notification.setContentTitle(ContextCompat.getString(context, R.string.time_is_up))
-                        .setContentText(ContextCompat.getString(context, R.string.timer) + getName() + " " + ContextCompat.getString(context, R.string.ended));
-                //.setFullScreenIntent(createPendingIntent(createIntent()), true)
-            } else {
-                long elapsed_time = END_TIME - System.currentTimeMillis();
-                time_notification.setContentTitle(ContextCompat.getString(context, R.string.timer_running) + "(" + getName() + ")")
-                        .setContentText(ContextCompat.getString(context, R.string.time_left) + Utils.longToTime(elapsed_time, false));
-            }
-            return time_notification.build();
-        }
-
-        @Override
-        public void run() {
-            final long CURR_T = System.currentTimeMillis();
-            final long ELL_T = END_TIME - CURR_T;
-            long SEND_NOTIFICATION_EVERY_MILLIS = 800;
-            if (CURR_T - mLastNotificationUpdateTimeMillis >= SEND_NOTIFICATION_EVERY_MILLIS) {
-                sNotificationMan.notify(getNotificationId(), createNotification());
-                mLastNotificationUpdateTimeMillis = CURR_T;
-            }
-            if (ELL_T < 0 && mIsRunning) {
-                endTimer();
-            }
-            sHandler.post(() -> mView.setTitle(Utils.longToTime(ELL_T, false)));
-        }
-
-        private void endTimer() {
-            mIsRunning = false;
-            sRingtone.play();
-            Log.d("end_timer", "Stopping timer...");
-            mFinished = true;
-            Intent intent = new Intent(context, TimerService.class);
-            intent.setAction(ACTION_UPDATE_TIMERS);
-            context.startForegroundService(intent);
-        }
-
-        public int getNotificationId() {
-            return TIMER_ID;
-        }
-
     }
 }

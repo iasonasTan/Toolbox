@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import com.app.toolbox.MainActivity;
 import com.app.toolbox.R;
 import com.app.toolbox.tools.notepad.storage.Storage;
+import com.app.toolbox.utils.ParentPageFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.BufferedInputStream;
@@ -148,8 +149,8 @@ public final class NotepadEditor extends Fragment {
         imm.hideSoftInputFromWindow(mContentEditText.getWindowToken(), 0);
 
         if(saved) {
-            Intent intent = new Intent(NotepadRoot.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
-            intent.putExtra(NotepadRoot.PAGE_ID, NotepadRoot.FRAGMENT_HOME);
+            Intent intent = new Intent(ParentPageFragment.actionChangePage(NotepadRoot.STRING_ID)).setPackage(requireContext().getPackageName());
+            intent.putExtra(ParentPageFragment.PAGE_CLASSNAME_EXTRA, NotepadHome.class.getName());
             requireContext().sendBroadcast(intent);
         }
     }
@@ -237,8 +238,8 @@ public final class NotepadEditor extends Fragment {
             Storage.askToDelete(requireContext(), (dialog, which) -> {
                 if(mCurrentFile.delete())
                     Toast.makeText(requireContext(), "Note Deleted", Toast.LENGTH_SHORT).show();
-                Intent showHomeIntent = new Intent(NotepadRoot.ACTION_CHANGE_FRAGMENT).setPackage(requireContext().getPackageName());
-                showHomeIntent.putExtra(NotepadRoot.PAGE_ID, NotepadRoot.FRAGMENT_HOME);
+                Intent showHomeIntent = new Intent(ParentPageFragment.actionChangePage(NotepadRoot.STRING_ID)).setPackage(requireContext().getPackageName());
+                showHomeIntent.putExtra(ParentPageFragment.PAGE_CLASSNAME_EXTRA, NotepadHome.class.getName());
                 requireContext().sendBroadcast(showHomeIntent);
             });
         }
@@ -246,7 +247,7 @@ public final class NotepadEditor extends Fragment {
         private void shareCurrentFile() {
             String title = mTitleEditText.getText().toString();
             String contents = mContentEditText.getText().toString();
-            String textToShare = String.format("Title: %s\n%s", title, contents);
+            String textToShare = String.format("Title: %s\nNote: %s", title, contents);
 
             trySavingBuffer(title);
 
