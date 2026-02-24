@@ -70,7 +70,7 @@ public final class TimerService extends Service {
         @Override
         public void run() {
             mTimerUpdater.run();
-            mTimerHandler.postDelayed(this, 1000);
+            mTimerHandler.postDelayed(this, 600);
         }
     };
 
@@ -110,18 +110,22 @@ public final class TimerService extends Service {
         switch (Objects.requireNonNull(intent.getAction())) {
             case ACTION_ADD_TIMER -> {
                 mTimerHandler.removeCallbacks(mTimerUpdateLoop);
-                String nullableName = intent.getStringExtra(TIMER_NAME_EXTRA);
-                // I'm sorry for this ternary-nesting
-                String nonNullName = nullableName!=null
-                        ?(nullableName.equals("null")?getString(R.string.unnamed):nullableName)
-                        :getString(R.string.unnamed);
+                String name = intent.getStringExtra(TIMER_NAME_EXTRA);
+                if(name==null||name.equals("null")|| name.isEmpty()) {
+                    name = getString(R.string.unnamed);
+                }
                 long timeDelta = intent.getLongExtra(TIME_DELTA_EXTRA, /*DEFAULT VALUE:*/5000);
-                Timer timer = new Timer(getApplicationContext(), timeDelta, nonNullName);
-                mTimers.add(timer);
-                startForeground(11, mNotificationBuilder
-                        .setContentTitle(mTimers.size() + getString(R.string.timers_running))
-                        .build());
-                mTimerHandler.post(mTimerUpdateLoop);
+                if(timeDelta!=0) {
+                    Timer timer = new Timer(getApplicationContext(), timeDelta, name);
+                    mTimers.add(timer);
+                }
+                if(!mTimers.isEmpty()) {
+                    Notification notification = mNotificationBuilder
+                            .setContentTitle(mTimers.size() + getString(R.string.timers_running))
+                            .build();
+                    startForeground(11, notification);
+                    mTimerHandler.post(mTimerUpdateLoop);
+                }
             }
             case ACTION_STOP_TIMER -> {
                 mTimerHandler.removeCallbacks(mTimerUpdateLoop);

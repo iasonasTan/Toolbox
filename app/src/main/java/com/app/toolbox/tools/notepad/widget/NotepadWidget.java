@@ -11,8 +11,9 @@ import com.app.toolbox.MainActivity;
 import com.app.toolbox.R;
 
 /**
- * Not enabled.
+ * Not enabled yet.
  */
+@SuppressWarnings("all") // Allowed because class is unused.
 public final class NotepadWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager manager, int[] ids) {
@@ -20,8 +21,8 @@ public final class NotepadWidget extends AppWidgetProvider {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.notepad_widget);
 
             views.setOnClickPendingIntent(R.id.open_button, createOnOpenPIntent(context, "Test"));
-            views.setTextViewText(R.id.title_tv, "test1");
-            views.setTextViewText(R.id.desc_tv, "test2");
+            views.setTextViewText(R.id.title_tv, "a");
+            views.setTextViewText(R.id.desc_tv, "b");
 
             manager.updateAppWidget(id, views);
         }

@@ -2,6 +2,8 @@ package com.app.toolbox.tools.notepad.storage;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -92,12 +94,24 @@ public final class Storage implements Iterable<File> {
 
     public void createNote(String title, String contents) {
         File file = getNote(title);
-        saveNote(contents, file);
+        saveNote(contents, title, file);
     }
 
-    public void saveNote(String contents, File file) {
+    /** @noinspection ResultOfMethodCallIgnored*/
+    public void saveNote(String contents, String name, File file) {
         if(contents==null||file.isDirectory())
             return;
+        try {
+            if(!file.getName().equals(name)) {
+                // Rename file
+                File parentDir = file.getParentFile();
+                file.delete();
+                file = new File(parentDir, name);
+                file.createNewFile();
+            }
+        } catch (IOException ioe) {
+            throw new UncheckedIOException(ioe);
+        }
         try (BufferedOutputStream outputStream=new BufferedOutputStream(new FileOutputStream(file))) {
             byte[] bytes = contents.getBytes();
             outputStream.write(bytes);

@@ -15,7 +15,7 @@
       </SelectionState>
       <SelectionState runConfigName="buildrun">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-02-18T16:42:29.027326515Z">
+        <DropdownSelection timestamp="2026-02-24T15:25:45.242788984Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=/home/iasonas/.android/avd/Pixel_6_Pro.avd" />
@@ -48,9 +48,6 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="SettingsActivity">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="SettingsActivity (1)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
@@ -61,6 +58,9 @@
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="AddTimerActivity (2)">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="ExampleInstrumentedTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

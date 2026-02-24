@@ -1,5 +1,6 @@
 package com.app.toolbox.tools.calculator;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -76,6 +77,7 @@ public final class CalculatorFragment extends PageFragment {
         }
     }
 
+    @SuppressLint("RestrictedApi")
     public Button createButton(View.OnClickListener listener, String text, int i, final int COL_COUNT, boolean action) {
         AnimatedButton button=new AnimatedButton(requireContext());
         button.setHighlighted(!action);
@@ -84,7 +86,6 @@ public final class CalculatorFragment extends PageFragment {
         button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 100);
         button.setGravity(Gravity.CENTER);
         button.setOnClickListener(listener);
-        // noinspection all
         button.setAutoSizeTextTypeWithDefaults(TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
 
         GridLayout.LayoutParams params=new GridLayout.LayoutParams();

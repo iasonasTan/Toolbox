@@ -26,7 +26,6 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <!--        TODO do the translations-->
     <Button
         android:id="@+id/open_button"
         android:text="@string/open"

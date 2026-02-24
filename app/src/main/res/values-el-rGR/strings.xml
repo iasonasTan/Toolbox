@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="battery_warning">
+Η εφαρμογή λειτουργεί και χωρίς άδειες, αλλά όταν η μπαταρία ή η μνήμη είναι υπό έντονη χρήση, το σύστημα Android μπορεί να διακόψει ορισμένες υπηρεσίες.
+
+Αυτό σημαίνει ότι οι χρονοδιακόπτες ή το χρονόμετρο μπορεί να σταματήσουν απρόσμενα.
+
+Μπορείτε να επιτρέψετε τη δραστηριότητα στο παρασκήνιο από Πληροφορίες εφαρμογής → Μπαταρία → Χωρίς περιορισμούς.
+    </string>
+
+    <string name="permission_helps">Οι άδειες βελτιώνουν τη λειτουργία της εφαρμογής</string>
+    <string name="never_ask_again">Να μην ξαναρωτήσει</string>
+    <string name="lets_do_it">Ας το κάνουμε</string>
+    <string name="remind_me_later">Υπενθύμισέ μου αργότερα</string>
+    <string name="greet_will_happen_again_on">Ο χαιρετισμός θα εμφανιστεί ξανά στις </string>
+
     <string name="start">Έναρξη</string>
     <string name="reset">Επαναφορά</string>
-    <string name="stop">Διακοπή</string>
     <string name="pause">Παύση</string>
+    <string name="stop">Διακοπή</string>
     <string name="delete">Διαγραφή</string>
     <string name="back">Πίσω</string>
+    <string name="cancel">Ακύρωση</string>
+    <string name="stop_all">Διακοπή όλων</string>
+    <string name="add_a_timer">Προσθήκη χρονοδιακόπτη</string>
+    <string name="share">Κοινοποίηση</string>
+    <string name="delete_note">Διαγραφή σημείωσης</string>
+    <string name="share_this_note">Κοινοποίηση σημείωσης</string>
+    <string name="save">Αποθήκευση</string>
 
     <string name="item_stopwatch">Χρονόμετρο</string>
     <string name="item_calculator">Αριθμομηχανή</string>
@@ -13,58 +34,67 @@
     <string name="item_rng">Τυχαίος αριθμός</string>
     <string name="item_timer">Χρονοδιακόπτης</string>
 
-    <string name="title">Τίτλος</string>
-    <string name="content">Περιεχόμενο…</string>
-    <string name="new_note_fab">Νέα σημείωση</string>
-    <string name="timer_name">Όνομα χρονοδιακόπτη</string>
-    <string name="loading">Φόρτωση…</string>
-    <string name="no_notes_found">Δεν βρέθηκαν σημειώσεις.</string>
-    <string name="write_your_notes_here">Γράψε τη σημείωσή σου εδώ…</string>
     <string name="timer_set">Ο χρονοδιακόπτης ορίστηκε.</string>
     <string name="timer_canceled">Ο χρονοδιακόπτης ακυρώθηκε.</string>
     <string name="note_saved">Η σημείωση αποθηκεύτηκε.</string>
-    <string name="stopwatch_running">Το χρονόμετρο τρέχει</string>
-    <string name="timer_running">Ο χρονοδιακόπτης τρέχει</string>
-    <string name="time">Χρόνος:</string>
-    <string name="unnamed">Ανώνυμο</string>
-    <string name="time_left">Απομένει:</string>
+    <string name="delete_note_desc">Είστε σίγουροι ότι θέλετε να διαγράψετε αυτή τη σημείωση;</string>
+
     <string name="invalid_name">Μη έγκυρο όνομα!</string>
-    <string name="invalid_name_desc">Αυτό το όνομα είναι μη έγκυρο ή όμοιο με άλλο. Παρακαλώ χρησιμοποιήστε διαφορετικό όνομα.</string>
-    <string name="cancel">Ακύρωση</string>
-    <string name="time_is_up">Ο χρόνος τελείωσε</string>
+    <string name="invalid_name_desc">Ο τίτλος δεν είναι έγκυρος ή χρησιμοποιείται ήδη. Επιλέξτε διαφορετικό τίτλο. Υπόδειξη: Δεν επιτρέπονται οι εξής χαρακτήρες:</string>
+
+    <string name="stopwatch_running">Το χρονόμετρο λειτουργεί.</string>
+    <string name="timer_running">Ο χρονοδιακόπτης λειτουργεί.</string>
+
+    <string name="time">Χρόνος:</string>
+    <string name="time_left">Υπόλοιπος χρόνος:</string>
+    <string name="timer_name">Όνομα χρονοδιακόπτη…</string>
+    <string name="time_is_up">Ο χρόνος έληξε!</string>
     <string name="timer">Χρονοδιακόπτης:</string>
-    <string name="ended">Τελείωσε</string>
-    <string name="delete_note">Διαγραφή σημείωσης</string>
-    <string name="delete_note_desc">Είσαι σίγουρος ότι θέλεις να διαγράψεις αυτή τη σημείωση;</string>
-    <string name="add_a_timer">Πρόσθεσε χρονοδιακόπτη</string>
-    <string name="timers_running">Χρονοδιακόπτης/ες τρέχουν</string>
-    <string name="share">Κοινοποίηση</string>
-    <string name="share_this_note">Κοινοποίηση σημείωσης</string>
-    <string name="save">Αποθήκευση</string>
-    <string name="show_milliseconds_on_stopwatch">Προβολή χιλιοστών του δευτερολέπτου</string>
-    <string name="settings_udpated">Οι ρυθμίσεις αποθηκεύτηκαν</string>
-    <string name="stop_all">Διακοπή όλων</string>
-    <string name="start_stopwatch">Start Stopwatch</string>
-    <string name="not_available">Δεν είναι διαθέσημο προς το παρόν.</string>
+    <string name="ended">ολοκληρώθηκε.</string>
+    <string name="timers_running">χρονοδιακόπτες σε λειτουργία.</string>
+
+    <string name="show_milliseconds_on_stopwatch">Εμφάνιση χιλιοστών του δευτερολέπτου</string>
+
+    <string name="title">Τίτλος</string>
+    <string name="content">Περιεχόμενο…</string>
+    <string name="new_note_fab">Νέα σημείωση</string>
+    <string name="loading">Φόρτωση…</string>
+    <string name="no_notes_found">Δεν βρέθηκαν σημειώσεις.</string>
+    <string name="write_your_notes_here">Γράψτε τις σημειώσεις σας εδώ…</string>
+    <string name="unnamed">Χωρίς όνομα</string>
+
+    <string name="settings_updated">Οι ρυθμίσεις ενημερώθηκαν</string>
+    <string name="start_stopwatch">Εκκίνηση χρονόμετρου</string>
+    <string name="not_available">Δεν είναι διαθέσιμο αυτή τη στιγμή.</string>
+
     <string name="settings">Ρυθμίσεις</string>
-    <string name="toolbox_settings">Toolbox Ρυθμίσεις</string>
-    <string name="untitled_note">Σημείωση μου</string>
-    <string name="choose_button_background">Διάλεξε χρώμα κουμπιών</string>
-    <string name="are_you_sure">Είσαι σίγουρος?</string>
-    <string name="exit_for_sure">Είσαι σίγουρος οτι θες να κλείσεις το σημειωματάριο πρίν το αποθηκέυσεις?</string>
-    <string name="about_toolbox">Toolbox - Σχετικά</string>
-    <string name="app_version">"Έκδωση εφαρμογής: "</string>
-    <string name="developer_info">Δημηουργήθικε απο τον Ιάσονα Τάνταρο</string>
+    <string name="toolbox_settings">Ρυθμίσεις Εργαλειοθήκης</string>
+    <string name="untitled_note">Σημείωση χωρίς τίτλο</string>
+
+    <string name="button_background_color">Χρώμα φόντου κουμπιών:</string>
+    <string name="choose_button_background">Επιλογή φόντου κουμπιών</string>
+
+    <string name="are_you_sure">Είστε σίγουροι;</string>
+    <string name="exit_for_sure">Έξοδος χωρίς αποθήκευση;</string>
+
+    <string name="about_toolbox">Σχετικά με την εφαρμογή</string>
+    <string name="app_version">Έκδοση εφαρμογής:</string>
+    <string name="developer_info">Ανάπτυξη: Jason Tantaros</string>
     <string name="contact_info">Επικοινωνία: iasonas.tan@gmail.com</string>
-    <string name="developer_name">" Ιάσονας Τάνταρος"</string>
-    <string name="button_background_color">Χρώμα κουμπιών</string>
-    <string name="borders">Σύνορα:</string>
-    <string name="enable_borders">Εμφάνηση συνόρων</string>
-    <string name="round_corners">Στρογγυλές γωνίες</string>
-    <string name="choose_color">Διάλεξε χρώμα</string>
-    <string name="limit">Limit:</string>
-    <string name="done" >Τέλος</string>
+    <string name="developer_name">Jason Tantaros\nΜε επιφύλαξη παντός δικαιώματος.</string>
+
+    <string name="borders">Περιγράμματα:</string>
+    <string name="enable_borders">Ενεργοποίηση περιγραμμάτων</string>
+    <string name="round_corners">Στρογγυλεμένες γωνίες</string>
+    <string name="choose_color">Επιλογή χρώματος</string>
+
+    <string name="limit">Όριο:</string>
+    <string name="done">Ολοκλήρωση</string>
     <string name="open">Άνοιγμα</string>
-    <string name="rng_limit">Όριο ΠΤΑ:</string>
-    <string name="widgets">Γραφικά στοιχεία</string>
+    <string name="rng_limit">Όριο RNG:</string>
+
+    <string name="widgets">Γραφικά στοιχεία:</string>
+    <string name="status_about_running_timers">Εμφάνιση κατάστασης ενεργών χρονοδιακοπτών</string>
+    <string name="could_not_save_note">Αδυναμία αποθήκευσης σημείωσης.</string>
+
 </resources>

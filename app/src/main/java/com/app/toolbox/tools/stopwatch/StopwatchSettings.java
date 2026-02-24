@@ -48,7 +48,7 @@ public class StopwatchSettings extends Fragment {
         boolean showMillis = mShowMillisCheckBox.isChecked();
         requireContext().getSharedPreferences(StopwatchHome.PREFERENCES_NAME, Context.MODE_PRIVATE)
                 .edit().putBoolean(StopwatchHome.MILLIS_PREFERENCE, showMillis).apply();
-        Toast.makeText(requireContext(), R.string.settings_udpated, Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), R.string.settings_updated, Toast.LENGTH_SHORT).show();
 
         Intent exitIntent = new Intent(ParentPageFragment.actionChangePage(StopwatchRoot.STRING_ID)).setPackage(requireContext().getPackageName());
         exitIntent.putExtra(ParentPageFragment.PAGE_CLASSNAME_EXTRA, StopwatchHome.class.getName());

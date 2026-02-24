@@ -41,7 +41,7 @@ public final class TimerEditor extends Fragment {
             // And intent
             Intent timerAddIntent = new Intent(requireContext(), TimerService.class);
             timerAddIntent.setAction(TimerService.ACTION_ADD_TIMER);
-            timerAddIntent.putExtra(TimerService.TIMER_NAME_EXTRA, mNameInput.getText()+"");
+            timerAddIntent.putExtra(TimerService.TIMER_NAME_EXTRA, String.valueOf(mNameInput.getText()));
             timerAddIntent.putExtra(TimerService.TIME_DELTA_EXTRA, mTimeInput.getTimeMillis());
             requireContext().startForegroundService(timerAddIntent);
             // Show Home

@@ -174,21 +174,36 @@ public final class NotepadEditor extends Fragment {
     }
 
     public boolean trySavingBuffer(String name) {
-        // If title is already used or contains forbidden symbols
-        if (mCurrentFile==null&&Storage.getInstance().noteFileExists(name)||
-            mCurrentFile!=null&&!mCurrentFile.getName().equals(name)&& Storage.getInstance().noteFileExists(name) ||
-            !isNameValid(name)) {
-
-            // Don't save and warn user
+        // If new file but name is already used.
+        if(mCurrentFile==null&&Storage.getInstance().noteFileExists(name)) {
             showWrongNameDialog();
             return false;
         }
+        // If new file but name is invalid
+        if(mCurrentFile==null&&!isNameValid(name)) {
+            showWrongNameDialog();
+            return false;
+        }
+        // If renaming existing file but name is already used.
+        if(mCurrentFile!=null&&!mCurrentFile.getName().equals(name)/*Renaming file*/&&
+                Storage.getInstance().noteFileExists(name)) {
+            showWrongNameDialog();
+            return false;
+        }
+        // If renaming existing file but name is invalid.
+        if(mCurrentFile!=null&&!mCurrentFile.getName().equals(name)/*Renaming file*/&&
+                !isNameValid(name)) {
+            showWrongNameDialog();
+            return false;
+        }
+
         String title = mTitleEditText.getText().toString();
         String contents = mContentEditText.getText().toString();
         if(mCurrentFile==null)
             Storage.getInstance().createNote(title, contents);
         else
-            Storage.getInstance().saveNote(contents, mCurrentFile);
+            Storage.getInstance().saveNote(contents, name, mCurrentFile);
+
         return true; // Not always right!
     }
 

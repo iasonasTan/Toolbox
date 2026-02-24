@@ -143,7 +143,7 @@ public final class Utils {
      * @param runnable Runnable to try to execute.
      * @return Returns {@code false} if any exception is thrown; {@code true} otherwise.
      */
-    @SuppressWarnings("all")
+    @SuppressWarnings("UnusedReturnValue")
     public static boolean execute(Runnable runnable) {
         try {
             runnable.run();

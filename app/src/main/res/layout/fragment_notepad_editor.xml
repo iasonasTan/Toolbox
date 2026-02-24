@@ -18,7 +18,8 @@
 
             <com.app.toolbox.view.AnimatedButton
                 android:id="@+id/back_button"
-                android:layout_width="120dp"
+                android:minWidth="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_margin="2dp"
                 android:layout_gravity="center"
@@ -29,7 +30,8 @@
 
             <com.app.toolbox.view.AnimatedButton
                 android:id="@+id/share_button"
-                android:layout_width="120dp"
+                android:minWidth="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_margin="2dp"
                 android:layout_gravity="center"
@@ -40,7 +42,8 @@
 
             <com.app.toolbox.view.AnimatedButton
                 android:id="@+id/delete_button"
-                android:layout_width="120dp"
+                android:minWidth="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_margin="2dp"
                 android:layout_gravity="center"

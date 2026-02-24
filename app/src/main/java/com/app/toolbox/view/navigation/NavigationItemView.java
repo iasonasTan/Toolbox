@@ -28,7 +28,7 @@ public final class NavigationItemView extends LinearLayout implements ReceiverOw
     private final Vibrator mVibrator  = ContextCompat.getSystemService(getContext(), Vibrator.class);
     private final VibrationEffect mVibEffect = VibrationEffect.createOneShot(45, VibrationEffect.EFFECT_HEAVY_CLICK);
     private final BroadcastReceiver mStateUpdatesReceiver = new StateUpdateReceiver();
-    private String mName = "UNKNOWN";
+    private String mName = "UNKNOWN"; // Hardcoded string is allowed because it hasn't to do with the user.
 
     public NavigationItemView(Context context, int srcID) {
         this(context, null);

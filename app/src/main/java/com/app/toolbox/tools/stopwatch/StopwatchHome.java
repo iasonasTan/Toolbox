@@ -35,14 +35,14 @@ public class StopwatchHome extends Fragment {
     private final BroadcastReceiver mTimeStatusReceiver = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
             long time = intent.getLongExtra(StopwatchService.COUNTED_TIME_EXTRA, StopwatchService.UNEXISTING_TIME);
-            String timeFormatted = Utils.longToTime(time, true);
+            String timeFormatted = Utils.longToTime(time, mShowMillis);
             mTimeView.setText(timeFormatted);
 
             StopwatchState stopwatchState = intent.getParcelableExtra(StopwatchService.TIMER_STATE_EXTRA, StopwatchState.class);
             if(stopwatchState!=null)
                 setUiState(stopwatchState);
             else
-                throw new RuntimeException("WTF?!");
+                throw new RuntimeException("Stopwatch State cannot be null...");
         }
     };
 

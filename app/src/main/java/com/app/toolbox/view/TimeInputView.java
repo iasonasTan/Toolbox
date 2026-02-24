@@ -10,14 +10,14 @@ import android.widget.TextView;
 import com.app.toolbox.R;
 
 public class TimeInputView extends LinearLayout {
-    private final NumberPicker hours_input, mins_input, secs_input;
+    private final NumberPicker mHoursInput, mMinsInput, mSecsInput;
 
     public TimeInputView(Context context, AttributeSet attrs) {
         super(context, attrs);
         inflate(context, R.layout.view_time_input, this);
-        hours_input=findViewById(R.id.hours_picker);
-        mins_input=findViewById(R.id.minutes_picker);
-        secs_input=findViewById(R.id.seconds_picker);
+        mHoursInput =findViewById(R.id.hours_picker);
+        mMinsInput =findViewById(R.id.minutes_picker);
+        mSecsInput =findViewById(R.id.seconds_picker);
         TextView title_textview = findViewById(R.id.title_tv);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TimeInputView);
@@ -26,21 +26,21 @@ public class TimeInputView extends LinearLayout {
 
         title_textview.setText(title);
 
-        hours_input.setMaxValue(23);
-        mins_input.setMaxValue(59);
-        secs_input.setMaxValue(59);
+        mHoursInput.setMaxValue(23);
+        mMinsInput.setMaxValue(59);
+        mSecsInput.setMaxValue(59);
 
     }
 
     public long getTimeMillis() {
-        return secs_input.getValue()*1000L+
-                mins_input.getValue()*1000*60L+
-                hours_input.getValue()*1000*60*60L;
+        return mSecsInput.getValue()*1000L+
+               mMinsInput.getValue()*1000*60L+
+              mHoursInput.getValue()*1000*60*60L;
     }
 
     public void reset() {
-        hours_input.setValue(0);
-        mins_input.setValue(0);
-        secs_input.setValue(0);
+        mHoursInput.setValue(0);
+        mMinsInput.setValue(0);
+        mSecsInput.setValue(0);
     }
 }

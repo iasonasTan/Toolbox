@@ -51,12 +51,18 @@ public class AnimatedButton extends MaterialButton {
         mVibrator=ContextCompat.getSystemService(context, Vibrator.class);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean performClick() {
+        animateThis();
+        mVibrator.vibrate(mClickVibrationEffect);
+        return super.performClick();
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            animateThis();
-            mVibrator.vibrate(mClickVibrationEffect);
+            performClick();
+            return true;
         }
         return super.onTouchEvent(event);
     }
