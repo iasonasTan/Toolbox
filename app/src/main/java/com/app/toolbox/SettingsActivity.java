@@ -71,7 +71,7 @@ public final class SettingsActivity extends AppCompatActivity {
         TextView copyrightView = findViewById(R.id.copyright_view);
         int year = Calendar.getInstance().get(Calendar.YEAR);
         copyrightView.append(String.valueOf(year));
-        copyrightView.append(getString(R.string.developer_name));
+        copyrightView.append(" "+getString(R.string.developer_name));
     }
 
     private class ExitListener implements View.OnClickListener {

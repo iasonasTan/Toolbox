@@ -6,7 +6,6 @@
     android:orientation="horizontal">
 
     <LinearLayout
-        android:id="@+id/text_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -20,8 +19,7 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="0dp">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/result"

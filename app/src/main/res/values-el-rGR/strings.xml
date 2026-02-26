@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="battery_warning">
-Η εφαρμογή λειτουργεί και χωρίς άδειες, αλλά όταν η μπαταρία ή η μνήμη είναι υπό έντονη χρήση, το σύστημα Android μπορεί να διακόψει ορισμένες υπηρεσίες.
-
-Αυτό σημαίνει ότι οι χρονοδιακόπτες ή το χρονόμετρο μπορεί να σταματήσουν απρόσμενα.
-
-Μπορείτε να επιτρέψετε τη δραστηριότητα στο παρασκήνιο από Πληροφορίες εφαρμογής → Μπαταρία → Χωρίς περιορισμούς.
-    </string>
-
-    <string name="permission_helps">Οι άδειες βελτιώνουν τη λειτουργία της εφαρμογής</string>
-    <string name="never_ask_again">Να μην ξαναρωτήσει</string>
-    <string name="lets_do_it">Ας το κάνουμε</string>
-    <string name="remind_me_later">Υπενθύμισέ μου αργότερα</string>
-    <string name="greet_will_happen_again_on">Ο χαιρετισμός θα εμφανιστεί ξανά στις </string>
-
     <string name="start">Έναρξη</string>
     <string name="reset">Επαναφορά</string>
     <string name="pause">Παύση</string>
@@ -34,7 +20,6 @@
     <string name="item_rng">Τυχαίος αριθμός</string>
     <string name="item_timer">Χρονοδιακόπτης</string>
 
-    <string name="timer_set">Ο χρονοδιακόπτης ορίστηκε.</string>
     <string name="timer_canceled">Ο χρονοδιακόπτης ακυρώθηκε.</string>
     <string name="note_saved">Η σημείωση αποθηκεύτηκε.</string>
     <string name="delete_note_desc">Είστε σίγουροι ότι θέλετε να διαγράψετε αυτή τη σημείωση;</string>
@@ -56,9 +41,7 @@
     <string name="show_milliseconds_on_stopwatch">Εμφάνιση χιλιοστών του δευτερολέπτου</string>
 
     <string name="title">Τίτλος</string>
-    <string name="content">Περιεχόμενο…</string>
     <string name="new_note_fab">Νέα σημείωση</string>
-    <string name="loading">Φόρτωση…</string>
     <string name="no_notes_found">Δεν βρέθηκαν σημειώσεις.</string>
     <string name="write_your_notes_here">Γράψτε τις σημειώσεις σας εδώ…</string>
     <string name="unnamed">Χωρίς όνομα</string>
@@ -69,24 +52,11 @@
 
     <string name="settings">Ρυθμίσεις</string>
     <string name="toolbox_settings">Ρυθμίσεις Εργαλειοθήκης</string>
-    <string name="untitled_note">Σημείωση χωρίς τίτλο</string>
-
-    <string name="button_background_color">Χρώμα φόντου κουμπιών:</string>
-    <string name="choose_button_background">Επιλογή φόντου κουμπιών</string>
-
-    <string name="are_you_sure">Είστε σίγουροι;</string>
-    <string name="exit_for_sure">Έξοδος χωρίς αποθήκευση;</string>
-
     <string name="about_toolbox">Σχετικά με την εφαρμογή</string>
     <string name="app_version">Έκδοση εφαρμογής:</string>
     <string name="developer_info">Ανάπτυξη: Jason Tantaros</string>
     <string name="contact_info">Επικοινωνία: iasonas.tan@gmail.com</string>
     <string name="developer_name">Jason Tantaros\nΜε επιφύλαξη παντός δικαιώματος.</string>
-
-    <string name="borders">Περιγράμματα:</string>
-    <string name="enable_borders">Ενεργοποίηση περιγραμμάτων</string>
-    <string name="round_corners">Στρογγυλεμένες γωνίες</string>
-    <string name="choose_color">Επιλογή χρώματος</string>
 
     <string name="limit">Όριο:</string>
     <string name="done">Ολοκλήρωση</string>

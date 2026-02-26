@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="battery_warning">
-Приложение работает даже без разрешений, но при высокой нагрузке на батарею или память система Android может остановить некоторые службы.
-
-Это означает, что таймеры или секундомер могут неожиданно остановиться.
-
-Вы можете разрешить работу в фоновом режиме: Информация о приложении → Батарея → Без ограничений.
-    </string>
-
-    <string name="permission_helps">Разрешения улучшают работу приложения</string>
-    <string name="never_ask_again">Больше не спрашивать</string>
-    <string name="lets_do_it">Давайте сделаем это</string>
-    <string name="remind_me_later">Напомнить позже</string>
-    <string name="greet_will_happen_again_on">Приветствие снова появится </string>
-
     <string name="start">Старт</string>
     <string name="reset">Сброс</string>
     <string name="pause">Пауза</string>
@@ -35,7 +21,6 @@
     <string name="item_rng">Случайное число</string>
     <string name="item_timer">Таймер</string>
 
-    <string name="timer_set">Таймер установлен.</string>
     <string name="timer_canceled">Таймер отменён.</string>
     <string name="note_saved">Заметка сохранена.</string>
     <string name="delete_note_desc">Вы уверены, что хотите удалить эту заметку?</string>
@@ -60,9 +45,7 @@
     <string name="show_milliseconds_on_stopwatch">Показывать миллисекунды в секундомере</string>
 
     <string name="title">Заголовок</string>
-    <string name="content">Содержимое…</string>
     <string name="new_note_fab">Новая заметка</string>
-    <string name="loading">Загрузка…</string>
     <string name="no_notes_found">Заметки не найдены.</string>
     <string name="write_your_notes_here">Напишите ваши заметки здесь…</string>
     <string name="unnamed">Без имени</string>
@@ -73,24 +56,11 @@
 
     <string name="settings">Настройки</string>
     <string name="toolbox_settings">Настройки Toolbox</string>
-    <string name="untitled_note">Без названия</string>
-
-    <string name="button_background_color">Цвет фона кнопок:</string>
-    <string name="choose_button_background">Выбрать фон кнопок</string>
-
-    <string name="are_you_sure">Вы уверены?</string>
-    <string name="exit_for_sure">Выйти без сохранения заметки?</string>
-
     <string name="about_toolbox">О приложении</string>
     <string name="app_version">Версия приложения:</string>
     <string name="developer_info">Разработчик: Jason Tantaros</string>
     <string name="contact_info">Контакт: iasonas.tan@gmail.com</string>
     <string name="developer_name">Jason Tantaros\nВсе права защищены.</string>
-
-    <string name="borders">Границы:</string>
-    <string name="enable_borders">Включить границы</string>
-    <string name="round_corners">Скруглённые углы</string>
-    <string name="choose_color">Выбрать цвет</string>
 
     <string name="limit">Лимит:</string>
     <string name="done">Готово</string>

@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="battery_warning">
-Ἡ ἐφαρμογὴ καὶ ἄνευ ἐξουσιῶν ἐνεργεῖ· ἐπειδὰν δὲ ἡ μνήμη ἢ ἡ τοῦ σώματος δύναμις (ἡ λεγομένη μπαταρία) βαρυνθῇ, τὸ σύστημα τὸ Ἀνδροειδὲς δύναται τινὰς ὑπηρεσίας παῦσαι.
-
-Δηλοῖ δὲ τοῦτο ὅτι οἱ χρόνοι ἢ τὸ ὡρομέτριον ἄφνω παύσονται.
-
-Δύνασαι τὴν ἐν ὑποβάθρῳ ἐνέργειαν ἐπιτρέψαι μεταβὰς εἰς Πληροφορίας ἐφαρμογῆς → Μπαταρία → Ἄνευ περιορισμοῦ.
-    </string>
-
-    <string name="permission_helps">Αἱ ἐξουσίαι τὴν ἐφαρμογὴν βελτίω ποιοῦσιν</string>
-    <string name="never_ask_again">Μηκέτι ἐρέσθαι</string>
-    <string name="lets_do_it">Ἴθι, πράξωμεν</string>
-    <string name="remind_me_later">Ὕστερον ἀνάμνησόν με</string>
-    <string name="greet_will_happen_again_on">Ὁ ἀσπασμὸς αὖθις γενήσεται τῇ </string>
-
     <string name="start">Ἄρξαι</string>
     <string name="reset">Ἀνακαίνισον</string>
     <string name="pause">Παῦσαι</string>
@@ -35,7 +21,6 @@
     <string name="item_rng">Τυχὸς ἀριθμός</string>
     <string name="item_timer">Χρόνος</string>
 
-    <string name="timer_set">Ὁ χρόνος ἐτάχθη.</string>
     <string name="timer_canceled">Ὁ χρόνος ἠκυρώθη.</string>
     <string name="note_saved">Ἡ γραφὴ ἐσώθη.</string>
     <string name="delete_note_desc">Ἆρα βούλει ταύτην τὴν γραφὴν ἀπολέσαι;</string>
@@ -60,9 +45,7 @@
     <string name="show_milliseconds_on_stopwatch">Τὰ χιλιοστὰ τοῦ δευτερολέπτου δεῖξον</string>
 
     <string name="title">Τίτλος</string>
-    <string name="content">Περιεχόμενα…</string>
     <string name="new_note_fab">Νέα γραφή</string>
-    <string name="loading">Φορτοῦται…</string>
     <string name="no_notes_found">Οὐδεμία γραφὴ εὑρέθη.</string>
     <string name="write_your_notes_here">Γράφε ἐνταῦθα…</string>
     <string name="unnamed">Ἄνευ ὀνόματος</string>
@@ -73,24 +56,11 @@
 
     <string name="settings">Ῥυθμίσεις</string>
     <string name="toolbox_settings">Ῥυθμίσεις Θήκης Ὀργάνων</string>
-    <string name="untitled_note">Γραφὴ ἄτιτλος</string>
-
-    <string name="button_background_color">Χρῶμα ὑποβάθρου κομβίων:</string>
-    <string name="choose_button_background">Χρῶμα αἱροῦ</string>
-
-    <string name="are_you_sure">Ἆρα βέβαιος εἶ;</string>
-    <string name="exit_for_sure">Ἐξελθεῖν ἄνευ σώσεως τῆς γραφῆς;</string>
-
     <string name="about_toolbox">Περὶ τῆς ἐφαρμογῆς</string>
     <string name="app_version">Ἔκδοσις:</string>
     <string name="developer_info">Κατεσκευάσθη ὑπὸ Ἰάσονος Ταντάρου</string>
     <string name="contact_info">Ἐπικοινωνία: iasonas.tan@gmail.com</string>
     <string name="developer_name">Ἰάσων Τάνταρος\nΠάντα τὰ δίκαια τετήρηται.</string>
-
-    <string name="borders">Περιγράμματα:</string>
-    <string name="enable_borders">Περιγράμματα ἐνεργοποίησον</string>
-    <string name="round_corners">Γωνίαι κυκλοτερῶς</string>
-    <string name="choose_color">Χρῶμα αἱροῦ</string>
 
     <string name="limit">Πέρας:</string>
     <string name="done">Τέτελεσται</string>

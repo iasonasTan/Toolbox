@@ -1,6 +1,5 @@
 package com.app.toolbox.view;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;

@@ -42,15 +42,10 @@ import com.app.toolbox.view.navigation.NavigationView;
 import com.google.android.material.color.DynamicColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -60,7 +55,7 @@ import java.util.Properties;
 import java.util.function.Consumer;
 
 /*
- * Integer Codes:
+ * Codes:
  * Permissions: 1000-1999
  * PendingIntents: 2000-2999, action.hashcode
  * Launch activity: 3000-3999
@@ -260,10 +255,6 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Deprecated because iasonas.duckdns.org isn't working anymore.
-     * Cause: ISP blocked required ports.
-     */
     @SuppressWarnings("unused")
     @Deprecated
     private final class UpdateChecker {
@@ -277,17 +268,15 @@ public final class MainActivity extends AppCompatActivity {
                 String appVersion = getApplicationVersion();
                 if(needsUpdate(appVersion, latestVersion))
                     showUpdateDialog();
-            } catch (IOException | PackageManager.NameNotFoundException ignored) {
+            } catch (Exception ignored) {
                 // causes: no internet, DNS problem or server is closed
                 // ignore, no version check
             }
         }
 
         private boolean needsUpdate(String appV, String latV) {
-            Log.d("net-test", "Comparing version codes...");
             double latestVersion = Double.parseDouble(latV);
             double appVersion = Double.parseDouble(appV);
-            Log.d("net-test", "Latest version: " + latestVersion + ", App version: " + appVersion);
             return appVersion < latestVersion;
         }
 
@@ -299,38 +288,12 @@ public final class MainActivity extends AppCompatActivity {
             return info.versionName;
         }
 
-        private String requestVersionFromServer() throws IOException {
-            BufferedWriter writer = null;
-            BufferedReader reader = null;
-            Socket socket = null;
-            try {
-                Log.d("net-test", "Checking for updates...");
-                socket = new Socket("iasonas.duckdns.org", 1422);
-                reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                writer.write("get_version_code?toolbox");
-                writer.append('\n');
-                writer.flush();
-                String latest_version_code = reader.readLine();
-                Log.d("net-test", "Latest version code is " + latest_version_code);
-                return latest_version_code;
-            } finally {
-                if(reader != null && !socket.isClosed()) {
-                    reader.close();
-                }
-                if(writer!= null && !socket.isClosed()) {
-                    writer.write("disconnect\n");
-                    writer.flush();
-                    writer.close();
-                }
-                if(socket != null && !socket.isClosed()) {
-                    socket.close();
-                }
-            }
+        private String requestVersionFromServer() {
+            // TODO get latest version code from somewhere online
+            throw new UnsupportedOperationException();
         }
 
         private void showUpdateDialog() {
-            Log.d("net-test", "Asking user to update...");
             runOnUiThread(() -> new MaterialAlertDialogBuilder(MainActivity.this)
                     .setTitle("Update available!")
                     .setMessage("Do you want to update?")
@@ -338,7 +301,7 @@ public final class MainActivity extends AppCompatActivity {
                     .setNegativeButton("Not now.", (a, b) -> a.dismiss())
                     .setPositiveButton("Yes!", (a, b) -> {
                         a.dismiss();
-                        String url = "http://iasonas.duckdns.org/download_toolbox/index.html";
+                        String url = "https://github.com/iasonasTan/Toolbox/releases";
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);

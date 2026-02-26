@@ -2,8 +2,6 @@ package com.app.toolbox.tools.notepad.storage;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -29,11 +27,9 @@ public final class Storage implements Iterable<File> {
         sInstance=null;
     }
 
-    public static boolean initIfNotInitialized(Context context, String dirName) {
-        if(sInstance!=null)
-            return false;
-        init(context, dirName);
-        return true;
+    public static void initIfNotInitialized(Context context, String dirName) {
+        if(sInstance==null)
+            init(context, dirName);
     }
 
     public static void init(Context context, String dirName) {
