@@ -57,19 +57,30 @@ public class AnimatedButton extends MaterialButton {
         return super.performClick();
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            performClick();
-            return true;
-        }
-        return super.onTouchEvent(event);
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        switch(event.getAction()){
+//            case MotionEvent.ACTION_DOWN -> animateThis();
+//            case MotionEvent.ACTION_UP -> performClick();
+//        }
+//        return super.onTouchEvent(event);
+//    }
 
     private void animateThis() {
-        final float DURATION=140f, SCALE=0.96f;
-        Runnable removeAnim=()-> animate().scaleX(1f).scaleY(1f).setDuration((long)DURATION).start();
-        animate().scaleX(SCALE).scaleY(SCALE).setDuration((long)DURATION).withEndAction(removeAnim).start();
+        final long DURATION=170;
+        final float SCALE=0.94f;
+        Runnable removeAnim=()->
+                animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration((long) (DURATION*1.6))
+                .start();
+        animate()
+                .scaleX(SCALE)
+                .scaleY(SCALE)
+                .setDuration(DURATION)
+                .withEndAction(removeAnim)
+                .start();
     }
 
     public void setHighlighted(boolean h) {
