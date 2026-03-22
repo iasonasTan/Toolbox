@@ -97,10 +97,6 @@ public final class NavigationItemView extends LinearLayout implements ReceiverOw
         mName = pageName;
     }
 
-    public String getName() {
-        return mName;
-    }
-
     private final class StateUpdateReceiver extends BroadcastReceiver {
         @Override public void onReceive(Context context, Intent intent) {
             boolean current = mName.equals(intent.getStringExtra(NAME_EXTRA));

@@ -93,7 +93,6 @@ public final class SettingsActivity extends AppCompatActivity {
 
             editor.apply();
             finish();
-            AnimatedButton.sBackground = -1;
         }
     }
 

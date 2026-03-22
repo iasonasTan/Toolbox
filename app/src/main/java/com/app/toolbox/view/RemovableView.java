@@ -60,10 +60,6 @@ public class RemovableView extends LinearLayout implements Named {
         return mTitleView.getText().toString();
     }
 
-    public String getContent() {
-        return mContentPreviewView.getText().toString();
-    }
-
     @Override
     public String getName() {
         return getTitle();

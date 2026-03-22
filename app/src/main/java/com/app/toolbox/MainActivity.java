@@ -42,10 +42,14 @@ import com.app.toolbox.view.navigation.NavigationView;
 import com.google.android.material.color.DynamicColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -105,7 +109,7 @@ public final class MainActivity extends AppCompatActivity {
         if(savedInstanceState==null) {
             new IntentProcessor(this, mManager).processIntent(getIntent());
             new ApplicationGreeter(this).greet();
-            //new UpdateChecker().checkVersionAsynchronously();
+            new UpdateChecker().checkVersionAsynchronously();
         }
     }
 
@@ -255,8 +259,6 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressWarnings("unused")
-    @Deprecated
     private final class UpdateChecker {
         public void checkVersionAsynchronously() {
             new Thread(this::checkVersion).start();
@@ -288,9 +290,12 @@ public final class MainActivity extends AppCompatActivity {
             return info.versionName;
         }
 
-        private String requestVersionFromServer() {
-            // TODO get latest version code from somewhere online
-            throw new UnsupportedOperationException();
+        private String requestVersionFromServer() throws IOException {
+            URL url = URI.create("https://raw.githubusercontent.com/iasonasTan/Toolbox/master/latest-version.txt").toURL();
+            BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+            String versionStr = br.readLine();
+            br.close();
+            return versionStr;
         }
 
         private void showUpdateDialog() {
