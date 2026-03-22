@@ -27,7 +27,7 @@ public final class NotepadRoot extends ParentPageFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_notepad_root, container, false);
+        return inflater.inflate(R.layout.notepad_root, container, false);
     }
 
     @Override

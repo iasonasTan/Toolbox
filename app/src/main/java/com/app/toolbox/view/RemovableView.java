@@ -48,15 +48,15 @@ public class RemovableView extends LinearLayout implements Named {
         mDeleteButton.setOnClickListener(li);
     }
 
-    public void setTitle (String title) {
+    public void setTitle(String title) {
         mTitleView.setText(title);
     }
 
-    public void setContent (String content) {
+    public void setContent(String content) {
         mContentPreviewView.setText(content);
     }
 
-    public String getTitle () {
+    public String getTitle() {
         return mTitleView.getText().toString();
     }
 

@@ -57,8 +57,7 @@ public class StopwatchHome extends Fragment {
         super.onCreate(savedInstanceState);
         IntentFilter filter = Utils.intentFilter(StopwatchService.ACTION_SEND_UPDATE);
         ContextCompat.registerReceiver(requireContext(), mTimeStatusReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
-        NotificationChannel channel = new NotificationChannel(
-                StopwatchRoot.NOTIFICATION_CHANNEL_ID, "Stopwatch Notifications", NotificationManager.IMPORTANCE_HIGH);
+        NotificationChannel channel = new NotificationChannel(StopwatchRoot.NOTIFICATION_CHANNEL_ID, "Stopwatch Notifications", NotificationManager.IMPORTANCE_HIGH);
         requireContext()
                 .getSystemService(NotificationManager.class)
                 .createNotificationChannel(channel);

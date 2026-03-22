@@ -75,7 +75,7 @@ public final class TimerHome extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_timer_list, container, false);
+        return inflater.inflate(R.layout.timer_list, container, false);
     }
 
     @Override
@@ -83,7 +83,7 @@ public final class TimerHome extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mTimersList = view.findViewById(R.id.timers_list);
 
-        view.findViewById(R.id.add_timer).setOnClickListener(v -> {
+        view.findViewById(R.id.add_timer_fab).setOnClickListener(v -> {
             Intent intent = new Intent(ParentPageFragment.actionChangePage(TimerRoot.STRING_ID)).setPackage(requireContext().getPackageName());
             intent.putExtra(ParentPageFragment.PAGE_CLASSNAME_EXTRA, TimerEditor.class.getName());
             requireContext().sendBroadcast(intent);

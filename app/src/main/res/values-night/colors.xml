@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="widget_background">#C5000000</color>
-    <color name="white">#BFBFBF</color>
+    <color name="contrast1">#BFBFBF</color>
     <color name="border_color">#DDDDDD</color>
 </resources>

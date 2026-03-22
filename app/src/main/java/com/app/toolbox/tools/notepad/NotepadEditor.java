@@ -153,7 +153,7 @@ public final class NotepadEditor extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_notepad_editor, container, false);
+        return inflater.inflate(R.layout.notepad_editor, container, false);
     }
 
     public void exitEditor() {

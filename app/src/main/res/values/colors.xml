@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="widget_background">#C5FFFFFF</color>
-    <color name="white">#404040</color>
+    <color name="contrast1">#404040</color>
     <color name="border_color">#343434</color>
 
     <color name="black">#FF000000</color>

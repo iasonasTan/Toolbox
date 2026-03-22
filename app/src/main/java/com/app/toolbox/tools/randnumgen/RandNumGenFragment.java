@@ -43,7 +43,7 @@ public class RandNumGenFragment extends PageFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_rand_num, container, false);
+        return inflater.inflate(R.layout.rand_num, container, false);
     }
 
     @Override

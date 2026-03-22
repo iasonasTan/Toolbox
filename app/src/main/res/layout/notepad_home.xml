@@ -44,8 +44,6 @@
         app:backgroundTint="?attr/colorSecondary"
         app:fabSize="normal"
         app:srcCompat="@drawable/add_icon"
-        app:tint="@color/black"
-        app:useCompatPadding="false"
-        tools:ignore="ClassNameCheck" />
+        app:tint="@color/black" />
 
 </RelativeLayout>

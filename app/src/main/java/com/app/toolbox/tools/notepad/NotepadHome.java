@@ -28,7 +28,7 @@ public final class NotepadHome extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_notepad_home, container, false);
+        return inflater.inflate(R.layout.notepad_home, container, false);
     }
 
     @Override

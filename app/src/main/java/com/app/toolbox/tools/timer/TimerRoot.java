@@ -25,7 +25,7 @@ public final class TimerRoot extends ParentPageFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_timer_root, container, false);
+        return inflater.inflate(R.layout.timer_root, container, false);
     }
 
     @Override

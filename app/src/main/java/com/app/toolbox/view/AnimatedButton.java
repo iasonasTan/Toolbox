@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,16 +28,13 @@ public class AnimatedButton extends MaterialButton {
         this(context, null);
     }
 
-    public AnimatedButton (@NonNull Context context, @Nullable AttributeSet attrs) {
+    public AnimatedButton(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AnimatedButton);
             boolean highlighted = a.getBoolean(R.styleable.AnimatedButton_highlighted, false);
+            setHighlighted(highlighted);
             a.recycle();
-            if(highlighted)
-                setBackgroundResource(R.drawable.red_background_with_border);
-            else
-                setBackgroundResource(R.drawable.background_with_border);
         } else {
             setBackgroundResource(R.drawable.background_with_border);
         }
@@ -46,7 +42,6 @@ public class AnimatedButton extends MaterialButton {
         setTypeface(typeface);
         setClickable(true);
         setFocusable(true);
-        setTextColor(MaterialColors.getColor(context, android.R.attr.textColorPrimary, context.getColor(R.color.white)));
         mVibrator=ContextCompat.getSystemService(context, Vibrator.class);
     }
 
@@ -56,15 +51,6 @@ public class AnimatedButton extends MaterialButton {
         mVibrator.vibrate(mClickVibrationEffect);
         return super.performClick();
     }
-
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//        switch(event.getAction()){
-//            case MotionEvent.ACTION_DOWN -> animateThis();
-//            case MotionEvent.ACTION_UP -> performClick();
-//        }
-//        return super.onTouchEvent(event);
-//    }
 
     private void animateThis() {
         final long DURATION=170;
