@@ -2,6 +2,7 @@ package com.app.toolbox.tools.notepad.storage;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -36,6 +37,11 @@ public final class Storage implements Iterable<File> {
         if(sInstance!=null)
             throw new IllegalStateException("Storage is already initialized.");
         File notes_dir = new File(context.getFilesDir(), dirName);
+        if(!notes_dir.exists() || !notes_dir.isDirectory()) {
+            boolean created = notes_dir.mkdir();
+            if(!created)
+                Log.e("notepad_io", "Could not create directory: "+notes_dir.getAbsolutePath());
+        }
         sInstance = new Storage(notes_dir);
     }
 
