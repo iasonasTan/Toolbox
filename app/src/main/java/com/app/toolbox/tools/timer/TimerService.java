@@ -243,18 +243,17 @@ public final class TimerService extends Service {
                         iter.remove();
                     }
                 }
-                Log.d("timer_service", "Timers n: "+mTimers.size());
 
-                // startForeground OR stopSelf
-                if(!mTimers.isEmpty()/*there are timers left*/) {
-                    Log.d("timer_service", "Resending notification...");
-                    startForeground(11, mNotificationBuilder
-                            .setContentTitle(mTimers.size() + getString(R.string.timers_running))
-                            .build());
+                Log.d("timer_service", "Timers count: "+mTimers.size());
+                Log.d("timer_service", "Resending notification...");
+                startForeground(11, mNotificationBuilder
+                        .setContentTitle(mTimers.size() + " " + getString(R.string.timers_running))
+                        .build());
 
-                    // Restart loop
-                    mTimerUpdater.run();
-                } else {
+                // Restart loop
+                mTimerUpdater.run();
+
+                if (mTimers.isEmpty()/*no timers, stop service*/) {
                     Log.d("timer_service", "Stopping service...");
                     stopSelf();
                 }
