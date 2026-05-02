@@ -5,9 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -40,16 +38,11 @@ import com.app.toolbox.utils.Utils;
 import com.app.toolbox.view.navigation.NavigationItemView;
 import com.app.toolbox.view.navigation.NavigationView;
 import com.google.android.material.color.DynamicColors;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -109,7 +102,7 @@ public final class MainActivity extends AppCompatActivity {
         if(savedInstanceState==null) {
             new IntentProcessor(this, mManager).processIntent(getIntent());
             new ApplicationGreeter(this).greet();
-            new UpdateChecker().checkVersionAsynchronously();
+            new UpdateChecker(this).checkVersionAsynchronously();
         }
     }
 
@@ -256,62 +249,6 @@ public final class MainActivity extends AppCompatActivity {
 
         public void forEach(Consumer<PageFragment> cons) {
             fragments.forEach(cons);
-        }
-    }
-
-    private final class UpdateChecker {
-        public void checkVersionAsynchronously() {
-            new Thread(this::checkVersion).start();
-        }
-
-        public void checkVersion() {
-            try {
-                String latestVersion = requestVersionFromServer();
-                String appVersion = getApplicationVersion();
-                if(needsUpdate(appVersion, latestVersion))
-                    showUpdateDialog();
-            } catch (Exception ignored) {
-                // causes: no internet, DNS problem or server is closed
-                // ignore, no version check
-            }
-        }
-
-        private boolean needsUpdate(String appV, String latV) {
-            double latestVersion = Double.parseDouble(latV);
-            double appVersion = Double.parseDouble(appV);
-            return appVersion < latestVersion;
-        }
-
-        private String getApplicationVersion() throws PackageManager.NameNotFoundException {
-            PackageManager pm = getPackageManager();
-            PackageInfo info = pm.getPackageInfo(getPackageName(), 0);
-            if(info==null||info.versionName==null)
-                throw new NullPointerException("Cannot get version code. Null returned by android system.");
-            return info.versionName;
-        }
-
-        private String requestVersionFromServer() throws IOException {
-            URL url = URI.create("https://raw.githubusercontent.com/iasonasTan/Toolbox/master/latest-version.txt").toURL();
-            BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-            String versionStr = br.readLine();
-            br.close();
-            return versionStr;
-        }
-
-        private void showUpdateDialog() {
-            runOnUiThread(() -> new MaterialAlertDialogBuilder(MainActivity.this)
-                    .setTitle("Update available!")
-                    .setMessage("Do you want to update?")
-                    .setCancelable(false)
-                    .setNegativeButton("Not now.", (a, b) -> a.dismiss())
-                    .setPositiveButton("Yes!", (a, b) -> {
-                        a.dismiss();
-                        String url = "https://github.com/iasonasTan/Toolbox/releases";
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    })
-                    .show());
         }
     }
 

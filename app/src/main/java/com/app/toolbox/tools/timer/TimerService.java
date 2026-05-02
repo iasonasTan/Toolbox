@@ -182,7 +182,7 @@ public final class TimerService extends Service {
      * same process.  You should always avoid stalling the main
      * thread's event loop.  When doing long-running operations,
      * network calls, or heavy disk I/O, you should kick off a new
-     * thread, or use {@link android.os.AsyncTask}.</p>
+     * thread.</p>
      *
      * @param intent The Intent supplied to {@link android.content.Context#startService},
      * as given.  This may be null if the service is being restarted after

@@ -46,4 +46,5 @@ dependencies {
     implementation libs.ambilwarna
     implementation libs.material.v190
     implementation libs.material3
+    implementation 'com.github.iasonasTan:VersionCheckerLib:v2.0.0'
 }

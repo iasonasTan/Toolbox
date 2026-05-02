@@ -119,7 +119,7 @@ public abstract class PageFragment extends Fragment implements Comparable<PageFr
     }
 
     /**
-     * Abstract method used to request fragment's getPageName from sub-class
+     * Abstract method used to request fragment's getPageName from subclass
      * @return getPageName of this fragment as {@code String}
      */
     abstract protected String fragmentName();

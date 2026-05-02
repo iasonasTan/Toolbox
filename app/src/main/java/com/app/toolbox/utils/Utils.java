@@ -81,8 +81,8 @@ public final class Utils {
 
     /**
      * Checks if given array contains given object.
-     * @param array array to check it's elements
-     * @param obj object that the array may contains
+     * @param array array to check its elements
+     * @param obj object that the array may contain
      * @return returns {@code true} if given array contains given object;
      * {@code false} otherwise.
      */
@@ -165,7 +165,7 @@ public final class Utils {
 
     /**
      * Creates an {@link IntentFilter} with given actions.
-     * @param actions Actions to add to intent filter.
+     * @param actions Actions to add to IntentFilter.
      * @return Intent filter with given actions.
      */
     public static IntentFilter intentFilter(String... actions) {
