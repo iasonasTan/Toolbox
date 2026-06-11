@@ -60,7 +60,7 @@
     <string name="app_version">Версия приложения:</string>
     <string name="developer_info">Разработчик: Jason Tantaros</string>
     <string name="contact_info">Контакт: iasonas.tan@gmail.com</string>
-    <string name="developer_name">Jason Tantaros\nВсе права защищены.</string>
+    <string name="developer_name">Jason Tantaros Лицензировано под GPL-v3.</string>
 
     <string name="limit">Лимит:</string>
     <string name="done">Готово</string>

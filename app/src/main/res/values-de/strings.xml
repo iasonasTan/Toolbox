@@ -61,7 +61,7 @@ Hinweis: Folgende Zeichen sind nicht erlaubt:
     <string name="app_version">App-Version:</string>
     <string name="developer_info">Entwickelt von Jason Tantaros</string>
     <string name="contact_info">Kontakt: iasonas.tan@gmail.com</string>
-    <string name="developer_name">Jason Tantaros\nAlle Rechte vorbehalten.</string>
+    <string name="developer_name">Jason Tantaros Lizenziert unter GPL-v3.</string>
 
     <string name="limit">Limit:</string>
     <string name="done">Fertig</string>

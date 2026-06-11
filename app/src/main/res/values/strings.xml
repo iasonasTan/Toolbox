@@ -73,7 +73,7 @@ Hint: Titles cannot contain the following characters:
     <string name="app_version">App version:</string>
     <string name="developer_info">Developed by Jason Tantaros</string>
     <string name="contact_info">Contact: iasonas.tan@gmail.com</string>
-    <string name="developer_name">Jason Tantaros\nAll rights reserved.</string>
+    <string name="developer_name">Jason Tantaros Licensed under GPL-v3.</string>
 
     <string name="limit">Limit:</string>
     <string name="done">Done</string>
